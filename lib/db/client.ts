@@ -14,7 +14,15 @@ export function postgresDb(url: string): Db {
   // mixes up overlapping queries' parameter types, so local use sends one query at a time over one
   // connection; Supabase connections work as normal
   const local = /@(localhost|127\.0\.0\.1)[:/]/.test(url);
-  const sql = postgres(url, { prepare: false, max: local ? 1 : 5, idle_timeout: 20, ...(local && { max_pipeline: 1 }) } as postgres.Options<{}>);
+  const sql = postgres(url, {
+    prepare: false,
+    max: local ? 1 : 5,
+    idle_timeout: 20,
+    ...(local && { max_pipeline: 1 }),
+    // the repositories pass JSON columns as JSON text already; send it as is instead of
+    // encoding it again (which would store a JSON string, not an object)
+    types: { json: { to: 114, from: [114, 3802], serialize: (x: unknown) => (typeof x === 'string' ? x : JSON.stringify(x)), parse: (x: string) => JSON.parse(x) } },
+  } as postgres.Options<{}>);
   const wrap = (s: postgres.Sql | postgres.TransactionSql): Db => ({
     query: async (text, params = []) => (await s.unsafe(text, params as any[])) as any,
     tx: (fn) => ('begin' in s ? (s as postgres.Sql).begin((t) => fn(wrap(t))) : fn(wrap(s))) as any,

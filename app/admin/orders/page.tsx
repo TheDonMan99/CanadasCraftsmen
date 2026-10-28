@@ -24,6 +24,7 @@ export default async function OrdersPage({ searchParams }: { searchParams: Promi
     text: (o.design?.labels?.lines ?? []).map((l: any) => l.text).join(' / '),
     width: o.width_in,
     material: o.design?.labels?.material ?? '',
+    materialId: o.design?.materialId ?? '',
     finish: [o.design?.labels?.finish, ...(o.design?.labels?.colours ?? [])].filter(Boolean).join(', '),
     total: o.total,
     paid: o.paid,

@@ -4,7 +4,7 @@ A web app for designing, ordering and producing laser-cut welcome signs. Custome
 design a sign; you confirm payment; one click makes a LightBurn-ready SVG.
 `SPEC.md` is the full build spec and the source of truth.
 
-**Status:** phases 1–4 of 6 (engine and LightBurn files; catalog, settings and pricing; order designer, orders and emails; dashboard, payments and production). See `CHANGELOG.md`.
+**Status:** phases 1–5 of 6 (engine and LightBurn files; catalog, settings and pricing; order designer, orders and emails; dashboard, payments and production; nesting, inventory and offcuts). See `CHANGELOG.md`.
 
 ## Run it on your computer
 
@@ -171,7 +171,40 @@ your domain is verified in Resend, you can send sign-in emails through Resend
 instead: Supabase → Authentication → Emails → SMTP settings, using Resend's SMTP
 details.
 
-## Settings and catalog
+## Nesting and inventory (phase 5)
+
+- **Nesting** (`/admin/nesting`):
+  1. Pick a material, then tick paid orders, or use **Plan next batch**: by
+     needed-by date, rush first, as many as fit on one new sheet. From the orders
+     list you can also select orders and use **Send to nesting**.
+  2. **Nest** packs every part onto offcuts first, then spare panels, then new
+     4 × 8 ft sheets ripped into Panel A and Panel B. Parts of one order stay on
+     one panel when they fit. Plywood is grain-locked (no quarter turns).
+- **Reviewing a job:**
+  - each panel is drawn with every part labelled by order;
+  - drag a part to adjust it (it snaps to 1/8 in), then **Save layout**; the
+    server checks it's inside the panel and 1/4 in from the others;
+  - or **Re-run**.
+- **Files for a job:**
+  - **Download SVG** gives one LightBurn file per panel, at true size (48 ×
+    47.875 in), with the panel outline and order numbers on the green labels
+    layer;
+  - **Cut list** is a printable list of panel, order, part, size and finish.
+- **Mark as cut:**
+  - inventory drops by the sheets used, and an unused Panel B becomes a spare
+    panel;
+  - used offcuts are closed, and leftovers of at least 6 × 12 in are saved as
+    offcuts;
+  - the orders move to In production.
+- **Material cost** per order (sheet cost ÷ sheet area × the area its parts
+  take up, spacing included) is shown to the owner on each job.
+- **Inventory** (`/admin/inventory`):
+  - full sheets, spare panels and offcuts per material;
+  - **Add stock**, where the cost per sheet you enter becomes the material's
+    sheet cost;
+  - correct counts, set the low-stock alert, and add or remove offcuts.
+  - Low stock shows on the home screen.
+
 
 - `/admin/settings/catalog`: every option in every category.
   - Switch options on or off, one at a time or several at once.
@@ -192,7 +225,7 @@ details.
 npm test
 ```
 
-This runs about 500 Vitest tests in about two and a half minutes. They cover:
+This runs about 520 Vitest tests in about two and a half minutes. They cover:
 
 - every engine pipeline step and the exports;
 - the seed catalog;
@@ -202,6 +235,8 @@ This runs about 500 Vitest tests in about two and a half minutes. They cover:
   against PGlite, a real Postgres that runs inside the tests;
 - the order form's design rules and the whole order submission: price
   tampering, spam checks, lead times, files and emails;
+- nesting: the packer, a real job from four paid orders, panel files at true
+  size, marking as cut, and the next run using the saved offcut;
 - the dashboard:
   - payment statuses and refunds under the policy;
   - the cut-file gate;
@@ -222,6 +257,8 @@ This test:
 - checks the confirmation page, a tampered price and a share link;
 - signs in as the owner:
   - marks the order paid, and checks that cut files unlock;
+  - stocks birch, nests the order onto Panel A, downloads the panel file, and
+    marks it cut;
   - cancels a paid order for the customer (50% refund);
   - invites a production user, and uses quick quote;
 - signs in as that production user, checks they see no prices or contact
@@ -290,6 +327,10 @@ npm run typecheck
 | `lib/db/admin.ts` | Dashboard reads and writes (payments, statuses, users, replies, short links) |
 | `lib/order/payments.ts` | Statuses, payment and refund rules, the cut-file gate (pure) |
 | `config/reply-templates.seed.json` | The starting Messenger replies |
+| `lib/nesting/pack.ts` | The panel packer, layout checks and leftovers (pure) |
+| `lib/server/nesting.ts` | Planning, adjusting and cutting nest jobs |
+| `lib/export/panel.ts` | One LightBurn SVG per panel |
+| `app/admin/nesting/`, `app/admin/inventory/` | Nesting and inventory pages |
 | `tests/` | Vitest suite |
 
 ## Deploy and back up

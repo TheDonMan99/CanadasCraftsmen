@@ -1,5 +1,117 @@
 # Changelog
 
+## Phase 5: Nesting, inventory and offcuts (2026-10-29)
+
+Built:
+
+- **Panel packer** (`lib/nesting/pack.ts`):
+  - rectangle packing (MaxRects, best short-side fit) on each part's cut
+    outline;
+  - 0.25 in between parts and 0.5 in at the panel edges;
+  - order of use: offcuts first, then spare panels, then new sheets (Sheet 1
+    Panel A, Sheet 1 Panel B, Sheet 2…);
+  - an order's parts stay on one panel when they fit;
+  - plywood's grain lock means no quarter turns;
+  - parts bigger than a panel are reported;
+  - several part orderings are tried within the time limit, and the plan with the
+    fewest sheets wins.
+- **Nesting page:**
+  - paid orders on one material (plus unpaid ones you released by override);
+  - **Plan next batch**: by needed-by date, rush first, up to one new sheet;
+  - **Nest**;
+  - recent jobs.
+- **Job page:**
+  - each panel drawn, with each part labelled by order;
+  - drag to adjust (snaps to 1/8 in, checked on the server), **Re-run** or
+    delete;
+  - panels used, material used %, spare panels left;
+  - material cost per order (owner only), and a warning when the plan needs more
+    sheets than inventory shows.
+- **Files:**
+  - one LightBurn SVG per panel (`2026-11-03_Birch-6mm_Sheet1_PanelA.svg`) at
+    true size;
+  - each part is turned and moved into place, with its score and engrave lines;
+  - the panel outline and every part's order number go on the green labels
+    layer;
+  - panel files are stored in Supabase Storage when a job is planned or adjusted,
+    so a saved layout re-downloads exactly as cut.
+- **Printable cut list:** panel, order, part, size, finish, needed-by, and a tick
+  box.
+- **Mark as cut:**
+  - full sheets go down;
+  - an unused Panel B becomes a spare panel;
+  - used offcuts are closed;
+  - leftovers of at least 6 × 12 in are saved as offcuts;
+  - the orders move to In production, with a history note and the In production
+    email if it's on;
+  - all in one transaction.
+- **Inventory page:** full sheets, spare panels and offcuts per material.
+  - **Add stock**: the cost per sheet you enter updates the material's sheet
+    cost (owner only).
+  - Correct counts, set the alert level, and add or remove offcuts.
+  - A low-stock warning shows on the home screen.
+- **Orders list:** "Send to nesting" for the selected orders.
+- **Database:** migration `20261031000000_nesting.sql` adds offcut dates and
+  their source job, plus job summaries (orders, sheets, offcuts used, costs,
+  stored files).
+
+Fixed (important for the live site):
+
+- **JSON was being stored as text.** The database client encoded JSON values a
+  second time. Settings saves, catalog edits, orders and the audit log were
+  stored as a quoted string instead of an object. The app read them back fine,
+  but SQL that looks inside them found nothing. On Supabase that would have
+  broken nesting and other queries.
+  - The client now sends JSON text as is.
+  - Migration `20261031000001_fix_json_strings.sql` unwraps any values already
+    stored that way. Data seeded by `setup.sql` was never affected.
+
+Tests: 518 Vitest tests passing (15 new). The browser test now also:
+
+- adds 3 sheets of birch;
+- nests the paid order onto Sheet 1 Panel A;
+- downloads the panel file and checks it's 48 × 47.875 in with S-1001 on the
+  labels layer;
+- marks it cut, which saves an offcut, leaves 2 sheets and 1 spare panel, and
+  moves the order to In production;
+- checks that production sees no money on the nesting page.
+
+The new Vitest tests cover:
+
+- the packer: four 36 in signs on one sheet, two per panel; orders kept
+  together; grain lock; oversize parts; offcuts and spare panels first; a lone
+  sign leaving a spare panel; small parts filling gaps; layout checks; leftovers;
+- a real job against PGlite: four paid orders plan onto Panel A and Panel B; the
+  panel file is true size with every order number on the labels layer;
+- marking that job as cut: inventory 5 → 4, offcuts saved, orders in
+  production;
+- the next run putting a 12 in sign on the saved offcut;
+- plan next batch;
+- a dragged part being checked.
+
+Decisions made while building:
+
+- **Spare panels:** an unused Panel B from a ripped sheet is kept as a spare
+  panel in inventory and used before ripping a new sheet.
+- **Offcuts are measured** from the free space on the panel, rounded down to
+  the 1/8 in. Up to three per panel are kept.
+- **One material per job**, as the spec says. With "use offcuts first" off,
+  offcuts are left for you to use by hand.
+
+What you need to do: run `supabase/setup.sql` once more. It adds the two new
+migrations, and is safe as always.
+
+Checklist for you (spec phase 5):
+
+- [ ] Four paid orders nest onto panels; files import into LightBurn at true
+  size with order labels on the green layer. Shown in tests; the LightBurn
+  import is yours.
+- [ ] Marking as cut lowers inventory and saves a usable offcut. Shown in
+  tests.
+- [ ] The next run places a fitting part on that offcut first. Shown in tests.
+
+Next: phase 6, reports and extras.
+
 ## Phase 4: Dashboard, payments and production (2026-10-29)
 
 Built:

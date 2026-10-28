@@ -3,6 +3,8 @@ import { requirePage } from '@/lib/auth/session';
 import { loadSettings } from '@/lib/data';
 import { boardOrders, homeStats, listOrders } from '@/lib/db/admin';
 import { getDb } from '@/lib/db/client';
+import { lowStock } from '@/lib/db/nesting';
+import { loadCatalog } from '@/lib/data';
 import { daysSince, paymentBadge } from '@/lib/order/payments';
 import { localToday } from '@/lib/order/rules';
 import { Card, money, PaidBadge, shortDate, specLine, StatusPill } from './ui';
@@ -14,7 +16,18 @@ export default async function AdminHome({ searchParams }: { searchParams: Promis
   const q = await searchParams;
   const db = getDb();
   const settings = await loadSettings();
-  const denied = q.denied && <p className="mb-4 rounded bg-amber-50 p-2 text-sm text-amber-900">Your role can’t open that page.</p>;
+  const low = db && user.perms.manage_inventory ? await lowStock(db) : [];
+  const catalog = low.length ? await loadCatalog() : [];
+  const denied = (
+    <>
+      {q.denied && <p className="mb-4 rounded bg-amber-50 p-2 text-sm text-amber-900">Your role can’t open that page.</p>}
+      {low.map((l) => (
+        <p key={l.material_option_id} className="mb-4 rounded bg-red-50 p-2 text-sm text-red-800">
+          Low stock: {catalog.find((m) => m.id === l.material_option_id)?.label ?? l.material_option_id} has {l.full_sheets} sheet{l.full_sheets === 1 ? '' : 's'} left (alert below {l.low_stock_alert}). <Link href="/admin/inventory" className="underline">Inventory</Link>
+        </p>
+      ))}
+    </>
+  );
   if (!db)
     return (
       <main className="mx-auto max-w-7xl px-4 py-6">

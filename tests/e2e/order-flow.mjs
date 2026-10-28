@@ -1,8 +1,9 @@
 // The order flow in a real browser at phone size: design a sign, approve the
 // proof, place the order and land on the confirmation page. Also checks that a
 // tampered price is ignored and that share links open the saved design.
-// Then the dashboard: the owner takes payment and releases cut files, and a
-// production login sees the board and files but no prices or contact details.
+// Then the dashboard: the owner takes payment and releases cut files, stocks
+// sheets, nests the order onto a panel and marks it cut; a production login sees
+// the board and files but no prices or contact details.
 //   npm run test:e2e        (builds nothing; run `npm run build` first)
 // Starts its own in-memory database and the built app, so it never touches Supabase.
 import { spawn } from 'node:child_process';
@@ -19,6 +20,8 @@ const OUT = 'test-output/e2e';
 mkdirSync(OUT, { recursive: true });
 const procs = [];
 let browser;
+// the page in use, for a screenshot when a step fails
+let current;
 
 function start(cmd, args, env, ready) {
   return new Promise((resolve, reject) => {
@@ -153,6 +156,7 @@ async function signIn(page, email) {
 async function dashboard(browser, errors) {
   const ctx = await browser.newContext({ baseURL: BASE, viewport: { width: 1280, height: 900 } });
   const page = await ctx.newPage();
+  current = page;
   page.on('pageerror', (e) => errors.push(e.message));
   page.on('dialog', (d) => d.accept());
 
@@ -186,6 +190,31 @@ async function dashboard(browser, errors) {
   assert.match(await svg.text(), /<svg[^>]+width="[\d.]+in"/);
   assert.match(svg.headers()['content-disposition'], /S-1001_Smith_30in_Birch-6mm\.svg/);
   await page.screenshot({ path: `${OUT}/8-order-paid.png`, fullPage: true });
+
+  step('inventory: buy 3 sheets of birch');
+  await page.goto('/admin/inventory');
+  await page.getByLabel('Birch plywood 1/4 in sheets bought').fill('3');
+  await page.getByRole('region', { name: 'Birch plywood 1/4 in' }).getByRole('button', { name: 'Add stock' }).click();
+  await page.getByRole('region', { name: 'Birch plywood 1/4 in' }).getByText('3', { exact: true }).first().waitFor();
+
+  step('nesting: the paid order nests onto Panel A; the panel file is true size with its order label');
+  await page.goto('/admin/nesting?material=material.birch-6mm');
+  await page.getByLabel('Select S-1001').check();
+  await page.getByRole('button', { name: 'Nest 1 order' }).click();
+  await page.waitForURL(/\/admin\/nesting\/[0-9a-f-]{36}$/);
+  const panel = page.getByRole('region', { name: 'Sheet 1 Panel A' });
+  await panel.getByText('S-1001', { exact: false }).first().waitFor();
+  const dl = await page.request.get(await panel.getByRole('link', { name: 'Download SVG' }).getAttribute('href'));
+  assert.equal(dl.status(), 200);
+  const panelSvg = await dl.text();
+  assert.match(panelSvg, /width="48\.0000in" height="47\.8750in"/);
+  assert.match(panelSvg, /<g id="labels"[^>]*>.*S-1001/s);
+  assert.match(dl.headers()['content-disposition'], /_Birch-6mm_Sheet1_PanelA\.svg/);
+  await page.screenshot({ path: `${OUT}/10-nesting.png`, fullPage: true });
+  await page.getByRole('button', { name: 'Mark as cut' }).click();
+  await page.getByText(/Marked as cut\. 1 order moved to In production; \d+ offcuts? saved/).waitFor();
+  await page.goto('/admin/inventory');
+  await page.getByRole('region', { name: 'Birch plywood 1/4 in' }).getByText(/2 sheets · 1 spare panel/).waitFor();
 
   step('a customer cancellation before cutting records a 50% refund');
   await page.goto('/admin/orders?q=S-1002');
@@ -226,16 +255,20 @@ async function dashboard(browser, errors) {
   assert.equal((await page.request.get(`/api/admin/orders/${orderId}/files/svg`)).status(), 200);
   await page.goto('/admin/orders');
   await page.waitForURL(/denied=1/);
+  await page.goto('/admin/nesting');
+  await page.getByRole('heading', { name: 'Nesting' }).waitFor();
+  assert.ok(!(await page.locator('main').innerText()).includes('$'), 'nesting shows no money to production');
   await page.goto('/admin/board');
-  await page.getByRole('region', { name: 'Paid, ready to start' }).getByText('S-1001').waitFor();
-  await page.getByRole('button', { name: '→ In production' }).first().click();
   await page.getByRole('region', { name: 'In production' }).getByText('S-1001').waitFor();
+  await page.getByRole('button', { name: '→ Ready' }).first().click();
+  await page.getByRole('region', { name: 'Ready' }).getByText('S-1001').waitFor();
   await page.screenshot({ path: `${OUT}/9-production-board.png`, fullPage: true });
   await ctx.close();
 }
 
 main()
-  .catch((e) => {
+  .catch(async (e) => {
+    await current?.screenshot({ path: `${OUT}/failure.png`, fullPage: true }).catch(() => {});
     console.error(e);
     process.exitCode = 1;
   })

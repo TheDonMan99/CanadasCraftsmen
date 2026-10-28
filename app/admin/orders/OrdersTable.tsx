@@ -24,6 +24,7 @@ export interface Row {
   status: Status;
   needed_by: string | null;
   days_unpaid: number;
+  materialId: string;
 }
 
 const MANUAL: Status[] = ['awaiting_payment', 'in_production', 'ready', 'complete'];
@@ -35,6 +36,8 @@ export default function OrdersTable({ rows, reminderDays }: { rows: Row[]; remin
   const [pending, start] = useTransition();
   const toggle = (id: string) => setSelected((s) => (s.has(id) ? (s.delete(id), new Set(s)) : new Set(s.add(id))));
   const ids = [...selected];
+  // nesting runs one material at a time: use the selected orders' material
+  const material = rows.find((r) => selected.has(r.id))?.materialId;
   const act = (fn: () => Promise<{ ok: boolean; error?: string; message?: string }>) =>
     start(async () => {
       const r = await fn();
@@ -63,6 +66,9 @@ export default function OrdersTable({ rows, reminderDays }: { rows: Row[]; remin
             <button className="rounded-md border border-stone-300 bg-white px-3 py-1.5" disabled={pending} onClick={() => act(() => bulkRegenerate(ids))}>
               Generate files
             </button>
+            <a className="rounded-md border border-stone-300 bg-white px-3 py-1.5" href={`/admin/nesting?orders=${ids.join(',')}${material ? `&material=${material}` : ''}`}>
+              Send to nesting
+            </a>
           </>
         )}
         {msg && <span className={msg.ok ? 'text-green-800' : 'text-red-700'} role="status">{msg.text}</span>}
@@ -103,7 +109,6 @@ export default function OrdersTable({ rows, reminderDays }: { rows: Row[]; remin
           </tbody>
         </table>
       </div>
-      <p className="mt-2 text-xs text-stone-500">Sending selected orders to nesting arrives with phase 5.</p>
     </>
   );
 }

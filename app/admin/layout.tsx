@@ -8,6 +8,8 @@ const NAV: { href: string; label: string; perm: Perm | Perm[] }[] = [
   { href: '/admin', label: 'Home', perm: ['view_orders', 'view_board'] },
   { href: '/admin/orders', label: 'Orders', perm: 'view_orders' },
   { href: '/admin/board', label: 'Board', perm: 'view_board' },
+  { href: '/admin/nesting', label: 'Nesting', perm: 'manage_nesting' },
+  { href: '/admin/inventory', label: 'Inventory', perm: 'manage_inventory' },
   { href: '/admin/customers', label: 'Customers', perm: 'view_contacts' },
   { href: '/admin/quote', label: 'Quick quote', perm: 'edit_orders' },
   { href: '/admin/templates', label: 'Replies', perm: 'edit_orders' },
