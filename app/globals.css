@@ -1,0 +1,18 @@
+@import "tailwindcss";
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  @apply bg-stone-50 text-stone-900 antialiased;
+}
+
+@layer components {
+  .input {
+    @apply w-full rounded-md border border-stone-300 bg-white px-2 py-1 text-sm;
+  }
+  .btn {
+    @apply rounded-md bg-stone-900 px-3 py-2 text-sm text-white hover:bg-stone-700;
+  }
+}

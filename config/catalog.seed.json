@@ -1,0 +1,2020 @@
+{
+  "version": 1,
+  "options": [
+    {
+      "id": "product.welcome",
+      "category": "product",
+      "label": "Welcome sign",
+      "description": "",
+      "enabled": true,
+      "stock_status": "in_stock",
+      "sort_order": 10,
+      "price_type": "none",
+      "price_value": 0,
+      "applies_to": null,
+      "values": {
+        "layout": "horizontal",
+        "default_width_in": 36,
+        "lines": [
+          {
+            "role": "top",
+            "text": "Welcome"
+          },
+          {
+            "role": "main",
+            "text": "The Smiths"
+          },
+          {
+            "role": "small",
+            "text": "Est. 2019",
+            "optional": true
+          }
+        ],
+        "allowed_styles": [
+          "style.one-piece",
+          "style.layered",
+          "style.letters-on-backer",
+          "style.stencil"
+        ],
+        "allowed_sizes": [
+          "size.w12",
+          "size.w18",
+          "size.w24",
+          "size.w30",
+          "size.w36",
+          "size.w40",
+          "size.w44",
+          "size.w46"
+        ],
+        "allowed_fonts": [
+          "font.pacifico",
+          "font.lobster",
+          "font.kaushan-script",
+          "font.yellowtail",
+          "font.dancing-script-bold",
+          "font.satisfy",
+          "font.great-vibes",
+          "font.alex-brush",
+          "font.playfair-display-bold",
+          "font.abril-fatface",
+          "font.montserrat-bold",
+          "font.bebas-neue",
+          "font.oswald",
+          "font.amatic-sc-bold"
+        ]
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "product.family-name",
+      "category": "product",
+      "label": "Family name sign",
+      "description": "",
+      "enabled": true,
+      "stock_status": "in_stock",
+      "sort_order": 20,
+      "price_type": "none",
+      "price_value": 0,
+      "applies_to": null,
+      "values": {
+        "layout": "horizontal",
+        "default_width_in": 30,
+        "lines": [
+          {
+            "role": "main",
+            "text": "Smith"
+          },
+          {
+            "role": "small",
+            "text": "Est. 2019"
+          }
+        ],
+        "allowed_styles": [
+          "style.one-piece",
+          "style.layered",
+          "style.letters-on-backer",
+          "style.stencil"
+        ],
+        "allowed_sizes": [
+          "size.w12",
+          "size.w18",
+          "size.w24",
+          "size.w30",
+          "size.w36",
+          "size.w40",
+          "size.w44",
+          "size.w46"
+        ],
+        "allowed_fonts": [
+          "font.pacifico",
+          "font.lobster",
+          "font.kaushan-script",
+          "font.yellowtail",
+          "font.dancing-script-bold",
+          "font.satisfy",
+          "font.great-vibes",
+          "font.alex-brush",
+          "font.playfair-display-bold",
+          "font.abril-fatface",
+          "font.montserrat-bold",
+          "font.bebas-neue",
+          "font.oswald",
+          "font.amatic-sc-bold"
+        ]
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "product.nursery-name",
+      "category": "product",
+      "label": "Nursery name sign",
+      "description": "",
+      "enabled": true,
+      "stock_status": "in_stock",
+      "sort_order": 30,
+      "price_type": "none",
+      "price_value": 0,
+      "applies_to": null,
+      "values": {
+        "layout": "horizontal",
+        "default_width_in": 36,
+        "lines": [
+          {
+            "role": "main",
+            "text": "Ava"
+          }
+        ],
+        "allowed_styles": [
+          "style.one-piece",
+          "style.layered",
+          "style.letters-on-backer",
+          "style.stencil"
+        ],
+        "allowed_sizes": [
+          "size.w12",
+          "size.w18",
+          "size.w24",
+          "size.w30",
+          "size.w36",
+          "size.w40",
+          "size.w44",
+          "size.w46"
+        ],
+        "allowed_fonts": [
+          "font.pacifico",
+          "font.lobster",
+          "font.kaushan-script",
+          "font.yellowtail",
+          "font.dancing-script-bold",
+          "font.satisfy",
+          "font.great-vibes",
+          "font.alex-brush",
+          "font.playfair-display-bold",
+          "font.abril-fatface",
+          "font.montserrat-bold",
+          "font.bebas-neue",
+          "font.oswald",
+          "font.amatic-sc-bold"
+        ]
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "product.porch-leaner",
+      "category": "product",
+      "label": "Porch leaner (vertical)",
+      "description": "",
+      "enabled": true,
+      "stock_status": "in_stock",
+      "sort_order": 40,
+      "price_type": "none",
+      "price_value": 0,
+      "applies_to": null,
+      "values": {
+        "layout": "vertical",
+        "default_height_in": 46,
+        "lines": [
+          {
+            "role": "main",
+            "text": "WELCOME"
+          },
+          {
+            "role": "small",
+            "text": "",
+            "optional": true,
+            "placement": "bottom"
+          }
+        ],
+        "allowed_styles": [
+          "style.one-piece",
+          "style.layered"
+        ],
+        "allowed_sizes": [
+          "size.leaner-h36",
+          "size.leaner-h42",
+          "size.leaner-h46"
+        ],
+        "allowed_fonts": [
+          "font.pacifico",
+          "font.lobster",
+          "font.kaushan-script",
+          "font.yellowtail",
+          "font.dancing-script-bold",
+          "font.satisfy",
+          "font.great-vibes",
+          "font.alex-brush",
+          "font.playfair-display-bold",
+          "font.abril-fatface",
+          "font.montserrat-bold",
+          "font.bebas-neue",
+          "font.oswald",
+          "font.amatic-sc-bold"
+        ]
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "product.round-door",
+      "category": "product",
+      "label": "Round door sign",
+      "description": "",
+      "enabled": true,
+      "stock_status": "in_stock",
+      "sort_order": 50,
+      "price_type": "none",
+      "price_value": 0,
+      "applies_to": null,
+      "values": {
+        "layout": "horizontal",
+        "default_width_in": 18,
+        "lines": [
+          {
+            "role": "main",
+            "text": "Welcome"
+          }
+        ],
+        "allowed_styles": [
+          "style.letters-on-backer",
+          "style.stencil"
+        ],
+        "forced_backer": "backer.circle",
+        "allowed_sizes": [
+          "size.w12",
+          "size.w18"
+        ],
+        "allowed_fonts": [
+          "font.pacifico",
+          "font.lobster",
+          "font.kaushan-script",
+          "font.yellowtail",
+          "font.dancing-script-bold",
+          "font.satisfy",
+          "font.great-vibes",
+          "font.alex-brush",
+          "font.playfair-display-bold",
+          "font.abril-fatface",
+          "font.montserrat-bold",
+          "font.bebas-neue",
+          "font.oswald",
+          "font.amatic-sc-bold"
+        ]
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "product.custom-text",
+      "category": "product",
+      "label": "Custom text",
+      "description": "",
+      "enabled": true,
+      "stock_status": "in_stock",
+      "sort_order": 60,
+      "price_type": "none",
+      "price_value": 0,
+      "applies_to": null,
+      "values": {
+        "layout": "horizontal",
+        "default_width_in": 24,
+        "max_lines": 3,
+        "lines": [
+          {
+            "role": "main",
+            "text": "Your text"
+          }
+        ],
+        "allowed_styles": [
+          "style.one-piece",
+          "style.layered",
+          "style.letters-on-backer",
+          "style.stencil"
+        ],
+        "allowed_sizes": [
+          "size.w12",
+          "size.w18",
+          "size.w24",
+          "size.w30",
+          "size.w36",
+          "size.w40",
+          "size.w44",
+          "size.w46"
+        ],
+        "allowed_fonts": [
+          "font.pacifico",
+          "font.lobster",
+          "font.kaushan-script",
+          "font.yellowtail",
+          "font.dancing-script-bold",
+          "font.satisfy",
+          "font.great-vibes",
+          "font.alex-brush",
+          "font.playfair-display-bold",
+          "font.abril-fatface",
+          "font.montserrat-bold",
+          "font.bebas-neue",
+          "font.oswald",
+          "font.amatic-sc-bold"
+        ]
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "style.one-piece",
+      "category": "style",
+      "label": "One-piece word",
+      "description": "Letters welded or bridged into one piece that hangs on its own",
+      "enabled": true,
+      "stock_status": "in_stock",
+      "sort_order": 10,
+      "price_type": "none",
+      "price_value": 0,
+      "applies_to": null,
+      "values": {
+        "expected_pieces": "one",
+        "default": true
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "style.layered",
+      "category": "style",
+      "label": "Layered two-tone",
+      "description": "One-piece word on top of a matching outline layer 0.25 in larger, in a second colour",
+      "enabled": true,
+      "stock_status": "in_stock",
+      "sort_order": 20,
+      "price_type": "flat",
+      "price_value": 3000,
+      "applies_to": null,
+      "values": {
+        "expected_pieces": "two",
+        "colour_pieces": [
+          "top",
+          "outline"
+        ]
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "style.letters-on-backer",
+      "category": "style",
+      "label": "Letters on backer",
+      "description": "Letters cut separately and glued to a backer; the backer gets an engraved placement guide",
+      "enabled": true,
+      "stock_status": "in_stock",
+      "sort_order": 30,
+      "price_type": "flat",
+      "price_value": 4000,
+      "applies_to": null,
+      "values": {
+        "expected_pieces": "backer_plus_letters",
+        "colour_pieces": [
+          "letters",
+          "backer"
+        ],
+        "needs_backer": true
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "style.stencil",
+      "category": "style",
+      "label": "Stencil panel",
+      "description": "Letters cut out of a solid panel, with bridges so letter centres stay in",
+      "enabled": true,
+      "stock_status": "in_stock",
+      "sort_order": 40,
+      "price_type": "flat",
+      "price_value": 2000,
+      "applies_to": null,
+      "values": {
+        "expected_pieces": "one_panel",
+        "colour_pieces": [
+          "panel"
+        ],
+        "needs_backer": true
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "backer.rectangle",
+      "category": "backer_shape",
+      "label": "Rectangle",
+      "description": "",
+      "enabled": true,
+      "stock_status": "in_stock",
+      "sort_order": 10,
+      "price_type": "none",
+      "price_value": 0,
+      "applies_to": [
+        "style.letters-on-backer",
+        "style.stencil",
+        "product.round-door"
+      ],
+      "values": {
+        "shape": "rectangle"
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "backer.rounded-rectangle",
+      "category": "backer_shape",
+      "label": "Rounded rectangle (1 in corners)",
+      "description": "",
+      "enabled": true,
+      "stock_status": "in_stock",
+      "sort_order": 20,
+      "price_type": "none",
+      "price_value": 0,
+      "applies_to": [
+        "style.letters-on-backer",
+        "style.stencil",
+        "product.round-door"
+      ],
+      "values": {
+        "shape": "rounded_rectangle",
+        "corner_radius_in": 1
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "backer.plank",
+      "category": "backer_shape",
+      "label": "Plank look (engraved board lines)",
+      "description": "",
+      "enabled": true,
+      "stock_status": "in_stock",
+      "sort_order": 30,
+      "price_type": "flat",
+      "price_value": 1000,
+      "applies_to": [
+        "style.letters-on-backer",
+        "style.stencil",
+        "product.round-door"
+      ],
+      "values": {
+        "shape": "plank",
+        "plank_width_in": 5.5
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "backer.arch-top",
+      "category": "backer_shape",
+      "label": "Arch top",
+      "description": "",
+      "enabled": true,
+      "stock_status": "in_stock",
+      "sort_order": 40,
+      "price_type": "flat",
+      "price_value": 500,
+      "applies_to": [
+        "style.letters-on-backer",
+        "style.stencil",
+        "product.round-door"
+      ],
+      "values": {
+        "shape": "arch_top"
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "backer.oval",
+      "category": "backer_shape",
+      "label": "Oval",
+      "description": "",
+      "enabled": true,
+      "stock_status": "in_stock",
+      "sort_order": 50,
+      "price_type": "none",
+      "price_value": 0,
+      "applies_to": [
+        "style.letters-on-backer",
+        "style.stencil",
+        "product.round-door"
+      ],
+      "values": {
+        "shape": "oval"
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "backer.circle",
+      "category": "backer_shape",
+      "label": "Circle",
+      "description": "",
+      "enabled": true,
+      "stock_status": "in_stock",
+      "sort_order": 60,
+      "price_type": "none",
+      "price_value": 0,
+      "applies_to": [
+        "style.letters-on-backer",
+        "style.stencil",
+        "product.round-door"
+      ],
+      "values": {
+        "shape": "circle"
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "size.w12",
+      "category": "size",
+      "label": "12 in wide",
+      "description": "Shelf, desk, small door",
+      "enabled": true,
+      "stock_status": "in_stock",
+      "sort_order": 10,
+      "price_type": "flat",
+      "price_value": 3500,
+      "applies_to": null,
+      "values": {
+        "kind": "width",
+        "width_in": 12
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "size.w18",
+      "category": "size",
+      "label": "18 in wide",
+      "description": "Door, small wall",
+      "enabled": true,
+      "stock_status": "in_stock",
+      "sort_order": 20,
+      "price_type": "flat",
+      "price_value": 4500,
+      "applies_to": null,
+      "values": {
+        "kind": "width",
+        "width_in": 18
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "size.w24",
+      "category": "size",
+      "label": "24 in wide",
+      "description": "Entryway",
+      "enabled": true,
+      "stock_status": "in_stock",
+      "sort_order": 30,
+      "price_type": "flat",
+      "price_value": 5500,
+      "applies_to": null,
+      "values": {
+        "kind": "width",
+        "width_in": 24
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "size.w30",
+      "category": "size",
+      "label": "30 in wide",
+      "description": "Porch, mantel",
+      "enabled": true,
+      "stock_status": "in_stock",
+      "sort_order": 40,
+      "price_type": "flat",
+      "price_value": 6500,
+      "applies_to": null,
+      "values": {
+        "kind": "width",
+        "width_in": 30
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "size.w36",
+      "category": "size",
+      "label": "36 in wide",
+      "description": "Nursery wall, porch",
+      "enabled": true,
+      "stock_status": "in_stock",
+      "sort_order": 50,
+      "price_type": "flat",
+      "price_value": 7500,
+      "applies_to": null,
+      "values": {
+        "kind": "width",
+        "width_in": 36
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "size.w40",
+      "category": "size",
+      "label": "40 in wide",
+      "description": "Large wall",
+      "enabled": true,
+      "stock_status": "in_stock",
+      "sort_order": 60,
+      "price_type": "flat",
+      "price_value": 8500,
+      "applies_to": null,
+      "values": {
+        "kind": "width",
+        "width_in": 40
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "size.w44",
+      "category": "size",
+      "label": "44 in wide",
+      "description": "Statement piece",
+      "enabled": true,
+      "stock_status": "in_stock",
+      "sort_order": 70,
+      "price_type": "flat",
+      "price_value": 9500,
+      "applies_to": null,
+      "values": {
+        "kind": "width",
+        "width_in": 44
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "size.w46",
+      "category": "size",
+      "label": "46 in wide",
+      "description": "Largest a panel allows",
+      "enabled": false,
+      "stock_status": "in_stock",
+      "sort_order": 80,
+      "price_type": "flat",
+      "price_value": 10500,
+      "applies_to": null,
+      "values": {
+        "kind": "width",
+        "width_in": 46
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "size.custom",
+      "category": "size",
+      "label": "Custom width",
+      "description": "Priced between the two nearest presets, rounded up to the next $5",
+      "enabled": true,
+      "stock_status": "in_stock",
+      "sort_order": 90,
+      "price_type": "none",
+      "price_value": 0,
+      "applies_to": null,
+      "values": {
+        "kind": "custom_width",
+        "min_width_in": 10,
+        "round_up_to_cents": 500
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "size.leaner-h36",
+      "category": "size",
+      "label": "36 in tall (leaner)",
+      "description": "",
+      "enabled": true,
+      "stock_status": "in_stock",
+      "sort_order": 100,
+      "price_type": "flat",
+      "price_value": 6500,
+      "applies_to": [
+        "product.porch-leaner"
+      ],
+      "values": {
+        "kind": "height",
+        "height_in": 36
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "size.leaner-h42",
+      "category": "size",
+      "label": "42 in tall (leaner)",
+      "description": "",
+      "enabled": true,
+      "stock_status": "in_stock",
+      "sort_order": 110,
+      "price_type": "flat",
+      "price_value": 7500,
+      "applies_to": [
+        "product.porch-leaner"
+      ],
+      "values": {
+        "kind": "height",
+        "height_in": 42
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "size.leaner-h46",
+      "category": "size",
+      "label": "46 in tall (leaner)",
+      "description": "",
+      "enabled": true,
+      "stock_status": "in_stock",
+      "sort_order": 120,
+      "price_type": "flat",
+      "price_value": 8500,
+      "applies_to": [
+        "product.porch-leaner"
+      ],
+      "values": {
+        "kind": "height",
+        "height_in": 46
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "material.birch-6mm",
+      "category": "material",
+      "label": "Birch plywood 1/4 in",
+      "description": "Everything: one-piece words, leaners, backers, stencil panels",
+      "enabled": true,
+      "stock_status": "in_stock",
+      "sort_order": 10,
+      "price_type": "none",
+      "price_value": 0,
+      "applies_to": null,
+      "values": {
+        "thickness_in": 0.25,
+        "thickness_label": "1/4 in (6 mm)",
+        "kerf_in": 0.008,
+        "min_feature_in": 0.1875,
+        "sheet_cost_cents": 2500,
+        "indoor_only": false,
+        "grain_lock": true,
+        "passes": 1,
+        "cut_speed_in_min": null,
+        "lightburn_name": "Birch plywood 1/4 in",
+        "file_tag": "Birch-6mm",
+        "preview_hex": "#E3C9A0",
+        "allowed_pieces": [
+          "letters",
+          "backer",
+          "top",
+          "outline",
+          "panel"
+        ]
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "material.maple-6mm",
+      "category": "material",
+      "label": "Maple plywood 1/4 in",
+      "description": "Premium option, same uses as birch",
+      "enabled": true,
+      "stock_status": "in_stock",
+      "sort_order": 20,
+      "price_type": "flat",
+      "price_value": 1000,
+      "applies_to": null,
+      "values": {
+        "thickness_in": 0.25,
+        "thickness_label": "1/4 in (6 mm)",
+        "kerf_in": 0.008,
+        "min_feature_in": 0.1875,
+        "sheet_cost_cents": 3500,
+        "indoor_only": false,
+        "grain_lock": true,
+        "passes": 1,
+        "cut_speed_in_min": null,
+        "lightburn_name": "Maple plywood 1/4 in",
+        "file_tag": "Maple-6mm",
+        "preview_hex": "#EBD7B5",
+        "allowed_pieces": [
+          "letters",
+          "backer",
+          "top",
+          "outline",
+          "panel"
+        ]
+      },
+      "internal_notes": "Maple can blotch under stain; use a pre-stain conditioner."
+    },
+    {
+      "id": "material.birch-3mm",
+      "category": "material",
+      "label": "Birch plywood 1/8 in",
+      "description": "Separate letters, layered top piece",
+      "enabled": false,
+      "stock_status": "in_stock",
+      "sort_order": 30,
+      "price_type": "none",
+      "price_value": 0,
+      "applies_to": null,
+      "values": {
+        "thickness_in": 0.125,
+        "thickness_label": "1/8 in (3 mm)",
+        "kerf_in": 0.006,
+        "min_feature_in": 0.125,
+        "sheet_cost_cents": null,
+        "indoor_only": false,
+        "grain_lock": true,
+        "passes": 1,
+        "cut_speed_in_min": null,
+        "lightburn_name": "Birch plywood 1/8 in",
+        "file_tag": "Birch-3mm",
+        "preview_hex": "#E3C9A0",
+        "allowed_pieces": [
+          "letters",
+          "top"
+        ]
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "material.mdf-6mm",
+      "category": "material",
+      "label": "MDF, paint grade 1/4 in",
+      "description": "Painted words, indoor only",
+      "enabled": false,
+      "stock_status": "in_stock",
+      "sort_order": 40,
+      "price_type": "flat",
+      "price_value": -500,
+      "applies_to": null,
+      "values": {
+        "thickness_in": 0.25,
+        "thickness_label": "1/4 in (6 mm)",
+        "kerf_in": 0.008,
+        "min_feature_in": 0.25,
+        "sheet_cost_cents": null,
+        "indoor_only": true,
+        "grain_lock": false,
+        "passes": 1,
+        "cut_speed_in_min": null,
+        "lightburn_name": "MDF 1/4 in",
+        "file_tag": "MDF-6mm",
+        "preview_hex": "#B8A487",
+        "allowed_pieces": [
+          "letters",
+          "backer",
+          "top",
+          "outline",
+          "panel"
+        ]
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "material.birch-12mm",
+      "category": "material",
+      "label": "Birch plywood 1/2 in",
+      "description": "Heavy backers",
+      "enabled": false,
+      "stock_status": "in_stock",
+      "sort_order": 50,
+      "price_type": "flat",
+      "price_value": 2500,
+      "applies_to": null,
+      "values": {
+        "thickness_in": 0.5,
+        "thickness_label": "1/2 in (12 mm)",
+        "kerf_in": 0.012,
+        "min_feature_in": 0.25,
+        "sheet_cost_cents": null,
+        "indoor_only": false,
+        "grain_lock": true,
+        "passes": 1,
+        "cut_speed_in_min": null,
+        "lightburn_name": "Birch plywood 1/2 in",
+        "file_tag": "Birch-12mm",
+        "preview_hex": "#E3C9A0",
+        "allowed_pieces": [
+          "backer",
+          "panel"
+        ]
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "finish.raw",
+      "category": "finish_type",
+      "label": "Raw wood",
+      "description": "Sanded, no colour",
+      "enabled": true,
+      "stock_status": "in_stock",
+      "sort_order": 10,
+      "price_type": "none",
+      "price_value": 0,
+      "applies_to": null,
+      "values": {
+        "colour_kinds": []
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "finish.stained",
+      "category": "finish_type",
+      "label": "Stained",
+      "description": "One stain colour",
+      "enabled": true,
+      "stock_status": "in_stock",
+      "sort_order": 20,
+      "price_type": "flat",
+      "price_value": 1000,
+      "applies_to": null,
+      "values": {
+        "colour_kinds": [
+          "stain"
+        ]
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "finish.painted",
+      "category": "finish_type",
+      "label": "Painted, one colour",
+      "description": "One paint colour",
+      "enabled": true,
+      "stock_status": "in_stock",
+      "sort_order": 30,
+      "price_type": "flat",
+      "price_value": 1500,
+      "applies_to": null,
+      "values": {
+        "colour_kinds": [
+          "paint"
+        ]
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "finish.two-tone",
+      "category": "finish_type",
+      "label": "Two-tone",
+      "description": "Two colours: paint + paint, or paint + stain",
+      "enabled": true,
+      "stock_status": "in_stock",
+      "sort_order": 40,
+      "price_type": "flat",
+      "price_value": 2500,
+      "applies_to": null,
+      "values": {
+        "colour_kinds": [
+          "paint",
+          "paint_or_stain"
+        ]
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "paint.white",
+      "category": "paint",
+      "label": "White",
+      "description": "",
+      "enabled": true,
+      "stock_status": "in_stock",
+      "sort_order": 10,
+      "price_type": "flat",
+      "price_value": 500,
+      "applies_to": null,
+      "values": {
+        "hex": "#F5F5F2"
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "paint.cream",
+      "category": "paint",
+      "label": "Cream",
+      "description": "",
+      "enabled": false,
+      "stock_status": "in_stock",
+      "sort_order": 20,
+      "price_type": "flat",
+      "price_value": 500,
+      "applies_to": null,
+      "values": {
+        "hex": "#EFE6D2"
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "paint.black",
+      "category": "paint",
+      "label": "Black",
+      "description": "",
+      "enabled": true,
+      "stock_status": "in_stock",
+      "sort_order": 30,
+      "price_type": "flat",
+      "price_value": 500,
+      "applies_to": null,
+      "values": {
+        "hex": "#1E1E1E"
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "paint.charcoal",
+      "category": "paint",
+      "label": "Charcoal",
+      "description": "",
+      "enabled": false,
+      "stock_status": "in_stock",
+      "sort_order": 40,
+      "price_type": "flat",
+      "price_value": 500,
+      "applies_to": null,
+      "values": {
+        "hex": "#3A3D40"
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "paint.navy",
+      "category": "paint",
+      "label": "Navy",
+      "description": "",
+      "enabled": false,
+      "stock_status": "in_stock",
+      "sort_order": 50,
+      "price_type": "flat",
+      "price_value": 500,
+      "applies_to": null,
+      "values": {
+        "hex": "#1F2A44"
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "paint.dusty-blue",
+      "category": "paint",
+      "label": "Dusty blue",
+      "description": "",
+      "enabled": false,
+      "stock_status": "in_stock",
+      "sort_order": 60,
+      "price_type": "flat",
+      "price_value": 500,
+      "applies_to": null,
+      "values": {
+        "hex": "#7A93AC"
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "paint.sage-green",
+      "category": "paint",
+      "label": "Sage green",
+      "description": "",
+      "enabled": false,
+      "stock_status": "in_stock",
+      "sort_order": 70,
+      "price_type": "flat",
+      "price_value": 500,
+      "applies_to": null,
+      "values": {
+        "hex": "#9CAF88"
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "paint.forest-green",
+      "category": "paint",
+      "label": "Forest green",
+      "description": "",
+      "enabled": false,
+      "stock_status": "in_stock",
+      "sort_order": 80,
+      "price_type": "flat",
+      "price_value": 500,
+      "applies_to": null,
+      "values": {
+        "hex": "#2F4A3A"
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "paint.blush-pink",
+      "category": "paint",
+      "label": "Blush pink",
+      "description": "",
+      "enabled": false,
+      "stock_status": "in_stock",
+      "sort_order": 90,
+      "price_type": "flat",
+      "price_value": 500,
+      "applies_to": null,
+      "values": {
+        "hex": "#E8C4C0"
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "paint.terracotta",
+      "category": "paint",
+      "label": "Terracotta",
+      "description": "",
+      "enabled": false,
+      "stock_status": "in_stock",
+      "sort_order": 100,
+      "price_type": "flat",
+      "price_value": 500,
+      "applies_to": null,
+      "values": {
+        "hex": "#C46A4A"
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "paint.gold-metallic",
+      "category": "paint",
+      "label": "Gold metallic",
+      "description": "",
+      "enabled": false,
+      "stock_status": "in_stock",
+      "sort_order": 110,
+      "price_type": "flat",
+      "price_value": 500,
+      "applies_to": null,
+      "values": {
+        "hex": "#C9A44C"
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "paint.silver-metallic",
+      "category": "paint",
+      "label": "Silver metallic",
+      "description": "",
+      "enabled": false,
+      "stock_status": "in_stock",
+      "sort_order": 120,
+      "price_type": "flat",
+      "price_value": 500,
+      "applies_to": null,
+      "values": {
+        "hex": "#B9BCC0"
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "paint.copper-metallic",
+      "category": "paint",
+      "label": "Copper metallic",
+      "description": "",
+      "enabled": false,
+      "stock_status": "in_stock",
+      "sort_order": 130,
+      "price_type": "flat",
+      "price_value": 500,
+      "applies_to": null,
+      "values": {
+        "hex": "#B87333"
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "paint.custom",
+      "category": "paint",
+      "label": "Custom colour match",
+      "description": "Customer types a name or code",
+      "enabled": false,
+      "stock_status": "in_stock",
+      "sort_order": 140,
+      "price_type": "flat",
+      "price_value": 1500,
+      "applies_to": null,
+      "values": {
+        "hex": "#CCCCCC",
+        "custom": true
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "stain.natural-clear",
+      "category": "stain",
+      "label": "Natural (clear)",
+      "description": "",
+      "enabled": false,
+      "stock_status": "in_stock",
+      "sort_order": 10,
+      "price_type": "none",
+      "price_value": 0,
+      "applies_to": null,
+      "values": {
+        "hex": "#D9B98C"
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "stain.golden-oak",
+      "category": "stain",
+      "label": "Golden oak",
+      "description": "",
+      "enabled": false,
+      "stock_status": "in_stock",
+      "sort_order": 20,
+      "price_type": "none",
+      "price_value": 0,
+      "applies_to": null,
+      "values": {
+        "hex": "#B5803F"
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "stain.early-american",
+      "category": "stain",
+      "label": "Early American",
+      "description": "",
+      "enabled": false,
+      "stock_status": "in_stock",
+      "sort_order": 30,
+      "price_type": "none",
+      "price_value": 0,
+      "applies_to": null,
+      "values": {
+        "hex": "#8A5A33"
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "stain.provincial",
+      "category": "stain",
+      "label": "Provincial",
+      "description": "",
+      "enabled": false,
+      "stock_status": "in_stock",
+      "sort_order": 40,
+      "price_type": "none",
+      "price_value": 0,
+      "applies_to": null,
+      "values": {
+        "hex": "#7A4E2D"
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "stain.special-walnut",
+      "category": "stain",
+      "label": "Special walnut",
+      "description": "",
+      "enabled": false,
+      "stock_status": "in_stock",
+      "sort_order": 50,
+      "price_type": "none",
+      "price_value": 0,
+      "applies_to": null,
+      "values": {
+        "hex": "#6B4429"
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "stain.dark-walnut",
+      "category": "stain",
+      "label": "Dark walnut",
+      "description": "",
+      "enabled": false,
+      "stock_status": "in_stock",
+      "sort_order": 60,
+      "price_type": "none",
+      "price_value": 0,
+      "applies_to": null,
+      "values": {
+        "hex": "#4B3020"
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "stain.red-mahogany",
+      "category": "stain",
+      "label": "Red mahogany",
+      "description": "",
+      "enabled": false,
+      "stock_status": "in_stock",
+      "sort_order": 70,
+      "price_type": "none",
+      "price_value": 0,
+      "applies_to": null,
+      "values": {
+        "hex": "#6E2E22"
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "stain.espresso",
+      "category": "stain",
+      "label": "Espresso",
+      "description": "",
+      "enabled": false,
+      "stock_status": "in_stock",
+      "sort_order": 80,
+      "price_type": "none",
+      "price_value": 0,
+      "applies_to": null,
+      "values": {
+        "hex": "#2B1E16"
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "stain.weathered-grey",
+      "category": "stain",
+      "label": "Weathered grey",
+      "description": "",
+      "enabled": false,
+      "stock_status": "in_stock",
+      "sort_order": 90,
+      "price_type": "none",
+      "price_value": 0,
+      "applies_to": null,
+      "values": {
+        "hex": "#8C8780"
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "stain.whitewash",
+      "category": "stain",
+      "label": "Whitewash",
+      "description": "",
+      "enabled": false,
+      "stock_status": "in_stock",
+      "sort_order": 100,
+      "price_type": "none",
+      "price_value": 0,
+      "applies_to": null,
+      "values": {
+        "hex": "#E6DFD3"
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "topcoat.none",
+      "category": "topcoat",
+      "label": "None",
+      "description": "Raw wood finish only",
+      "enabled": true,
+      "stock_status": "in_stock",
+      "sort_order": 10,
+      "price_type": "none",
+      "price_value": 0,
+      "applies_to": null,
+      "values": {
+        "for_placement": [
+          "indoor"
+        ],
+        "raw_only": true
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "topcoat.matte",
+      "category": "topcoat",
+      "label": "Matte clear",
+      "description": "Indoor default",
+      "enabled": true,
+      "stock_status": "in_stock",
+      "sort_order": 20,
+      "price_type": "none",
+      "price_value": 0,
+      "applies_to": null,
+      "values": {
+        "for_placement": [
+          "indoor"
+        ],
+        "default_for": "indoor"
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "topcoat.satin",
+      "category": "topcoat",
+      "label": "Satin clear",
+      "description": "Indoor, customer choice",
+      "enabled": true,
+      "stock_status": "in_stock",
+      "sort_order": 30,
+      "price_type": "none",
+      "price_value": 0,
+      "applies_to": null,
+      "values": {
+        "for_placement": [
+          "indoor"
+        ]
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "topcoat.exterior",
+      "category": "topcoat",
+      "label": "Exterior clear (spar urethane)",
+      "description": "Added automatically for covered outdoor",
+      "enabled": true,
+      "stock_status": "in_stock",
+      "sort_order": 40,
+      "price_type": "flat",
+      "price_value": 1500,
+      "applies_to": null,
+      "values": {
+        "for_placement": [
+          "covered_outdoor"
+        ],
+        "default_for": "covered_outdoor",
+        "automatic": true
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "placement.indoor",
+      "category": "placement",
+      "label": "Indoor",
+      "description": "",
+      "enabled": true,
+      "stock_status": "in_stock",
+      "sort_order": 10,
+      "price_type": "none",
+      "price_value": 0,
+      "applies_to": null,
+      "values": {
+        "key": "indoor"
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "placement.covered-outdoor",
+      "category": "placement",
+      "label": "Covered outdoor (porch, under an overhang)",
+      "description": "",
+      "enabled": true,
+      "stock_status": "in_stock",
+      "sort_order": 20,
+      "price_type": "none",
+      "price_value": 0,
+      "applies_to": null,
+      "values": {
+        "key": "covered_outdoor",
+        "hides_indoor_only_materials": true
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "placement.uncovered-outdoor",
+      "category": "placement",
+      "label": "Uncovered outdoor",
+      "description": "Only with exterior-grade material",
+      "enabled": false,
+      "stock_status": "in_stock",
+      "sort_order": 30,
+      "price_type": "none",
+      "price_value": 0,
+      "applies_to": null,
+      "values": {
+        "key": "uncovered_outdoor",
+        "hides_indoor_only_materials": true
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "font.pacifico",
+      "category": "font",
+      "label": "Pacifico",
+      "description": "Thick connected script. Best for: Welcome, names",
+      "enabled": true,
+      "stock_status": "in_stock",
+      "sort_order": 10,
+      "price_type": "none",
+      "price_value": 0,
+      "applies_to": null,
+      "values": {
+        "font_file": "Pacifico-Regular.ttf",
+        "licence_file": "Pacifico-Regular.LICENSE.txt",
+        "licence_confirmed": true,
+        "allowed_lines": [
+          "top",
+          "main"
+        ],
+        "auto_thicken_in": 0,
+        "weld_mode": "script"
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "font.lobster",
+      "category": "font",
+      "label": "Lobster",
+      "description": "Thick connected script. Best for: Names",
+      "enabled": true,
+      "stock_status": "in_stock",
+      "sort_order": 20,
+      "price_type": "none",
+      "price_value": 0,
+      "applies_to": null,
+      "values": {
+        "font_file": "Lobster-Regular.ttf",
+        "licence_file": "Lobster-Regular.LICENSE.txt",
+        "licence_confirmed": true,
+        "allowed_lines": [
+          "top",
+          "main"
+        ],
+        "auto_thicken_in": 0,
+        "weld_mode": "script"
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "font.kaushan-script",
+      "category": "font",
+      "label": "Kaushan Script",
+      "description": "Brush script. Best for: Welcome",
+      "enabled": true,
+      "stock_status": "in_stock",
+      "sort_order": 30,
+      "price_type": "none",
+      "price_value": 0,
+      "applies_to": null,
+      "values": {
+        "font_file": "KaushanScript-Regular.ttf",
+        "licence_file": "KaushanScript-Regular.LICENSE.txt",
+        "licence_confirmed": true,
+        "allowed_lines": [
+          "top",
+          "main"
+        ],
+        "auto_thicken_in": 0,
+        "weld_mode": "script"
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "font.yellowtail",
+      "category": "font",
+      "label": "Yellowtail",
+      "description": "Connected script. Best for: Names",
+      "enabled": true,
+      "stock_status": "in_stock",
+      "sort_order": 40,
+      "price_type": "none",
+      "price_value": 0,
+      "applies_to": null,
+      "values": {
+        "font_file": "Yellowtail-Regular.ttf",
+        "licence_file": "Yellowtail-Regular.LICENSE.txt",
+        "licence_confirmed": true,
+        "allowed_lines": [
+          "top",
+          "main"
+        ],
+        "auto_thicken_in": 0.02,
+        "weld_mode": "script"
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "font.dancing-script-bold",
+      "category": "font",
+      "label": "Dancing Script Bold",
+      "description": "Connected script. Best for: Nursery names",
+      "enabled": true,
+      "stock_status": "in_stock",
+      "sort_order": 50,
+      "price_type": "none",
+      "price_value": 0,
+      "applies_to": null,
+      "values": {
+        "font_file": "DancingScript-Bold.ttf",
+        "licence_file": "DancingScript-Bold.LICENSE.txt",
+        "licence_confirmed": true,
+        "allowed_lines": [
+          "top",
+          "main"
+        ],
+        "auto_thicken_in": 0.02,
+        "weld_mode": "script"
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "font.satisfy",
+      "category": "font",
+      "label": "Satisfy",
+      "description": "Connected script. Best for: Welcome",
+      "enabled": true,
+      "stock_status": "in_stock",
+      "sort_order": 60,
+      "price_type": "none",
+      "price_value": 0,
+      "applies_to": null,
+      "values": {
+        "font_file": "Satisfy-Regular.ttf",
+        "licence_file": "Satisfy-Regular.LICENSE.txt",
+        "licence_confirmed": true,
+        "allowed_lines": [
+          "top",
+          "main"
+        ],
+        "auto_thicken_in": 0.03,
+        "weld_mode": "script"
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "font.great-vibes",
+      "category": "font",
+      "label": "Great Vibes",
+      "description": "Thin formal script. Best for: Formal, weddings",
+      "enabled": false,
+      "stock_status": "in_stock",
+      "sort_order": 70,
+      "price_type": "none",
+      "price_value": 0,
+      "applies_to": null,
+      "values": {
+        "font_file": "GreatVibes-Regular.ttf",
+        "licence_file": "GreatVibes-Regular.LICENSE.txt",
+        "licence_confirmed": true,
+        "allowed_lines": [
+          "top",
+          "main"
+        ],
+        "auto_thicken_in": 0.04,
+        "weld_mode": "script"
+      },
+      "internal_notes": "Thin font: off until a test cut proves it holds together"
+    },
+    {
+      "id": "font.alex-brush",
+      "category": "font",
+      "label": "Alex Brush",
+      "description": "Thin script. Best for: Formal",
+      "enabled": false,
+      "stock_status": "in_stock",
+      "sort_order": 80,
+      "price_type": "none",
+      "price_value": 0,
+      "applies_to": null,
+      "values": {
+        "font_file": "AlexBrush-Regular.ttf",
+        "licence_file": "AlexBrush-Regular.LICENSE.txt",
+        "licence_confirmed": true,
+        "allowed_lines": [
+          "top",
+          "main"
+        ],
+        "auto_thicken_in": 0.04,
+        "weld_mode": "script"
+      },
+      "internal_notes": "Thin font: off until a test cut proves it holds together"
+    },
+    {
+      "id": "font.playfair-display-bold",
+      "category": "font",
+      "label": "Playfair Display Bold",
+      "description": "Serif. Best for: Family names, \"Est.\" line",
+      "enabled": true,
+      "stock_status": "in_stock",
+      "sort_order": 90,
+      "price_type": "none",
+      "price_value": 0,
+      "applies_to": null,
+      "values": {
+        "font_file": "PlayfairDisplay-Bold.ttf",
+        "licence_file": "PlayfairDisplay-Bold.LICENSE.txt",
+        "licence_confirmed": true,
+        "allowed_lines": [
+          "top",
+          "main",
+          "small"
+        ],
+        "auto_thicken_in": 0,
+        "weld_mode": "block"
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "font.abril-fatface",
+      "category": "font",
+      "label": "Abril Fatface",
+      "description": "Heavy serif. Best for: Bold names",
+      "enabled": true,
+      "stock_status": "in_stock",
+      "sort_order": 100,
+      "price_type": "none",
+      "price_value": 0,
+      "applies_to": null,
+      "values": {
+        "font_file": "AbrilFatface-Regular.ttf",
+        "licence_file": "AbrilFatface-Regular.LICENSE.txt",
+        "licence_confirmed": true,
+        "allowed_lines": [
+          "main"
+        ],
+        "auto_thicken_in": 0,
+        "weld_mode": "block"
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "font.montserrat-bold",
+      "category": "font",
+      "label": "Montserrat Bold",
+      "description": "Sans serif. Best for: \"Est.\" line, modern",
+      "enabled": true,
+      "stock_status": "in_stock",
+      "sort_order": 110,
+      "price_type": "none",
+      "price_value": 0,
+      "applies_to": null,
+      "values": {
+        "font_file": "Montserrat-Bold.ttf",
+        "licence_file": "Montserrat-Bold.LICENSE.txt",
+        "licence_confirmed": true,
+        "allowed_lines": [
+          "top",
+          "main",
+          "small"
+        ],
+        "auto_thicken_in": 0,
+        "weld_mode": "block"
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "font.bebas-neue",
+      "category": "font",
+      "label": "Bebas Neue",
+      "description": "Condensed capitals. Best for: Modern, farmhouse",
+      "enabled": true,
+      "stock_status": "in_stock",
+      "sort_order": 120,
+      "price_type": "none",
+      "price_value": 0,
+      "applies_to": null,
+      "values": {
+        "font_file": "BebasNeue-Regular.ttf",
+        "licence_file": "BebasNeue-Regular.LICENSE.txt",
+        "licence_confirmed": true,
+        "allowed_lines": [
+          "top",
+          "main",
+          "small"
+        ],
+        "auto_thicken_in": 0,
+        "weld_mode": "block"
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "font.oswald",
+      "category": "font",
+      "label": "Oswald",
+      "description": "Condensed sans. Best for: Small line",
+      "enabled": true,
+      "stock_status": "in_stock",
+      "sort_order": 130,
+      "price_type": "none",
+      "price_value": 0,
+      "applies_to": null,
+      "values": {
+        "font_file": "Oswald-Regular.ttf",
+        "licence_file": "Oswald-Regular.LICENSE.txt",
+        "licence_confirmed": true,
+        "allowed_lines": [
+          "small"
+        ],
+        "auto_thicken_in": 0,
+        "weld_mode": "block"
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "font.amatic-sc-bold",
+      "category": "font",
+      "label": "Amatic SC Bold",
+      "description": "Hand-drawn capitals. Best for: Farmhouse",
+      "enabled": false,
+      "stock_status": "in_stock",
+      "sort_order": 140,
+      "price_type": "none",
+      "price_value": 0,
+      "applies_to": null,
+      "values": {
+        "font_file": "AmaticSC-Bold.ttf",
+        "licence_file": "AmaticSC-Bold.LICENSE.txt",
+        "licence_confirmed": true,
+        "allowed_lines": [
+          "main",
+          "small"
+        ],
+        "auto_thicken_in": 0.03,
+        "weld_mode": "block"
+      },
+      "internal_notes": "Thin font: off until a test cut proves it holds together"
+    },
+    {
+      "id": "addon.keyholes",
+      "category": "addon",
+      "label": "Keyhole slots cut into the sign",
+      "description": "",
+      "enabled": true,
+      "stock_status": "in_stock",
+      "sort_order": 10,
+      "price_type": "none",
+      "price_value": 0,
+      "applies_to": null,
+      "values": {
+        "engine": "keyholes"
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "addon.hardware",
+      "category": "addon",
+      "label": "Sawtooth or D-ring hanging hardware",
+      "description": "",
+      "enabled": true,
+      "stock_status": "in_stock",
+      "sort_order": 20,
+      "price_type": "flat",
+      "price_value": 500,
+      "applies_to": null,
+      "values": {},
+      "internal_notes": ""
+    },
+    {
+      "id": "addon.mounting-kit",
+      "category": "addon",
+      "label": "Wall mounting kit (screws and spacers)",
+      "description": "",
+      "enabled": true,
+      "stock_status": "in_stock",
+      "sort_order": 30,
+      "price_type": "flat",
+      "price_value": 800,
+      "applies_to": null,
+      "values": {},
+      "internal_notes": ""
+    },
+    {
+      "id": "addon.engraved-small-line",
+      "category": "addon",
+      "label": "Engraved small line instead of cut",
+      "description": "For example \"Est. 2019\"",
+      "enabled": true,
+      "stock_status": "in_stock",
+      "sort_order": 40,
+      "price_type": "flat",
+      "price_value": 1000,
+      "applies_to": null,
+      "values": {
+        "engine": "engrave_small_line"
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "addon.gift-wrap",
+      "category": "addon",
+      "label": "Gift wrap",
+      "description": "",
+      "enabled": false,
+      "stock_status": "in_stock",
+      "sort_order": 50,
+      "price_type": "flat",
+      "price_value": 500,
+      "applies_to": null,
+      "values": {},
+      "internal_notes": ""
+    },
+    {
+      "id": "addon.rush",
+      "category": "addon",
+      "label": "Rush (ready in 3 days or less)",
+      "description": "",
+      "enabled": true,
+      "stock_status": "in_stock",
+      "sort_order": 60,
+      "price_type": "percent",
+      "price_value": 25,
+      "applies_to": null,
+      "values": {
+        "rush": true
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "delivery.pickup",
+      "category": "delivery",
+      "label": "Local pickup",
+      "description": "Local pickup, Sherwood Park area. We'll contact you to arrange a time.",
+      "enabled": true,
+      "stock_status": "in_stock",
+      "sort_order": 10,
+      "price_type": "none",
+      "price_value": 0,
+      "applies_to": null,
+      "values": {},
+      "internal_notes": ""
+    },
+    {
+      "id": "delivery.local",
+      "category": "delivery",
+      "label": "Local delivery",
+      "description": "Sherwood Park and Edmonton",
+      "enabled": true,
+      "stock_status": "in_stock",
+      "sort_order": 20,
+      "price_type": "flat",
+      "price_value": 1500,
+      "applies_to": null,
+      "values": {
+        "needs_address": true
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "delivery.shipping",
+      "category": "delivery",
+      "label": "Shipping",
+      "description": "Quoted by you",
+      "enabled": false,
+      "stock_status": "in_stock",
+      "sort_order": 30,
+      "price_type": "none",
+      "price_value": 0,
+      "applies_to": null,
+      "values": {
+        "needs_address": true,
+        "quoted": true
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "payment.etransfer",
+      "category": "payment_method",
+      "label": "Interac e-Transfer",
+      "description": "",
+      "enabled": true,
+      "stock_status": "in_stock",
+      "sort_order": 10,
+      "price_type": "none",
+      "price_value": 0,
+      "applies_to": null,
+      "values": {
+        "instructions": "Send an Interac e-Transfer to {payment_email} and put your order number {order_number} in the message."
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "payment.cash",
+      "category": "payment_method",
+      "label": "Cash",
+      "description": "",
+      "enabled": true,
+      "stock_status": "in_stock",
+      "sort_order": 20,
+      "price_type": "none",
+      "price_value": 0,
+      "applies_to": null,
+      "values": {
+        "instructions": "Pay cash at pickup or delivery."
+      },
+      "internal_notes": ""
+    },
+    {
+      "id": "payment.stripe",
+      "category": "payment_method",
+      "label": "Card (Stripe payment link)",
+      "description": "",
+      "enabled": false,
+      "stock_status": "in_stock",
+      "sort_order": 30,
+      "price_type": "none",
+      "price_value": 0,
+      "applies_to": null,
+      "values": {
+        "instructions": "Pay by card using the link in your email."
+      },
+      "internal_notes": ""
+    }
+  ]
+}

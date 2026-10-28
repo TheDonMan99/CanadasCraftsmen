@@ -1,0 +1,86 @@
+[
+  {
+    "file": "Pacifico-Regular.ttf",
+    "licence": "Pacifico-Regular.LICENSE.txt",
+    "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/pacifico/Pacifico-Regular.ttf",
+    "weight": null
+  },
+  {
+    "file": "Lobster-Regular.ttf",
+    "licence": "Lobster-Regular.LICENSE.txt",
+    "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/lobster/Lobster-Regular.ttf",
+    "weight": null
+  },
+  {
+    "file": "KaushanScript-Regular.ttf",
+    "licence": "KaushanScript-Regular.LICENSE.txt",
+    "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/kaushanscript/KaushanScript-Regular.ttf",
+    "weight": null
+  },
+  {
+    "file": "Yellowtail-Regular.ttf",
+    "licence": "Yellowtail-Regular.LICENSE.txt",
+    "source": "https://raw.githubusercontent.com/google/fonts/main/apache/yellowtail/Yellowtail-Regular.ttf",
+    "weight": null
+  },
+  {
+    "file": "DancingScript-Bold.ttf",
+    "licence": "DancingScript-Bold.LICENSE.txt",
+    "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/dancingscript/DancingScript[wght].ttf",
+    "weight": 700
+  },
+  {
+    "file": "Satisfy-Regular.ttf",
+    "licence": "Satisfy-Regular.LICENSE.txt",
+    "source": "https://raw.githubusercontent.com/google/fonts/main/apache/satisfy/Satisfy-Regular.ttf",
+    "weight": null
+  },
+  {
+    "file": "GreatVibes-Regular.ttf",
+    "licence": "GreatVibes-Regular.LICENSE.txt",
+    "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/greatvibes/GreatVibes-Regular.ttf",
+    "weight": null
+  },
+  {
+    "file": "AlexBrush-Regular.ttf",
+    "licence": "AlexBrush-Regular.LICENSE.txt",
+    "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/alexbrush/AlexBrush-Regular.ttf",
+    "weight": null
+  },
+  {
+    "file": "PlayfairDisplay-Bold.ttf",
+    "licence": "PlayfairDisplay-Bold.LICENSE.txt",
+    "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/playfairdisplay/PlayfairDisplay[wght].ttf",
+    "weight": 700
+  },
+  {
+    "file": "AbrilFatface-Regular.ttf",
+    "licence": "AbrilFatface-Regular.LICENSE.txt",
+    "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/abrilfatface/AbrilFatface-Regular.ttf",
+    "weight": null
+  },
+  {
+    "file": "Montserrat-Bold.ttf",
+    "licence": "Montserrat-Bold.LICENSE.txt",
+    "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/montserrat/Montserrat[wght].ttf",
+    "weight": 700
+  },
+  {
+    "file": "BebasNeue-Regular.ttf",
+    "licence": "BebasNeue-Regular.LICENSE.txt",
+    "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/bebasneue/BebasNeue-Regular.ttf",
+    "weight": null
+  },
+  {
+    "file": "Oswald-Regular.ttf",
+    "licence": "Oswald-Regular.LICENSE.txt",
+    "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/oswald/Oswald[wght].ttf",
+    "weight": 400
+  },
+  {
+    "file": "AmaticSC-Bold.ttf",
+    "licence": "AmaticSC-Bold.LICENSE.txt",
+    "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/amaticsc/AmaticSC-Bold.ttf",
+    "weight": null
+  }
+]
