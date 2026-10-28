@@ -15,7 +15,7 @@ const dir = process.env.LOCAL_DB_DIR ?? '.local-db';
 
 async function main() {
   const pg = new PGlite(dir === 'memory' ? undefined : dir);
-  await pg.exec("do $$ begin create role anon; exception when duplicate_object then null; end $$; do $$ begin create role authenticated; exception when duplicate_object then null; end $$;");
+  await pg.exec("do $$ begin create role anon; exception when duplicate_object then null; end $$; do $$ begin create role authenticated; exception when duplicate_object then null; end $$; do $$ begin create role service_role; exception when duplicate_object then null; end $$;");
   const db = pgliteDb(pg);
   const applied = await migrate(db);
   const seeded = await seedDatabase(db, seedCatalog(), seedSettings());

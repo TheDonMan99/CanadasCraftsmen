@@ -18,16 +18,19 @@
         "lines": [
           {
             "role": "top",
-            "text": "Welcome"
+            "text": "Welcome",
+            "font": "font.pacifico"
           },
           {
             "role": "main",
-            "text": "The Smiths"
+            "text": "The Smiths",
+            "font": "font.pacifico"
           },
           {
             "role": "small",
             "text": "Est. 2019",
-            "optional": true
+            "optional": true,
+            "font": "font.montserrat-bold"
           }
         ],
         "allowed_styles": [
@@ -82,11 +85,13 @@
         "lines": [
           {
             "role": "main",
-            "text": "Smith"
+            "text": "Smith",
+            "font": "font.pacifico"
           },
           {
             "role": "small",
-            "text": "Est. 2019"
+            "text": "Est. 2019",
+            "font": "font.montserrat-bold"
           }
         ],
         "allowed_styles": [
@@ -141,7 +146,8 @@
         "lines": [
           {
             "role": "main",
-            "text": "Ava"
+            "text": "Ava",
+            "font": "font.pacifico"
           }
         ],
         "allowed_styles": [
@@ -196,13 +202,15 @@
         "lines": [
           {
             "role": "main",
-            "text": "WELCOME"
+            "text": "WELCOME",
+            "font": "font.pacifico"
           },
           {
             "role": "small",
             "text": "",
             "optional": true,
-            "placement": "bottom"
+            "placement": "bottom",
+            "font": "font.montserrat-bold"
           }
         ],
         "allowed_styles": [
@@ -250,7 +258,8 @@
         "lines": [
           {
             "role": "main",
-            "text": "Welcome"
+            "text": "Welcome",
+            "font": "font.pacifico"
           }
         ],
         "allowed_styles": [
@@ -299,7 +308,8 @@
         "lines": [
           {
             "role": "main",
-            "text": "Your text"
+            "text": "Your text",
+            "font": "font.pacifico"
           }
         ],
         "allowed_styles": [
@@ -350,7 +360,8 @@
       "applies_to": null,
       "values": {
         "expected_pieces": "one",
-        "default": true
+        "default": true,
+        "engine_style": "one_piece"
       },
       "internal_notes": ""
     },
@@ -370,7 +381,8 @@
         "colour_pieces": [
           "top",
           "outline"
-        ]
+        ],
+        "engine_style": "layered"
       },
       "internal_notes": "Off for now: two-tone signs not offered yet."
     },
@@ -391,7 +403,8 @@
           "letters",
           "backer"
         ],
-        "needs_backer": true
+        "needs_backer": true,
+        "engine_style": "letters_on_backer"
       },
       "internal_notes": ""
     },
@@ -411,7 +424,8 @@
         "colour_pieces": [
           "panel"
         ],
-        "needs_backer": true
+        "needs_backer": true,
+        "engine_style": "stencil"
       },
       "internal_notes": ""
     },

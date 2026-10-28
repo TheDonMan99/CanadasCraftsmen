@@ -4,7 +4,7 @@ A web app for designing, ordering and producing laser-cut welcome signs. Custome
 design a sign; you confirm payment; one click makes a LightBurn-ready SVG.
 `SPEC.md` is the full build spec and the source of truth.
 
-**Status:** phases 1–2 of 6 (engine and LightBurn files; catalog, settings and pricing). See `CHANGELOG.md`.
+**Status:** phases 1–3 of 6 (engine and LightBurn files; catalog, settings and pricing; order designer, orders and emails). See `CHANGELOG.md`.
 
 ## Run it on your computer
 
@@ -15,7 +15,8 @@ npm install
 npm run dev
 ```
 
-Open <http://localhost:3000/admin/lab> for the engine lab.
+Open <http://localhost:3000> for the public site and order form, and
+<http://localhost:3000/admin/lab> for the engine lab.
 
 In the lab you can:
 
@@ -66,6 +67,46 @@ Then, in a second terminal:
 DATABASE_URL=postgres://postgres@127.0.0.1:54329/postgres npm run dev
 ```
 
+## Orders (phase 3)
+
+Customers design their sign at `/design`, step by step, with the live preview
+and price above every step:
+
+product → text → fonts → size → style and material → finish and colours →
+placement and extras → proof → details.
+
+- **Proof:** the order can't be placed until the customer ticks that the
+  spelling, layout and refund policy are right.
+- **Share link:** saves the design and gives a link to send to someone else. The
+  link opens the design at the proof step.
+- **On the server**, `POST /api/orders`:
+  - checks the design against the live catalog;
+  - recalculates the price, ignoring any price the browser sends;
+  - runs the engine;
+  - checks the needed-by date against the lead time and capacity;
+  - saves the order (S-1001, S-1002, …) with a snapshot of the design and price;
+  - stores the SVG, PNG and DXF in Supabase Storage (private bucket
+    `order-files`);
+  - sends the emails. Every send is recorded in `email_log`.
+- **Emails** go through Resend:
+  - The new-order alert to you has the preview in the body and the LightBurn
+    SVG attached.
+  - The customer's "order received" email is held until you set a from address
+    on your own verified domain in Settings → Emails. Until then, alerts to you
+    come from Resend's test address.
+- **Spam protection:**
+  - a hidden honeypot field;
+  - 5 orders per device per hour;
+  - Cloudflare Turnstile, when `TURNSTILE_SITE_KEY` and `TURNSTILE_SECRET_KEY`
+    are set.
+- **Confirmation page:** `/order/S-1001/confirmation` only opens with the
+  secret token in the link the customer gets. Order numbers alone can't be
+  guessed into someone else's order.
+
+Settings → Emails edits every template's on/off switch, subject and wording.
+Settings → Spam protection and Settings → Production (lead times, capacity,
+pause switch, share links) control the rest.
+
 ## Settings and catalog
 
 - `/admin/settings/catalog`: every option in every category.
@@ -74,8 +115,8 @@ DATABASE_URL=postgres://postgres@127.0.0.1:54329/postgres npm run dev
     options.
   - Each option has its price history and a preview.
 - `/admin/settings/pricing`, `machine`, `engine`, `export`, `nesting`,
-  `production`, `payments`, `tax`, `business`, `sizes`: one page per settings
-  group.
+  `production`, `payments`, `tax`, `business`, `sizes`, `emails`, `spam`: one
+  page per settings group.
 - Every change is recorded in the audit log.
 - Price changes apply to new quotes only.
 
@@ -85,14 +126,31 @@ DATABASE_URL=postgres://postgres@127.0.0.1:54329/postgres npm run dev
 npm test
 ```
 
-This runs about 330 Vitest tests in about a minute. They cover:
+This runs about 370 Vitest tests in about two minutes. They cover:
 
 - every engine pipeline step and the exports;
 - the seed catalog;
 - every spec test name in every enabled font at 24 and 36 in;
 - the price calculator, including five hand-calculated orders;
 - the database (schema, seed, edits, price history, append-only payments),
-  against PGlite, a real Postgres that runs inside the tests.
+  against PGlite, a real Postgres that runs inside the tests;
+- the order form's design rules and the whole order submission: price
+  tampering, spam checks, lead times, files and emails.
+
+The order flow in a real browser, at phone size (needs `npm run build` first):
+
+```bash
+npm run test:e2e
+```
+
+This test:
+
+- starts its own throwaway database and the built app;
+- designs and orders a sign;
+- checks the confirmation page, a tampered price and a share link;
+- saves screenshots to `test-output/e2e/`.
+
+It never touches Supabase, Resend or Turnstile.
 
 - Each test name must either pass or fail with the outcome recorded in
   `tests/engine/expected-outcomes.json`.
@@ -142,11 +200,46 @@ npm run typecheck
 | `supabase/migrations/` | The database schema |
 | `app/admin/settings/` | Settings pages |
 | `app/api/catalog`, `app/api/quote` | Public catalog and quote endpoints |
+| `app/design/` | The public order form (designer) |
+| `app/order/`, `app/privacy/` | Order confirmation and privacy pages |
+| `app/api/orders`, `app/api/designs` | Order submission and share links |
+| `lib/order/` | The order form's design model, dates and policy (pure) |
+| `lib/server/submit-order.ts` | Everything that happens when an order is placed |
+| `lib/email/` | Email templates |
+| `supabase/setup.sql` | The whole schema and seed, to paste into the Supabase SQL Editor |
 | `tests/` | Vitest suite |
 
 ## Deploy and back up
 
-Deployment to Vercel arrives in phase 3; this section will cover it then.
+### Vercel
+
+1. Import the GitHub repository in Vercel (Add New → Project). Vercel detects
+   Next.js; keep the defaults.
+2. Add the environment variables from `.env.example`. Use the **Transaction
+   pooler** (port 6543) for `DATABASE_URL`.
+3. Deploy. Every push to `main` deploys the live site; pushes to other branches
+   get preview links.
+4. Set `SITE_URL` to the live address, so links in emails point to it.
+
+### Database changes
+
+When a release adds a migration (a new file in `supabase/migrations/`), apply it
+in one of two ways:
+
+- run `npm run db:setup` from a computer that can reach the database; or
+- paste `supabase/setup.sql` into Supabase → SQL Editor and click **Run**.
+
+Either way is safe to repeat.
+
+### Email from your own domain
+
+1. In Resend → Domains, add your domain and add the DNS records it shows.
+2. Once Resend shows the domain as verified, set **from address** in Settings →
+   Emails, for example `orders@yourdomain.ca`.
+
+Customer emails start sending after step 2.
+
+### Back up
 
 Supabase backs up the database daily on paid plans. On the free plan, export
 the database from the Supabase dashboard yourself (Database → Backups), or use

@@ -9,6 +9,7 @@
     "start": "next start",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:e2e": "node tests/e2e/order-flow.mjs",
     "typecheck": "tsc --noEmit",
     "fonts": "python3 scripts/prepare_fonts.py",
     "db:setup": "tsx scripts/db-setup.ts",

@@ -1,5 +1,124 @@
 # Changelog
 
+## Phase 3: Order designer, orders and emails (2026-10-28)
+
+Built:
+
+- **Order form** (`/design`): a phone-first, step-by-step designer.
+  - Steps: product → text → fonts → size → style and material → finish and
+    colours → placement and extras → proof → details.
+  - The live preview and price sit above every step. The preview is drawn by
+    the same engine that makes the cut file, in a Web Worker.
+  - Only options that are on appear.
+  - Each font is shown with the customer's own text.
+  - Size presets show the height they'd give.
+  - Thin spots show in red. When a sign can't be cut, the form offers the fix:
+    a bigger size, another font, or letters on a backer.
+  - The proof shows the big preview with its size, the text letter by letter,
+    the price breakdown and the refund policy. A required box approves it.
+  - Details: name, email, phone, pickup or delivery (address if needed),
+    needed-by date (no earlier than the lead time allows), how they heard about
+    you, notes and the privacy note.
+- **Share links** (`POST /api/designs`, `/design/<id>`): save a design and send
+  the link. It opens at the proof, ready to change or order.
+- **Placing an order** (`POST /api/orders`):
+  - checks the design against the live catalog and the product's rules;
+  - recalculates the price (a price sent by the browser is ignored);
+  - runs the engine and refuses designs that can't be cut;
+  - checks the dates against lead time and capacity;
+  - saves the order (S-1001 on) with snapshots of the design, labels, price
+    breakdown and engine report, and records the proof approval time;
+  - matches repeat customers by email.
+- **Files:** each order's SVG, preview PNG and DXF go to a private Supabase
+  Storage bucket (`order-files`) and are listed in `order_files`.
+- **Emails** through Resend, each recorded in `email_log`:
+  - **New-order alert to you:** subject like "New order S-1001 · Smith · 36 in ·
+    $75 · UNPAID", the preview in the body and the LightBurn SVG attached.
+  - **Order received, to the customer:** preview, amount due, payment
+    instructions and refund policy.
+  - Customer emails are held (and logged as held) until you set a from address
+    on a verified domain. Until then, alerts to you come from Resend's test
+    address.
+  - A failed send never loses the order.
+- **Spam protection:**
+  - hidden honeypot field;
+  - 5 orders per device per hour;
+  - Cloudflare Turnstile, when its keys are set.
+- **Confirmation page** (`/order/S-1001/confirmation`): amount due, payment
+  instructions and the price breakdown. It only opens with the order's secret
+  token, so order numbers can't be guessed into someone else's order.
+- **Other pages:**
+  - the landing page shows every product drawn by the engine, with "from"
+    prices;
+  - a privacy page.
+- **Settings:**
+  - new Emails page: from address, reply-to, alert address, and every template's
+    on/off switch, subject and wording;
+  - new Spam protection page;
+  - production gains a share-link switch;
+  - business gains the privacy note and the "how did you hear" list;
+  - the settings editor now shows nested settings as fields and long text as a
+    text box, instead of raw JSON.
+- **Database:** migration `20261029000000_orders.sql` adds:
+  - the order token;
+  - a submission log for the rate limit;
+  - email-log subject and error columns;
+  - the storage bucket.
+  `supabase/setup.sql` includes it.
+- **Deploying:** fonts ship with every Vercel function. `SUPABASE_URL` works with
+  or without `/rest/v1/` on the end. `.env.example` lists every key.
+
+Tests: 367 Vitest tests passing (35 new), plus a Playwright order flow
+(`npm run test:e2e`). The new Vitest tests cover:
+
+- every product's starting design: valid, priced and cuttable;
+- options switched off disappearing;
+- dates and capacity;
+- the whole order submission against a real Postgres:
+  - a good order, with its snapshot, files and emails;
+  - a tampered price;
+  - an option that's switched off;
+  - a design that can't be cut;
+  - no proof approval;
+  - a date too early, and the same order with rush;
+  - escaping of customer text in emails;
+  - the honeypot, Turnstile, the 6th order in an hour, and the pause switch;
+  - failed email and storage.
+
+The Playwright flow runs at iPhone size:
+
+- designs a Lobster "Ava" nursery sign, 30 in, painted black, with keyholes;
+- approves the proof and places order S-1001 for $90;
+- checks the confirmation page and that a wrong token is refused;
+- checks that a tampered $1 price saves at $75;
+- checks that a share link opens at the proof.
+
+Decisions made while building:
+
+- **Capacity:** the earliest ready date moves back one week for each full week
+  of capacity already taken by open orders. Rush orders use the 3-day rush lead
+  time.
+- **Starting fonts:** each product line can name its starting font. The "Est."
+  line starts in Montserrat Bold, because Playfair Display's hairlines fail
+  the thin check (the open item from phase 1).
+- **Customer emails** wait for your own domain, as the spec says. This is a
+  Settings → Emails switch (the from address), not a code change.
+- **New orders** start as "New". Payment statuses follow in phase 4, when
+  payments are recorded.
+- **Landing page:** without product photos yet, it shows each product drawn by
+  the engine, refreshed hourly.
+
+Still to check (needs the live site):
+
+- A test order on your phone arrives in Gmail with the preview and the SVG
+  attached.
+- The customer email shows the full amount due, payment instructions and refund
+  policy. Shown in tests; on the live site it needs a verified domain first.
+- A tampered price is ignored and recalculated. Passes in tests and in the
+  browser test.
+
+Next: phase 4, dashboard, payments and production.
+
 ## Connecting Supabase (2026-10-28)
 
 - The Supabase keys work: the secret key reaches the project's API, and the
