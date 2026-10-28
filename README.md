@@ -4,7 +4,7 @@ A web app for designing, ordering and producing laser-cut welcome signs. Custome
 design a sign; you confirm payment; one click makes a LightBurn-ready SVG.
 `SPEC.md` is the full build spec and the source of truth.
 
-**Status:** phase 1 of 6 (engine and LightBurn files). See `CHANGELOG.md`.
+**Status:** phases 1–2 of 6 (engine and LightBurn files; catalog, settings and pricing). See `CHANGELOG.md`.
 
 ## Run it on your computer
 
@@ -27,15 +27,65 @@ In the lab you can:
 The lab has no sign-in yet. Owner sign-in for everything under `/admin` arrives
 in phase 4, so for now run it on your own computer only.
 
+## Connect the database (Supabase)
+
+1. Copy `.env.example` to `.env.local`.
+2. Fill in `DATABASE_URL` from Supabase → Project Settings → Database →
+   Connection string, using the **Transaction pooler** (port 6543). Fill in the
+   other three values from Project Settings → API.
+3. Create the tables and load the starting catalog:
+
+   ```bash
+   npm run db:setup
+   ```
+
+   It's safe to run again: migrations already applied are skipped, and catalog
+   rows you've edited are never overwritten.
+4. Run `npm run dev` and open <http://localhost:3000/admin/settings/catalog>.
+
+Without `DATABASE_URL` the app reads the seed files in `config/`, and the
+settings pages are read-only.
+
+To try the settings pages without Supabase, start a throwaway local database
+(it keeps its data in `.local-db/`):
+
+```bash
+npm run db:local
+```
+
+Then, in a second terminal:
+
+```bash
+DATABASE_URL=postgres://postgres@127.0.0.1:54329/postgres npm run dev
+```
+
+## Settings and catalog
+
+- `/admin/settings/catalog`: every option in every category.
+  - Switch options on or off, one at a time or several at once.
+  - Edit labels, prices and details, drag to reorder, duplicate, or add new
+    options.
+  - Each option has its price history and a preview.
+- `/admin/settings/pricing`, `machine`, `engine`, `export`, `nesting`,
+  `production`, `payments`, `tax`, `business`, `sizes`: one page per settings
+  group.
+- Every change is recorded in the audit log.
+- Price changes apply to new quotes only.
+
 ## Test
 
 ```bash
 npm test
 ```
 
-This runs about 300 Vitest tests in about a minute. They cover every engine
-pipeline step, the exports, the seed catalog, and every spec test name in every
-enabled font at 24 and 36 in.
+This runs about 330 Vitest tests in about a minute. They cover:
+
+- every engine pipeline step and the exports;
+- the seed catalog;
+- every spec test name in every enabled font at 24 and 36 in;
+- the price calculator, including five hand-calculated orders;
+- the database (schema, seed, edits, price history, append-only payments),
+  against PGlite, a real Postgres that runs inside the tests.
 
 - Each test name must either pass or fail with the outcome recorded in
   `tests/engine/expected-outcomes.json`.
@@ -80,10 +130,17 @@ npm run typecheck
 | `public/fonts/` | The 14 fonts, each with its licence file (`scripts/prepare_fonts.py` re-downloads them) |
 | `app/admin/lab/` | The engine lab |
 | `app/api/lab/` | Server-side file downloads for the lab |
-| `tests/engine/` | Vitest suite |
+| `lib/pricing/` | The price calculator (pure; the server always recalculates) |
+| `lib/db/` | Database access: catalog, settings, seed, migrations |
+| `supabase/migrations/` | The database schema |
+| `app/admin/settings/` | Settings pages |
+| `app/api/catalog`, `app/api/quote` | Public catalog and quote endpoints |
+| `tests/` | Vitest suite |
 
 ## Deploy and back up
 
-Deployment (Vercel) and backups (Supabase) arrive in phases 2 and 3; this
-section will cover them then. For now the only thing to back up is this git
-repository.
+Deployment to Vercel arrives in phase 3; this section will cover it then.
+
+Supabase backs up the database daily on paid plans. On the free plan, export
+the database from the Supabase dashboard yourself (Database → Backups), or use
+the nightly CSV email that arrives with orders in phase 6.

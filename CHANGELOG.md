@@ -1,5 +1,69 @@
 # Changelog
 
+## Phase 2: Catalog, settings and pricing (2026-10-28)
+
+Built:
+
+- **Database schema** (`supabase/migrations/`): every table in the spec's data
+  model.
+  - Row-level security is on for every table. The public can only read the
+    enabled catalog and create orders and saved designs.
+  - Database triggers write price history on every price edit.
+  - Payments, status history and the audit log are append-only.
+  - A font can't be switched on until its licence is confirmed.
+  - Order numbers start at S-1001.
+- **Setup:** `npm run db:setup` applies migrations and seeds the catalog,
+  settings, fonts, inventory rows and the owner and production roles. It never
+  overwrites your edits.
+- **Local database:** `npm run db:local` runs a throwaway local Postgres for
+  trying things without Supabase.
+- **Settings pages:**
+  - catalog editing for every category: on/off, bulk on/off, edit, reorder by
+    drag or arrows, duplicate, add, price history, preview;
+  - one form per settings group;
+  - every change goes to the audit log.
+- **Price calculator** (`lib/pricing`): size (preset, or custom width
+  interpolated and rounded up to $5), style, backer, material, finish, colours,
+  topcoat (forced to exterior for covered outdoor), add-ons, rush %, delivery,
+  promo, $30 minimum, GST and rounding.
+- **Endpoints:**
+  - `GET /api/catalog`: enabled options only, with no internal notes or costs.
+  - `POST /api/quote`: always recalculates on the server, ignoring any price
+    sent in.
+- **Lab:** the lab now reads the live catalog, so switching an option off
+  removes it at once. A tick-box still shows options that are off, for test
+  cuts.
+
+Checked: 328 tests passing. In a browser against a local database:
+
+- Switching Satisfy off removed it from the lab.
+- Raising 36 in from $75 to $80 changed new quotes and recorded the change in
+  price history.
+
+Five hand-calculated orders match the calculator to the cent:
+
+| Order | Total |
+|---|---|
+| Welcome sign | $75 |
+| Family name on a maple backer | $150 |
+| 33 in custom, outdoor, rush | $138 |
+| Leaner with GST | $113 |
+| 12 in with promo, minimum applied | $30 |
+
+Decisions made while building:
+
+- **Server database access** uses a direct Postgres connection
+  (`DATABASE_URL`, the Supabase transaction pooler). Supabase's REST API isn't
+  used for this. One SQL code path runs in production and in the tests. Sign-in
+  and file storage will still use Supabase from phase 3.
+- **Custom widths** outside the presets extend the price line from the nearest
+  two presets that are on.
+- **Raw wood** gets no topcoat unless the placement forces the exterior one.
+
+Not connected yet: this cloud session can't reach Supabase. Once the
+environment allows `*.supabase.co` and `*.pooler.supabase.com` and has
+`DATABASE_URL` set, run `npm run db:setup`.
+
 ## Catalog update (2026-10-28)
 
 - Two-tone signs are off for now: the "Layered two-tone" style and the

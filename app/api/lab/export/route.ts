@@ -13,7 +13,7 @@ export async function POST(req: Request) {
   }
   if (!body?.design || !Array.isArray(body.design.lines) || !FORMATS.has(body.format))
     return Response.json({ error: 'Expected { design, materialId, format }' }, { status: 400 });
-  const file = labFile(body);
+  const file = await labFile(body);
   return new Response(typeof file.body === 'string' ? file.body : new Uint8Array(file.body), {
     headers: {
       'Content-Type': file.type,

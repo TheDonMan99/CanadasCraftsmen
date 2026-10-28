@@ -9,3 +9,5 @@ next-env.d.ts
 .env*.local
 test-output/
 .DS_Store
+.local-db/
+!.env.example

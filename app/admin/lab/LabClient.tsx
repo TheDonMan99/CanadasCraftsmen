@@ -1,26 +1,18 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { byCategory, seedCatalog, seedSettings } from '@/lib/config/catalog';
+import { byCategory, type CatalogOption, type Settings } from '@/lib/config/catalog';
 import type { ContextOverrides } from '@/lib/config/context';
 import type { BackerShapeKey, Design, DesignLine, EngineResult, EngineSettings, FloatingBits, LineRole, StyleKey } from '@/lib/engine/types';
 import { previewSvg } from '@/lib/export/svg';
 
-const catalog = seedCatalog();
-const settings = seedSettings();
-const fonts = byCategory(catalog, 'font', false);
-const materials = byCategory(catalog, 'material', false);
-const widths = byCategory(catalog, 'size').filter((s) => s.values.kind === 'width').map((s) => s.values.width_in as number);
-const heights = byCategory(catalog, 'size').filter((s) => s.values.kind === 'height').map((s) => s.values.height_in as number);
-const paints = byCategory(catalog, 'paint', false);
-
-const STYLES: { key: StyleKey; label: string }[] = [
-  { key: 'one_piece', label: 'One-piece word' },
-  { key: 'layered', label: 'Layered two-tone' },
-  { key: 'letters_on_backer', label: 'Letters on backer' },
-  { key: 'stencil', label: 'Stencil panel' },
-];
-const BACKERS: BackerShapeKey[] = ['rectangle', 'rounded_rectangle', 'plank', 'arch_top', 'oval', 'circle'];
+// catalog style ids → engine style keys
+const STYLE_KEYS: Record<string, StyleKey> = {
+  'style.one-piece': 'one_piece',
+  'style.layered': 'layered',
+  'style.letters-on-backer': 'letters_on_backer',
+  'style.stencil': 'stencil',
+};
 
 type Preset = { name: string; layout: Design['layout']; lines: DesignLine[]; size: number };
 const P = (role: LineRole, text: string, fontId = 'font.pacifico'): DesignLine => ({ role, text, fontId });
@@ -40,7 +32,6 @@ const PRESETS: Preset[] = [
   { name: '36 in Welcome (test cut)', layout: 'horizontal', size: 36, lines: [P('main', 'Welcome')] },
 ];
 
-const ENGINE_KEYS = Object.keys(settings.engine).filter((k) => typeof (settings.engine as any)[k] === 'number') as (keyof EngineSettings)[];
 const label = (k: string) => k.replace(/_in$/, ' (in)').replace(/_pct$/, ' (%)').replace(/_/g, ' ');
 
 function download(name: string, blob: Blob) {
@@ -51,9 +42,21 @@ function download(name: string, blob: Blob) {
   setTimeout(() => URL.revokeObjectURL(a.href), 5000);
 }
 
-export default function LabClient() {
+export default function LabClient({ catalog, settings, initialFont, initialMaterial }: { catalog: CatalogOption[]; settings: Settings; initialFont?: string; initialMaterial?: string }) {
+  // Only options that are on appear, unless "include options that are off" is ticked for a test cut.
+  const startsOff = [initialFont, initialMaterial].some((id) => id && catalog.find((o) => o.id === id && !o.enabled));
+  const [showDisabled, setShowDisabled] = useState(startsOff);
+  const pick = (category: string) => byCategory(catalog, category, !showDisabled);
+  const fonts = pick('font');
+  const materials = pick('material');
+  const widths = pick('size').filter((s) => s.values.kind === 'width').map((s) => s.values.width_in as number);
+  const heights = pick('size').filter((s) => s.values.kind === 'height').map((s) => s.values.height_in as number);
+  const paints = pick('paint');
+  const STYLES = pick('style').filter((o) => STYLE_KEYS[o.id]).map((o) => ({ key: STYLE_KEYS[o.id], label: o.label + (o.enabled ? '' : ' (off)') }));
+  const BACKERS = pick('backer_shape').map((o) => o.values.shape as BackerShapeKey);
+  const ENGINE_KEYS = Object.keys(settings.engine).filter((k) => typeof (settings.engine as any)[k] === 'number') as (keyof EngineSettings)[];
   const [layout, setLayout] = useState<Design['layout']>('horizontal');
-  const [lines, setLines] = useState<DesignLine[]>([P('main', 'Welcome')]);
+  const [lines, setLines] = useState<DesignLine[]>([P('main', 'Welcome', initialFont && catalog.some((o) => o.id === initialFont) ? initialFont : 'font.pacifico')]);
   const [widthIn, setWidthIn] = useState(36);
   const [heightIn, setHeightIn] = useState(46);
   const [style, setStyle] = useState<StyleKey>('one_piece');
@@ -62,11 +65,10 @@ export default function LabClient() {
   const [bits, setBits] = useState<FloatingBits>(settings.engine.floating_bits as FloatingBits);
   const [keyholes, setKeyholes] = useState(false);
   const [foot, setFoot] = useState(settings.engine.leaner_foot);
-  const [materialId, setMaterialId] = useState(materials[0].id);
+  const [materialId, setMaterialId] = useState(initialMaterial && materials.some((m) => m.id === initialMaterial) ? initialMaterial : materials[0]?.id ?? '');
   const [kerf, setKerf] = useState<number | ''>('');
   const [minFeature, setMinFeature] = useState<number | ''>('');
   const [engine, setEngine] = useState<Partial<EngineSettings>>({});
-  const [showDisabled, setShowDisabled] = useState(true);
   const [colours, setColours] = useState({ word: '#E3C9A0', top: '#F5F5F2', outline: '#1E1E1E', letters: '#1E1E1E', backer: '#E3C9A0', panel: '#E3C9A0' });
   const [background, setBackground] = useState<'plain' | 'wall'>('plain');
   const [showCut, setShowCut] = useState(false);
@@ -116,10 +118,10 @@ export default function LabClient() {
     const t = setTimeout(() => {
       seq.current += 1;
       setBusy(true);
-      worker.current?.postMessage({ id: seq.current, design, materialId, overrides });
+      worker.current?.postMessage({ id: seq.current, design, materialId, overrides, catalog, settings });
     }, 250);
     return () => clearTimeout(t);
-  }, [design, materialId, overrides]);
+  }, [design, materialId, overrides, catalog, settings]);
 
   const preview = useMemo(
     () => (result && result.parts.length ? previewSvg(result, { colours, background, showDimensions: true, showThin: true, showCutPaths: showCut }) : ''),
@@ -133,8 +135,18 @@ export default function LabClient() {
     download(name, await res.blob());
   }
 
+  // when an option is switched off (or hidden), move any line using it to one that's on
+  const fontIds = fonts.map((f) => f.id).join();
+  useEffect(() => {
+    const ok = new Set(fontIds.split(','));
+    if (lines.some((l) => !ok.has(l.fontId))) setLines((ls) => ls.map((l) => (ok.has(l.fontId) ? l : { ...l, fontId: fonts[0]?.id ?? l.fontId })));
+    if (materials.length && !materials.some((m) => m.id === materialId)) setMaterialId(materials[0].id);
+    if (STYLES.length && !STYLES.some((x) => x.key === style)) setStyle(STYLES[0].key);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fontIds, showDisabled]);
+
   const setLine = (i: number, patch: Partial<DesignLine>) => setLines((ls) => ls.map((l, j) => (j === i ? { ...l, ...patch } : l)));
-  const fontChoices = fonts.filter((f) => showDisabled || f.enabled);
+  const fontChoices = fonts;
   const usesBacker = style === 'letters_on_backer' || style === 'stencil';
   const r = result?.report;
 
@@ -190,7 +202,7 @@ export default function LabClient() {
             ))}
             <div className="flex items-center justify-between">
               {lines.length < 3 && <button className="text-sm text-blue-700" onClick={() => setLines((ls) => [...ls, P('small', 'Est. 2019', 'font.montserrat-bold')])}>+ Add line</button>}
-              <label className="flex items-center gap-1 text-xs text-stone-600"><input type="checkbox" checked={showDisabled} onChange={(e) => setShowDisabled(e.target.checked)} /> Show fonts that are off</label>
+              <label className="flex items-center gap-1 text-xs text-stone-600"><input type="checkbox" checked={showDisabled} onChange={(e) => setShowDisabled(e.target.checked)} /> Include options that are off (test cuts)</label>
             </div>
           </Section>
 

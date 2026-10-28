@@ -2,14 +2,12 @@
 // long names are welded and checked.
 
 import { buildContext, type ContextOverrides } from '@/lib/config/context';
-import { seedCatalog, seedSettings, byCategory } from '@/lib/config/catalog';
+import { byCategory, type CatalogOption, type Settings } from '@/lib/config/catalog';
 import { loadFont, runEngine, type Design, type LoadedFont } from '@/lib/engine';
 
-const catalog = seedCatalog();
-const settings = seedSettings();
 const fonts = new Map<string, LoadedFont>();
 
-async function ensureFonts() {
+async function ensureFonts(catalog: CatalogOption[]) {
   const files = byCategory(catalog, 'font', false).map((o) => o.values.font_file as string);
   await Promise.all(
     files.filter((f) => !fonts.has(f)).map(async (f) => {
@@ -19,10 +17,12 @@ async function ensureFonts() {
   );
 }
 
-self.onmessage = async (e: MessageEvent<{ id: number; design: Design; materialId: string; overrides: ContextOverrides }>) => {
-  const { id, design, materialId, overrides } = e.data;
+type Msg = { id: number; design: Design; materialId: string; overrides: ContextOverrides; catalog: CatalogOption[]; settings: Settings };
+
+self.onmessage = async (e: MessageEvent<Msg>) => {
+  const { id, design, materialId, overrides, catalog, settings } = e.data;
   try {
-    await ensureFonts();
+    await ensureFonts(catalog);
     const ctx = buildContext(catalog, settings, (f) => fonts.get(f)!, materialId, overrides);
     const t = performance.now();
     const result = runEngine(design, ctx);

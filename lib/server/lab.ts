@@ -2,7 +2,7 @@
 // downloads come from the same path as real order files.
 
 import { buildContext, type ContextOverrides } from '@/lib/config/context';
-import { byCategory, seedCatalog, seedSettings } from '@/lib/config/catalog';
+import { loadCatalog, loadSettings } from '@/lib/data';
 import { runEngine, type Design, type EngineResult } from '@/lib/engine';
 import { cutFileSvg, cutLayerDxf, orderFileName, previewSvg, type ExportSettings } from '@/lib/export';
 import { svgToPng } from '@/lib/export/png';
@@ -16,9 +16,8 @@ export interface LabRequest {
   format: 'svg' | 'png' | 'dxf' | 'json';
 }
 
-export function labFile(req: LabRequest): { body: string | Buffer; type: string; name: string; result: EngineResult } {
-  const catalog = seedCatalog();
-  const settings = seedSettings();
+export async function labFile(req: LabRequest): Promise<{ body: string | Buffer; type: string; name: string; result: EngineResult }> {
+  const [catalog, settings] = await Promise.all([loadCatalog(), loadSettings()]);
   const ctx = buildContext(catalog, settings, loadFontFile, req.materialId, req.overrides);
   const result = runEngine(req.design, ctx);
   const ex = settings.export as ExportSettings;
@@ -44,5 +43,3 @@ export function labFile(req: LabRequest): { body: string | Buffer; type: string;
       return { body: JSON.stringify({ ok: result.ok, failures: result.failures, warnings: result.warnings, report: result.report }), type: 'application/json', name: name('json'), result };
   }
 }
-
-export const labMaterials = () => byCategory(seedCatalog(), 'material', false);
