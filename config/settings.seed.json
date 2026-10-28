@@ -16,7 +16,8 @@
       "Other"
     ],
     "privacy_note": "We collect your name, email, phone number and, for delivery, your address, so we can make your sign, contact you about the order and arrange pickup or delivery. Your design and order details are kept with your order. We don't sell or share your information, and we only email you about your order.",
-    "owner_email": "donovanarntson@gmail.com"
+    "owner_email": "donovanarntson@gmail.com",
+    "review_link": ""
   },
   "machine": {
     "laser": "LaserTree K40 diode module (about 40 W optical)",
@@ -121,7 +122,7 @@
       180,
       270
     ],
-    "method": "rectangle",
+    "method": "best",
     "use_offcuts_first": true,
     "min_offcut_w_in": 6,
     "min_offcut_h_in": 12,
@@ -157,7 +158,8 @@
   "tax": {
     "gst_enabled": false,
     "gst_rate_pct": 5,
-    "registration_warning_cents": 2500000
+    "registration_warning_cents": 2500000,
+    "registration_threshold_cents": 3000000
   },
   "spam": {
     "honeypot": true,
@@ -222,20 +224,28 @@
         "enabled": false,
         "to": "customer",
         "subject": "How did we do?",
-        "body": "Hi {first_name},\n\nWe hope you love your sign. If you have a minute, we'd be grateful for a review.\n\n{business_name}"
+        "body": "Hi {first_name},\n\nWe hope you love your sign! If you have a minute, a review helps a small shop like ours a lot:\n{review_link}\n\nThank you,\n{business_name}"
       },
       "daily_digest": {
         "enabled": true,
         "to": "owner",
-        "subject": "Daily digest",
-        "body": "Unpaid orders, orders due this week and new orders."
+        "subject": "Daily digest · {date}",
+        "body": "Good morning! Here’s where things stand.\n\n{digest}\n\n{dashboard_link}"
       },
       "weekly_summary": {
         "enabled": true,
         "to": "owner",
-        "subject": "Weekly summary",
-        "body": "Revenue, orders, unpaid balance and materials used."
+        "subject": "Weekly summary · {date}",
+        "body": "Here’s last week.\n\n{summary}\n\n{dashboard_link}"
+      },
+      "nightly_backup": {
+        "enabled": false,
+        "to": "owner",
+        "subject": "Orders backup · {date}",
+        "body": "Attached: every order and payment so far, as CSV files you can open in a spreadsheet."
       }
-    }
+    },
+    "nightly_backup": false,
+    "digest_hour": 7
   }
 }

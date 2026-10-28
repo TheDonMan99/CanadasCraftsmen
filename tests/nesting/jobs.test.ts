@@ -109,4 +109,20 @@ describe('nest jobs', () => {
     await adjustLayout(deps, job.id, ok, 'owner');
     expect((await getJob(db, job.id))!.panels[0].placements[1].y).toBeCloseTo(ok[0].placements[1].y, 5);
   });
+
+  test('true-shape jobs plan, record their method, and a dragged part is checked against the real outlines', async () => {
+    deps = { ...deps, settings: { ...settings, nesting: { ...settings.nesting, method: 'true_shape' } } };
+    const ids = [await paidOrder('Ava', 'size.w24'), await paidOrder('Liam', 'size.w24')];
+    const job = (await getJob(db, await planJob(deps, 'material.birch-6mm', ids, 'owner')))!;
+    expect(job.summary.method).toBe('true_shape');
+    expect(job.panels).toHaveLength(1);
+    const f = (await panelFile(deps, job, job.panels[0].id))!;
+    expect(f.svg).toContain('S-1001');
+    const moved = structuredClone(job.panels);
+    moved[0].placements[1].x = moved[0].placements[0].x;
+    moved[0].placements[1].y = moved[0].placements[0].y;
+    await expect(adjustLayout(deps, job.id, moved, 'owner')).rejects.toThrow(/closer than/);
+    await cutJob(deps, job.id, 'owner');
+    expect((await getJob(db, job.id))!.status).toBe('cut');
+  });
 });

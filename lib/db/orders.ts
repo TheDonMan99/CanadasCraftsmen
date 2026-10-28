@@ -103,11 +103,11 @@ export async function addOrderFile(db: Db, orderId: string, kind: 'svg' | 'png' 
 
 export async function logEmail(
   db: Db,
-  e: { orderId: string | null; template: string; recipient: string; subject: string; status: 'sent' | 'failed' | 'held' | 'skipped'; providerMessageId?: string | null; error?: string | null },
+  e: { orderId: string | null; template: string; recipient: string; subject: string; status: 'sent' | 'failed' | 'held' | 'skipped'; providerMessageId?: string | null; error?: string | null; sentAt?: Date },
 ) {
   await db.query(
-    'insert into email_log (order_id, template, recipient, subject, status, provider_message_id, error) values ($1, $2, $3, $4, $5, $6, $7)',
-    [e.orderId, e.template, e.recipient, e.subject, e.status, e.providerMessageId ?? null, e.error ?? null],
+    'insert into email_log (order_id, template, recipient, subject, status, provider_message_id, error, sent_at) values ($1, $2, $3, $4, $5, $6, $7, coalesce($8::timestamptz, now()))',
+    [e.orderId, e.template, e.recipient, e.subject, e.status, e.providerMessageId ?? null, e.error ?? null, e.sentAt?.toISOString() ?? null],
   );
 }
 

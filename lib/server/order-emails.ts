@@ -17,13 +17,16 @@ export interface EmailDeps {
   db: Db;
   settings: Settings;
   sendEmail: SendEmail;
+  /** the time to log the send at (the scheduler's clock); now by default */
+  now?: Date;
 }
 
 export type EmailOutcome = 'sent' | 'failed' | 'held' | 'skipped' | 'off';
 
 export async function sendOrderEmail(
   deps: EmailDeps,
-  orderId: string,
+  /** null for emails about no single order (digests, backups) */
+  orderId: string | null,
   key: TemplateKey,
   to: string,
   vars: Vars,
@@ -40,7 +43,7 @@ export async function sendOrderEmail(
     showBreakdown: !!opt.quote && deps.settings.pricing.show_breakdown,
   });
   if (opt.toCustomer && !em.from_address) {
-    await logEmail(deps.db, { orderId, template: key, recipient: to, subject, status: 'held', error: 'Waiting for a verified sending domain (Settings → Emails → from address)' });
+    await logEmail(deps.db, { orderId, template: key, recipient: to, subject, status: 'held', error: 'Waiting for a verified sending domain (Settings → Emails → from address)', sentAt: deps.now });
     return 'held';
   }
   const res = await deps.sendEmail({ from: fromLine(em.from_name, em.from_address || RESEND_TEST_SENDER), to, replyTo: em.reply_to || undefined, subject, text, html, attachments: opt.attachments });
@@ -52,6 +55,7 @@ export async function sendOrderEmail(
     status: res.status,
     providerMessageId: res.status === 'sent' ? res.id : null,
     error: res.status === 'sent' ? null : res.error,
+    sentAt: deps.now,
   });
   if (res.status === 'failed') console.warn(`[orders] ${key} email to ${to} failed: ${res.error}`);
   return res.status;

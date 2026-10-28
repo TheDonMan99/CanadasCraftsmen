@@ -10,7 +10,9 @@ import { bounds } from '@/lib/engine/geom';
 import { runEngine, type EngineResult, type Part } from '@/lib/engine';
 import type { LoadedFont } from '@/lib/engine/font';
 import { panelFileName, panelSvg, type ExportSettings } from '@/lib/export';
-import { checkLayout, leftovers, nest, type BinLayout, type BinSpec, type NestPart, type NestSettings } from '@/lib/nesting/pack';
+import { checkLayout, leftovers, nest, type BinLayout, type BinSpec, type NestPart, type NestResult, type NestSettings } from '@/lib/nesting/pack';
+import { checkTrueShape, nestTrueShape, turn } from '@/lib/nesting/trueshape';
+import { pathData } from '@/lib/export/svg';
 import type { Upload } from './storage';
 
 export function nestSettings(settings: Settings, material: CatalogOption | undefined): NestSettings {
@@ -48,7 +50,7 @@ function orderParts(o: { id: string; number: string; design: any }, deps: Deps):
     const b = bounds(p.cut);
     const key = `${o.id}:${p.id}`;
     byKey.set(key, p);
-    return { key, orderId: o.id, orderNumber: o.number, partId: p.id, partName: p.name, w: b.maxX - b.minX, h: b.maxY - b.minY, area: p.areaIn2 };
+    return { key, orderId: o.id, orderNumber: o.number, partId: p.id, partName: p.name, w: b.maxX - b.minX, h: b.maxY - b.minY, area: p.areaIn2, shape: p.cut };
   });
   return { result, parts, byKey };
 }
@@ -91,7 +93,7 @@ export async function planJob(deps: Deps, materialId: string, orderIds: string[]
       unplaced.push({ orderNumber: o.number, partName: 'whole sign', reason: `the engine couldn’t make it: ${(e as Error).message}` });
     }
   }
-  const r = nest(groups, await availableBins(db, materialId, settings), s);
+  const { r, method } = pack(groups, await availableBins(db, materialId, settings), s, settings.nesting.method);
   const inv = await getInventory(db, materialId);
   const summary: JobSummary = {
     orderIds: chosen.map((o) => o.id),
@@ -104,6 +106,7 @@ export async function planJob(deps: Deps, materialId: string, orderIds: string[]
     costs: materialCosts(r.bins, material, settings, s.spacingIn),
     marginIn: s.marginIn,
     spacingIn: s.spacingIn,
+    method,
     ...(r.newSheets > inv.full_sheets && { inventoryWarning: `This plan needs ${r.newSheets} new sheet${r.newSheets === 1 ? '' : 's'}; inventory shows ${inv.full_sheets}.` }),
   };
   const id = await createJob(db, { materialId, bins: r.bins, utilization: round4(r.utilization), summary }, actor);
@@ -112,6 +115,19 @@ export async function planJob(deps: Deps, materialId: string, orderIds: string[]
 }
 
 const round4 = (n: number) => Math.round(n * 10000) / 10000;
+
+/**
+ * Packs with the method from Settings → Nesting: rectangle, true_shape, or best
+ * (both, keeping whichever needs fewer new sheets, then fewer panels; rectangle on a tie).
+ */
+export function pack(groups: { orderId: string; parts: NestPart[] }[], bins: BinSpec[], s: NestSettings, method: string): { r: NestResult; method: 'rectangle' | 'true_shape' } {
+  if (method === 'true_shape') return { r: nestTrueShape(groups, bins, s), method: 'true_shape' };
+  const rect = nest(groups, bins, s);
+  if (method !== 'best') return { r: rect, method: 'rectangle' };
+  const shaped = nestTrueShape(groups, bins, s);
+  const score = (x: NestResult) => x.unplaced.length * 1e6 + x.newSheets * 1e3 + x.bins.length;
+  return score(shaped) < score(rect) ? { r: shaped, method: 'true_shape' } : { r: rect, method: 'rectangle' };
+}
 
 /**
  * "Plan next batch": paid orders by needed-by date (rush first), adding orders
@@ -193,7 +209,15 @@ export async function adjustLayout(deps: Deps, jobId: string, bins: BinLayout[],
       target.placements.push({ ...orig, x: Number(p.x), y: Number(p.y) });
     }
   if (next.reduce((n, b) => n + b.placements.length, 0) !== job.panels.reduce((n, b) => n + b.placements.length, 0)) throw new NestError('A part is missing from the layout.');
-  const errors = next.flatMap((b) => checkLayout(b, s));
+  let errors: string[];
+  if (job.summary.method === 'true_shape') {
+    // exact check on the real outlines
+    const shapes = new Map<string, import('@/lib/engine/types').Shape>();
+    const ids = [...new Set(next.flatMap((b) => b.placements.map((p) => p.orderId)))];
+    const rows = await deps.db.query<{ id: string; number: string; design: any }>('select id, number, design from orders where id = any($1::uuid[])', [ids]);
+    for (const o of rows) for (const [k, part] of orderParts({ ...o, design: typeof o.design === 'string' ? JSON.parse(o.design) : o.design }, deps).byKey) shapes.set(k, part.cut);
+    errors = next.flatMap((b) => checkTrueShape(b, shapes, s));
+  } else errors = next.flatMap((b) => checkLayout(b, s));
   if (errors.length) throw new NestError(errors[0]);
   const material = deps.catalog.find((o) => o.id === job.material_option_id);
   const used = next.filter((b) => b.placements.length);
@@ -214,4 +238,24 @@ export async function cutJob(deps: Deps, jobId: string, actor: string) {
   const left: Record<string, ReturnType<typeof leftovers>> = {};
   for (const b of job.panels) if (b.placements.length) left[b.id] = leftovers(b, s);
   return markJobCut(deps.db, jobId, left, actor);
+}
+
+/** Each placed part's real outline, turned and with its top-left corner at 0,0, as SVG path data (for drawing the layout). */
+export async function jobOutlines(deps: Deps, job: NestJob): Promise<Record<string, string>> {
+  const ids = [...new Set(job.panels.flatMap((b) => b.placements.map((p) => p.orderId)))];
+  if (!ids.length) return {};
+  const rows = await deps.db.query<{ id: string; number: string; design: any }>('select id, number, design from orders where id = any($1::uuid[])', [ids]);
+  const parts = new Map<string, Part>();
+  for (const o of rows) {
+    try {
+      for (const [k, p] of orderParts({ ...o, design: typeof o.design === 'string' ? JSON.parse(o.design) : o.design }, deps).byKey) parts.set(k, p);
+    } catch {}
+  }
+  const out: Record<string, string> = {};
+  for (const b of job.panels)
+    for (const p of b.placements) {
+      const part = parts.get(p.key);
+      if (part) out[p.key] = pathData(turn(part.cut, p.rotation), 2);
+    }
+  return out;
 }

@@ -11,6 +11,7 @@ const NAV: { href: string; label: string; perm: Perm | Perm[] }[] = [
   { href: '/admin/nesting', label: 'Nesting', perm: 'manage_nesting' },
   { href: '/admin/inventory', label: 'Inventory', perm: 'manage_inventory' },
   { href: '/admin/customers', label: 'Customers', perm: 'view_contacts' },
+  { href: '/admin/reports', label: 'Reports', perm: 'view_reports' },
   { href: '/admin/quote', label: 'Quick quote', perm: 'edit_orders' },
   { href: '/admin/templates', label: 'Replies', perm: 'edit_orders' },
   { href: '/admin/lab', label: 'Lab', perm: 'download_files' },

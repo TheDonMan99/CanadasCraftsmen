@@ -16,9 +16,21 @@ export interface PanelItem {
   result: EngineResult;
 }
 
-/** Maps a point of a part (in sign coordinates) to the panel: quarter turn if asked, then to the placement. */
+/**
+ * Maps a point of a part (in sign coordinates) to the panel: turned clockwise by
+ * the placement's rotation, with the turned outline's top-left corner at (x, y).
+ */
 export function placeTransform(b: Bounds, p: Pick<Placed, 'x' | 'y' | 'rotation'>): (q: Pt) => Pt {
-  return p.rotation === 90 ? (q) => ({ x: b.maxY - q.y + p.x, y: q.x - b.minX + p.y }) : (q) => ({ x: q.x - b.minX + p.x, y: q.y - b.minY + p.y });
+  switch (p.rotation) {
+    case 90:
+      return (q) => ({ x: b.maxY - q.y + p.x, y: q.x - b.minX + p.y });
+    case 180:
+      return (q) => ({ x: b.maxX - q.x + p.x, y: b.maxY - q.y + p.y });
+    case 270:
+      return (q) => ({ x: q.y - b.minY + p.x, y: b.maxX - q.x + p.y });
+    default:
+      return (q) => ({ x: q.x - b.minX + p.x, y: q.y - b.minY + p.y });
+  }
 }
 
 const mapShape = (s: Shape, f: (q: Pt) => Pt): Shape => s.map((ring) => ring.map(f));

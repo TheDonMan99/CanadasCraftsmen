@@ -14,7 +14,7 @@ import { markCut, removeJob, rerun, saveAdjusted } from '../actions';
 const PALETTE = ['#F2C48D', '#A7C7E7', '#C1E1C1', '#F4B6C2', '#D7BDE2', '#FAE29C', '#B5EAD7', '#FFDAC1'];
 const snap = (n: number) => Math.round(n * 8) / 8;
 
-export default function JobView({ job }: { job: NestJob }) {
+export default function JobView({ job, outlines }: { job: NestJob; outlines: Record<string, string> }) {
   const router = useRouter();
   const [bins, setBins] = useState<BinLayout[]>(job.panels);
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
@@ -63,6 +63,7 @@ export default function JobView({ job }: { job: NestJob }) {
             margin={job.summary.marginIn}
             editable={planned}
             colour={colour}
+            outlines={outlines}
             download={`/api/admin/nesting/${job.id}/panels/${encodeURIComponent(b.id)}`}
             onMove={(key, x, y) => setBins((bs) => bs.map((bb, j) => (j === bi ? { ...bb, placements: bb.placements.map((p) => (p.key === key ? { ...p, x, y } : p)) } : bb)))}
           />
@@ -72,7 +73,7 @@ export default function JobView({ job }: { job: NestJob }) {
   );
 }
 
-function BinDrawing({ bin, margin, editable, colour, download, onMove }: { bin: BinLayout; margin: number; editable: boolean; colour: (orderId: string) => string; download: string; onMove: (key: string, x: number, y: number) => void }) {
+function BinDrawing({ bin, margin, editable, colour, outlines, download, onMove }: { bin: BinLayout; margin: number; editable: boolean; colour: (orderId: string) => string; outlines: Record<string, string>; download: string; onMove: (key: string, x: number, y: number) => void }) {
   const svg = useRef<SVGSVGElement>(null);
   const drag = useRef<{ key: string; dx: number; dy: number } | null>(null);
   const toSvg = (e: React.PointerEvent) => {
@@ -111,7 +112,14 @@ function BinDrawing({ bin, margin, editable, colour, download, onMove }: { bin: 
             }}
             className={editable ? 'cursor-move' : ''}
           >
-            <rect x={p.x} y={p.y} width={p.w} height={p.h} fill={colour(p.orderId)} stroke="#333" strokeWidth={0.06} />
+            {outlines[p.key] ? (
+              <>
+                <rect x={p.x} y={p.y} width={p.w} height={p.h} fill={colour(p.orderId)} fillOpacity={0.25} stroke="none" />
+                <path d={outlines[p.key]} transform={`translate(${p.x} ${p.y})`} fill={colour(p.orderId)} stroke="#333" strokeWidth={0.05} fillRule="evenodd" />
+              </>
+            ) : (
+              <rect x={p.x} y={p.y} width={p.w} height={p.h} fill={colour(p.orderId)} stroke="#333" strokeWidth={0.06} />
+            )}
             <text x={p.x + 0.3} y={p.y + Math.min(1.4, p.h * 0.6)} fontSize={Math.min(1.2, p.h * 0.5, p.w / 5)} fill="#222">
               {p.orderNumber} · {p.partName}{p.rotation ? ' ↻' : ''}
             </text>

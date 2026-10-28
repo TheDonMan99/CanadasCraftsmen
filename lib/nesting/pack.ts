@@ -4,6 +4,8 @@
 // each part's cut outline, with spacing between parts and a margin at the edges.
 // Pure: parts and bins in, a layout out.
 
+export type Rotation = 0 | 90 | 180 | 270;
+
 export interface NestPart {
   /** unique within the run, e.g. `${orderId}:${partId}` */
   key: string;
@@ -16,6 +18,8 @@ export interface NestPart {
   h: number;
   /** real part area, for material use */
   area: number;
+  /** the part's cut outline, for true-shape nesting */
+  shape?: import('@/lib/engine/types').Shape;
 }
 
 export type BinKind = 'offcut' | 'spare' | 'panel';
@@ -44,7 +48,8 @@ export interface Placed {
   /** footprint after rotation */
   w: number;
   h: number;
-  rotation: 0 | 90;
+  /** quarter turns clockwise; rectangle packing only uses 0 and 90 */
+  rotation: Rotation;
   area: number;
 }
 

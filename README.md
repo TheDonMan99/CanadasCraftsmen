@@ -4,7 +4,7 @@ A web app for designing, ordering and producing laser-cut welcome signs. Custome
 design a sign; you confirm payment; one click makes a LightBurn-ready SVG.
 `SPEC.md` is the full build spec and the source of truth.
 
-**Status:** phases 1–5 of 6 (engine and LightBurn files; catalog, settings and pricing; order designer, orders and emails; dashboard, payments and production; nesting, inventory and offcuts). See `CHANGELOG.md`.
+**Status:** all six phases built. Online card payments (Stripe) are deferred: customers pay by e-Transfer or cash and you mark orders paid. See `CHANGELOG.md`, and the checklist at the end of this file for what to test yourself.
 
 ## Run it on your computer
 
@@ -219,6 +219,39 @@ details.
 - Every change is recorded in the audit log.
 - Price changes apply to new quotes only.
 
+## Reports and scheduled emails (phase 6)
+
+- **Reports** (`/admin/reports`), over the last 3, 6, 12 or 24 months:
+  - money received and sales by month;
+  - sales by product, size, finish and order source;
+  - average order value;
+  - unpaid balances aged 0–7, 8–14 and 15+ days;
+  - material cost and gross margin per order. Material comes from cut nest
+    jobs, or is estimated until cut. Labour is added once you set an hourly
+    rate in Settings → Pricing.
+- **GST tracker:** money received over the last four calendar quarters. It warns
+  at $25,000 and tells you to register at $30,000, in one quarter or over four.
+- **CSV export** of orders and of payments.
+- **Scheduled emails** (Settings → Emails switches each one on or off):
+  - **daily digest** at 7:00 am Mountain: new orders, unpaid orders with days
+    waiting, orders due this week, low stock;
+  - **weekly summary** on Mondays at 7:00 am: money received, orders, unpaid
+    balance, materials used;
+  - **review request** to the customer 3 days after an order is Complete (off
+    until you switch it on and set a review link in Settings → Business);
+  - **nightly CSV backup** of every order and payment (off by default).
+  - Vercel Cron calls `/api/cron/daily` at 13:00 and 14:00 UTC (see
+    `vercel.json`). Only the call that lands at 7 am Mountain does anything, so
+    daylight saving never moves it. It needs `CRON_SECRET` set in Vercel.
+  - The **Email me now** buttons on the reports page send any of them straight
+    away, to try them.
+- **True-shape nesting:** Settings → Nesting → method.
+  - `best` (the default) tries rectangle packing and true-shape packing and
+    keeps whichever needs fewer panels.
+  - True-shape lets small signs sit in the empty space of bigger ones, still
+    1/4 in apart.
+  - `rectangle` and `true_shape` force one or the other.
+
 ## Test
 
 ```bash
@@ -237,6 +270,9 @@ This runs about 520 Vitest tests in about two and a half minutes. They cover:
   tampering, spam checks, lead times, files and emails;
 - nesting: the packer, a real job from four paid orders, panel files at true
   size, marking as cut, and the next run using the saved offcut;
+- true-shape nesting, including a part fitted into another's empty corner;
+- reports against a hand tally, the GST tracker, CSV safety;
+- scheduled emails: 7 am in summer and winter, once a day, Mondays only;
 - the dashboard:
   - payment statuses and refunds under the policy;
   - the cut-file gate;
@@ -261,8 +297,9 @@ This test:
     marks it cut;
   - cancels a paid order for the customer (50% refund);
   - invites a production user, and uses quick quote;
+- checks the reports page and the CSV exports;
 - signs in as that production user, checks they see no prices or contact
-  details, and moves the order on the board;
+  details (or reports), and moves the order on the board;
 - saves screenshots to `test-output/e2e/`.
 
 It never touches Supabase, Resend or Turnstile.
@@ -331,6 +368,10 @@ npm run typecheck
 | `lib/server/nesting.ts` | Planning, adjusting and cutting nest jobs |
 | `lib/export/panel.ts` | One LightBurn SVG per panel |
 | `app/admin/nesting/`, `app/admin/inventory/` | Nesting and inventory pages |
+| `lib/nesting/trueshape.ts` | True-shape nesting |
+| `lib/reports/` | Report figures, digests and CSV (pure) |
+| `lib/server/scheduled.ts`, `app/api/cron/daily/` | Scheduled emails |
+| `app/admin/reports/` | Reports page |
 | `tests/` | Vitest suite |
 
 ## Deploy and back up
@@ -344,6 +385,8 @@ npm run typecheck
 3. Deploy. Every push to `main` deploys the live site; pushes to other branches
    get preview links.
 4. Set `SITE_URL` to the live address, so links in emails point to it.
+5. Set `CRON_SECRET` to any long random string. It turns on the daily digest and
+   weekly summary; Vercel sends it with each scheduled call.
 
 ### Database changes
 
@@ -365,6 +408,67 @@ Customer emails start sending after step 2.
 
 ### Back up
 
-Supabase backs up the database daily on paid plans. On the free plan, export
-the database from the Supabase dashboard yourself (Database → Backups), or use
-the nightly CSV email that arrives with orders in phase 6.
+Supabase backs up the database daily on paid plans. On the free plan, either:
+
+- export it yourself from the Supabase dashboard (Database → Backups); or
+- switch on the nightly CSV backup email (Settings → Emails → nightly backup).
+
+Reports → Orders CSV and Payments CSV download everything at any time.
+
+## Checklist for you
+
+The automated tests cover the logic. These need you, the laser, your phone or
+a live account.
+
+**Setup, once**
+
+- [ ] Vercel has every variable in `.env.example`, including `SITE_URL` and
+  `CRON_SECRET`.
+- [ ] Supabase → Authentication → URL Configuration has your Site URL and the
+  `/auth/callback` redirect URLs.
+- [ ] You can sign in at `/login` with donovanarntson@gmail.com.
+- [ ] Settings → Business: business name, privacy note, review link.
+
+**On the laser (phase 1)**
+
+- [ ] The 10 in calibration square (Lab) imports into LightBurn at 10.000 in.
+- [ ] A 36 in "Welcome" in Pacifico on 1/4 in birch cuts in one piece and
+  measures within 1/32 in of 36 in.
+- [ ] Layered, letters-on-backer and stencil test signs cut correctly.
+- [ ] Kerf is measured and entered for each material (Catalog → Materials).
+- [ ] The five new fonts (Grand Hotel, Damion, Leckerli One, Fredoka Bold,
+  Chewy) test-cut cleanly.
+
+**Catalog and prices (phase 2)**
+
+- [ ] Switching an option off hides it from the order form.
+- [ ] Editing a price changes new quotes only, and price history records it.
+
+**Orders and emails (phase 3)**
+
+- [ ] A test order from your phone arrives in Gmail, with the preview and the
+  SVG attached.
+- [ ] Once your domain is verified in Resend and set in Settings → Emails, the
+  customer email shows the amount due, payment instructions and refund policy.
+- [ ] Turnstile shows on the order form.
+
+**Dashboard and payments (phase 4)**
+
+- [ ] Mark a test order paid. It goes to Paid in full, and its cut files unlock.
+- [ ] An invited production login sees the board and files, with no prices or
+  contact details.
+- [ ] A quick quote's image and short link look right pasted into Messenger.
+- [ ] One real Marketplace order runs from New to Complete.
+
+**Nesting (phase 5)**
+
+- [ ] A panel file imports into LightBurn at true size (48 × 47.875 in), with
+  order labels on the green layer.
+- [ ] Mark as cut lowers inventory and saves an offcut, and the next small
+  order lands on that offcut.
+
+**Reports (phase 6)**
+
+- [ ] Reports totals match your own tally of a month's e-Transfers and cash.
+- [ ] The daily digest arrives at 7:00 am Mountain. Use "Email me now" to
+  check it first.

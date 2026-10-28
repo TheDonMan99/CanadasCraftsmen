@@ -290,7 +290,7 @@ All wording is editable in Settings → Business.
 **Payment and refunds** (Settings → Payments)
 
 - Full payment upfront: the amount due at ordering is set to 100% (lower it any time to take a deposit instead)
-- Payment methods: Interac e-Transfer (on), cash (on), card through a Stripe payment link (off until phase 6)
+- Payment methods: Interac e-Transfer (on), cash (on), card through a Stripe payment link (off; online checkout is deferred until sales grow)
 - Payment email for e-Transfers is a setting, starting as donovanarntson@gmail.com; instructions ask the customer to put the order number in the message
 - Refund policy: 50% back if the customer cancels before cutting starts, nothing after; both percentages are editable, and the policy is shown at the proof step and in the order-received email
 - Cancelling an order in the dashboard asks who cancelled. Customer cancellations calculate the refund under the policy; cancellations by you default to a full refund. Either way the refund is recorded as a payment entry
@@ -577,7 +577,7 @@ A 4 × 8 ft sheet doesn't fit the 4 × 4 ft bed, so the app plans each sheet as 
 | Panel edge margin | 0.5 in |
 | Spacing between parts | 0.25 in |
 | Rotation | 0°, 90°, 180°, 270°; plywood grain lock limits to 0° and 180° |
-| Packing method | Rectangle packing (first version); true-shape nesting later |
+| Packing method | Best: tries rectangle packing and true-shape nesting, keeps whichever uses fewer panels (or pick either one) |
 | Use offcuts first | On |
 | Smallest offcut worth keeping | 6 × 12 in |
 | Fill gaps with small parts | On (separate letters and small signs fill leftover space) |
@@ -691,14 +691,14 @@ A small hosted web app in TypeScript, with the cut-file engine as a shared modul
 | App framework | Next.js (App Router) | Public designer, admin and server endpoints in one codebase |
 | Text to outlines | opentype.js | Reads TTF/OTF files and returns vector outlines, in browser and server |
 | Shape merging and offsets | Clipper2 (JavaScript port) or Paper.js | Union for welding, offsets for kerf, thicken and layered outlines |
-| Nesting | Rectangle packing first; true-shape later | Reliable first version; upgrade only if it saves material |
+| Nesting | Rectangle packing and true-shape nesting | True shape is used only when it saves material |
 | Database, login, file storage | Supabase | Postgres, emailed sign-in links, private file storage, row-level security |
 | Email | Resend | Reliable delivery with attachments and a simple API |
 | Spam protection | Cloudflare Turnstile | Free, invisible to most customers |
 | Hosting and scheduled jobs | Vercel | Simple deploys, custom domain, scheduled jobs for digests |
 | Styling | Tailwind CSS | Fast to build a clean, phone-friendly layout |
 | Tests | Vitest (engine and pricing), Playwright (order flow) | Engine and price rules tested on every change |
-| Payments (later) | Stripe payment links and webhooks | Marks orders paid automatically |
+| Payments (deferred) | Stripe payment links and webhooks | Not built for now: customers pay by e-Transfer or cash and you mark orders paid; add when sales grow |
 
 At a handful of orders a week, these services' free or entry tiers are usually enough; check current pricing when signing up. A custom domain for the business is optional but needed before customer emails go out from your own address.
 
@@ -753,10 +753,10 @@ Panel planning for 4 × 8 ft sheets, panel files, cut list, mark as cut, invento
 
 **Phase 6: Reports and extras**
 
-Reports, GST tracker, daily digest and weekly summary, CSV export, Stripe payment links that mark orders paid, review emails, true-shape nesting.
+Reports, GST tracker, daily digest and weekly summary, CSV export, review emails, true-shape nesting. Stripe payment links are deferred (decided after phase 5): no online checkout for now.
 
 - [ ] Report totals match a manual tally of the month's payments
-- [ ] A Stripe test payment marks its order paid without a click from you
+- [ ] The daily digest arrives at 7:00 am Mountain
 
 ## Decisions made
 
@@ -776,7 +776,7 @@ Every question now has an answer or a default, so Claude Code can build all six 
 | Colours, stains, fonts | 14 paints and 10 stains on; 16 fonts on (5 welcome and nursery fonts added after phase 3), 3 thin fonts off until test-cut | Catalog |
 | Prices | Starting tables kept after the market check; review once the queue is regularly full | Catalog, Settings → Pricing |
 | Your hourly rate | Not set; margin shows materials only until you add one | Settings → Pricing |
-| Payment | Full payment upfront; e-Transfer and cash; payment email editable, starting as donovanarntson@gmail.com; Stripe links in phase 6 | Settings → Payments |
+| Payment | Full payment upfront; e-Transfer and cash; payment email editable, starting as donovanarntson@gmail.com; no online checkout for now (Stripe deferred until sales grow) | Settings → Payments |
 | Refunds | 50% if the customer cancels before cutting starts; none after; full refund if you cancel | Settings → Payments |
 | Unpaid orders | Cut files need full payment; owner override with a logged reason | Settings → Production |
 | Capacity and lead time | 5 orders a week (raise to 10 later), 7 days standard, 3 days rush | Settings → Production |

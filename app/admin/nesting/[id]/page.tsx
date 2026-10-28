@@ -1,10 +1,12 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { requirePage } from '@/lib/auth/session';
-import { loadCatalog } from '@/lib/data';
+import { loadCatalog, loadSettings } from '@/lib/data';
 import { getDb } from '@/lib/db/client';
 import { getJob } from '@/lib/db/nesting';
 import { money, shortDate } from '../../ui';
+import { loadFontFile } from '@/lib/server/fonts';
+import { jobOutlines } from '@/lib/server/nesting';
 import JobView from './JobView';
 
 export const dynamic = 'force-dynamic';
@@ -15,7 +17,8 @@ export default async function JobPage({ params }: { params: Promise<{ id: string
   const db = getDb();
   const job = db ? await getJob(db, id) : null;
   if (!job) notFound();
-  const catalog = await loadCatalog();
+  const [catalog, settings] = await Promise.all([loadCatalog(), loadSettings()]);
+  const outlines = await jobOutlines({ db: db!, catalog, settings, loadFont: loadFontFile }, job);
   const material = catalog.find((m) => m.id === job.material_option_id);
   const s = job.summary;
   return (
@@ -24,12 +27,13 @@ export default async function JobPage({ params }: { params: Promise<{ id: string
       <h1 className="mt-1 text-2xl font-semibold">
         {material?.label} · {job.status === 'cut' ? `cut ${shortDate(job.cut_at)}` : `planned ${shortDate(job.created_at)}`}
       </h1>
-      <dl className="mt-3 grid grid-cols-2 gap-3 text-sm md:grid-cols-5">
+      <dl className="mt-3 grid grid-cols-2 gap-3 text-sm md:grid-cols-6">
         <Stat label="Orders" value={s.orderNumbers.join(', ')} />
         <Stat label="New sheets to rip" value={String(s.newSheets)} />
         <Stat label="Panels and offcuts used" value={String(job.panels.length)} />
         <Stat label="Material used" value={`${Math.round(job.utilization * 100)}%`} />
         <Stat label="Spare panels left over" value={String(s.sparePanelsLeft)} />
+        <Stat label="Packing" value={s.method === 'true_shape' ? 'True shape' : 'Rectangles'} />
       </dl>
       {s.inventoryWarning && <p className="mt-3 rounded bg-amber-50 p-2 text-sm text-amber-900">{s.inventoryWarning}</p>}
       {s.unplaced.length > 0 && (
@@ -42,7 +46,7 @@ export default async function JobPage({ params }: { params: Promise<{ id: string
           Material cost: {Object.entries(s.costs).map(([oid, c]) => `${s.orderNumbers[s.orderIds.indexOf(oid)]} ${money(c)}`).join(' · ')}
         </p>
       )}
-      <JobView job={job} />
+      <JobView job={job} outlines={outlines} />
     </main>
   );
 }

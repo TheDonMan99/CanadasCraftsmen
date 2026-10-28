@@ -59,6 +59,8 @@ export interface JobSummary {
   costs: Record<string, number>;
   marginIn: number;
   spacingIn: number;
+  /** how the layout was packed; true-shape layouts are checked against the real outlines */
+  method?: 'rectangle' | 'true_shape';
   /** stored panel files by bin id */
   files?: Record<string, string>;
   inventoryWarning?: string;

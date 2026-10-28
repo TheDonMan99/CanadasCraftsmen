@@ -216,6 +216,17 @@ async function dashboard(browser, errors) {
   await page.goto('/admin/inventory');
   await page.getByRole('region', { name: 'Birch plywood 1/4 in' }).getByText(/2 sheets · 1 spare panel/).waitFor();
 
+  step('reports: money received, GST tracker and CSV export');
+  await page.goto('/admin/reports');
+  await page.getByRole('heading', { name: 'GST registration tracker' }).waitFor();
+  assert.match(await page.locator('main').innerText(), /Money received\s*\$90/);
+  const csv = await page.request.get('/api/admin/export/orders');
+  assert.equal(csv.status(), 200);
+  assert.match(await csv.text(), /^Order,Date,Status,Customer/);
+  assert.match(await (await page.request.get('/api/admin/export/payments')).text(), /S-1001,payment,90\.00/);
+  await page.getByRole('button', { name: 'Daily digest' }).click();
+  await page.getByText(/daily digest: (sent|skipped)/).waitFor();
+
   step('a customer cancellation before cutting records a 50% refund');
   await page.goto('/admin/orders?q=S-1002');
   await page.getByRole('link', { name: 'S-1002' }).click();
@@ -255,6 +266,9 @@ async function dashboard(browser, errors) {
   assert.equal((await page.request.get(`/api/admin/orders/${orderId}/files/svg`)).status(), 200);
   await page.goto('/admin/orders');
   await page.waitForURL(/denied=1/);
+  await page.goto('/admin/reports');
+  await page.waitForURL(/denied=1/);
+  assert.equal((await page.request.get('/api/admin/export/orders')).status(), 403);
   await page.goto('/admin/nesting');
   await page.getByRole('heading', { name: 'Nesting' }).waitFor();
   assert.ok(!(await page.locator('main').innerText()).includes('$'), 'nesting shows no money to production');

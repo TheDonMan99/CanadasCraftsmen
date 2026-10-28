@@ -1,5 +1,92 @@
 # Changelog
 
+## Phase 6: Reports and extras (2026-10-29)
+
+Online checkout (Stripe) is **not** built, as you decided: customers pay by
+e-Transfer or cash and you mark orders paid. It can be added if sales grow.
+SPEC.md is updated to match.
+
+Built:
+
+- **Reports** (`/admin/reports`, owner only), over 3, 6, 12 or 24 months:
+  - money received (less refunds) and sales by month, with bars;
+  - sales and order counts by product, size, finish and order source;
+  - average order value;
+  - unpaid aging (0–7, 8–14, 15+ days), with the orders in each band;
+  - material cost and gross margin per order. The cost comes from cut nest
+    jobs, or is estimated (marked ~) until the order is cut. Labour at your
+    hourly rate is included once you set one.
+- **GST tracker:** money received over the last four calendar quarters, per
+  quarter and in total. It warns at $25,000 and says "register now" at $30,000,
+  in one quarter or over four (CRA memorandum 2-2). The threshold is a new
+  setting (Settings → Tax).
+- **CSV export** of orders and of payments. Cells that a spreadsheet would run
+  as a formula are neutralised.
+- **Scheduled emails**, each switched in Settings → Emails, and each sent at most
+  once a day:
+  - daily digest at 7:00 am Mountain: new orders, unpaid orders with days
+    waiting (flagged for a reminder after 3 days), due this week, past due, low
+    stock;
+  - weekly summary on Mondays: money received, orders, unpaid balance, sheets
+    and offcuts used, material cost;
+  - review request 3 days after Complete, once per order. It's off until you
+    switch it on and add a review link in Settings → Business;
+  - nightly CSV backup of all orders and payments, off by default.
+  - Vercel Cron (`vercel.json`) calls `/api/cron/daily` at 13:00 and 14:00 UTC.
+    Only the 7 am Mountain call acts, so daylight saving never shifts it. It's
+    protected by `CRON_SECRET`.
+  - "Email me now" buttons on the reports page send each one straight away.
+- **True-shape nesting** (`lib/nesting/trueshape.ts`):
+  - parts are placed by their real outlines on a 1/8 in grid;
+  - each outline is grown by half the spacing, so outlines stay at least 1/4 in
+    apart;
+  - small signs can sit in the empty space of bigger ones;
+  - grain lock still allows only 0° and 180°.
+  The job page now draws each part's real outline. Dragging a part on a
+  true-shape job is checked against the exact outlines.
+- **Packing method** setting: `best` (new default) tries both packers and
+  keeps whichever needs fewer panels; `rectangle` and `true_shape` force one.
+  Migration `20261101000000_true_shape.sql` switches saved settings from the
+  phase 5 default to `best`.
+- `.env.example` adds `CRON_SECRET`.
+- The README has the full run, deploy and back-up guide, and a checklist of
+  every test only you can do.
+
+Tests: 536 Vitest tests passing (18 new), and the browser test passes. The new
+Vitest tests cover:
+
+- reports against a hand tally (by month, product and source; average order;
+  aging; margins);
+- the GST tracker's ok, warn and register levels, with old quarters dropping off;
+- CSV quoting and formula safety;
+- scheduled emails at 7 am in November and in July, once a day, the weekly
+  summary only on Mondays, review requests once per order 3 days after Complete;
+- true-shape nesting: a part fitted into an L's corner where rectangles need a
+  second panel; the exact outline check; grain lock; the export turning parts
+  exactly as the packer did; four real signs; a true-shape job end to end.
+
+The browser test also:
+
+- checks the reports page and the orders and payments CSVs;
+- sends the digest;
+- confirms production can't open reports or exports.
+
+Decisions made while building:
+
+- **GST and "money received" count payments less refunds**, by the date
+  received.
+- **Material cost before cutting is an estimate** from the sign's size; after
+  cutting, the nest job's figure is used.
+- **Two cron times** (13:00 and 14:00 UTC), because Vercel schedules run in UTC
+  and Mountain time moves an hour twice a year.
+
+What you need to do:
+
+- Add `CRON_SECRET` (any long random string) in Vercel → Settings →
+  Environment Variables.
+- Run `supabase/setup.sql` once more for the one new migration.
+- Then work through "Checklist for you" at the end of README.md.
+
 ## Phase 5: Nesting, inventory and offcuts (2026-10-29)
 
 Built:
