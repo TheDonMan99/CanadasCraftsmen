@@ -176,16 +176,16 @@ The customer picks a finish type first, then colours for each piece. Two-colour 
 
 | Colour | Preview hex | Price change | On |
 | --- | --- | --- | --- |
-| White | #F5F5F2 | $5 | On |
-| Cream | #EFE6D2 | $5 | Off |
-| Black | #1E1E1E | $5 | On |
-| Charcoal | #3A3D40 | $5 | Off |
-| Navy | #1F2A44 | $5 | Off |
-| Dusty blue | #7A93AC | $5 | Off |
-| Sage green | #9CAF88 | $5 | Off |
-| Forest green | #2F4A3A | $5 | Off |
-| Blush pink | #E8C4C0 | $5 | Off |
-| Terracotta | #C46A4A | $5 | Off |
+| White | #F5F5F2 | $10 | On |
+| Cream | #EFE6D2 | $10 | Off |
+| Black | #1E1E1E | $10 | On |
+| Charcoal | #3A3D40 | $10 | Off |
+| Navy | #1F2A44 | $10 | Off |
+| Dusty blue | #7A93AC | $10 | Off |
+| Sage green | #9CAF88 | $10 | Off |
+| Forest green | #2F4A3A | $10 | Off |
+| Blush pink | #E8C4C0 | $10 | Off |
+| Terracotta | #C46A4A | $10 | Off |
 | Gold metallic | #C9A44C | +$5 | Off |
 | Silver metallic | #B9BCC0 | +$5 | Off |
 | Copper metallic | #B87333 | +$5 | Off |

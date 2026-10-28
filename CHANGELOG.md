@@ -1,5 +1,10 @@
 # Changelog
 
+## Catalog update (2026-10-28)
+
+- Basic paint colours now cost $10 each (was $5); only White and Black are on.
+  SPEC.md's paint table is updated to match. Metallic colours are unchanged.
+
 ## Phase 1: Engine and LightBurn files (2026-10-28)
 
 Built:
@@ -70,8 +75,9 @@ Decisions made while building (all are editable settings):
 
 Open items for later phases:
 
-- **Phase 2 (pricing):** the spec lists the basic paint colours at $5 each, but
-  the $135 worked example adds only the gold metallic +$5. This needs a decision.
+- **Phase 2 (pricing):** the $135 worked example (two-tone with gold metallic)
+  assumes one colour costs nothing. With basic colours now $10 each, that
+  example needs re-working before it becomes a pricing test.
 - Playfair Display Bold and Abril Fatface fail thin checks at most sizes. Consider
   giving them an auto-thicken value or switching them off after a test cut.
 

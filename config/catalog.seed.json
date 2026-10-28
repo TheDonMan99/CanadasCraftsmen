@@ -992,7 +992,7 @@
       "stock_status": "in_stock",
       "sort_order": 10,
       "price_type": "flat",
-      "price_value": 500,
+      "price_value": 1000,
       "applies_to": null,
       "values": {
         "hex": "#F5F5F2"
@@ -1008,7 +1008,7 @@
       "stock_status": "in_stock",
       "sort_order": 20,
       "price_type": "flat",
-      "price_value": 500,
+      "price_value": 1000,
       "applies_to": null,
       "values": {
         "hex": "#EFE6D2"
@@ -1024,7 +1024,7 @@
       "stock_status": "in_stock",
       "sort_order": 30,
       "price_type": "flat",
-      "price_value": 500,
+      "price_value": 1000,
       "applies_to": null,
       "values": {
         "hex": "#1E1E1E"
@@ -1040,7 +1040,7 @@
       "stock_status": "in_stock",
       "sort_order": 40,
       "price_type": "flat",
-      "price_value": 500,
+      "price_value": 1000,
       "applies_to": null,
       "values": {
         "hex": "#3A3D40"
@@ -1056,7 +1056,7 @@
       "stock_status": "in_stock",
       "sort_order": 50,
       "price_type": "flat",
-      "price_value": 500,
+      "price_value": 1000,
       "applies_to": null,
       "values": {
         "hex": "#1F2A44"
@@ -1072,7 +1072,7 @@
       "stock_status": "in_stock",
       "sort_order": 60,
       "price_type": "flat",
-      "price_value": 500,
+      "price_value": 1000,
       "applies_to": null,
       "values": {
         "hex": "#7A93AC"
@@ -1088,7 +1088,7 @@
       "stock_status": "in_stock",
       "sort_order": 70,
       "price_type": "flat",
-      "price_value": 500,
+      "price_value": 1000,
       "applies_to": null,
       "values": {
         "hex": "#9CAF88"
@@ -1104,7 +1104,7 @@
       "stock_status": "in_stock",
       "sort_order": 80,
       "price_type": "flat",
-      "price_value": 500,
+      "price_value": 1000,
       "applies_to": null,
       "values": {
         "hex": "#2F4A3A"
@@ -1120,7 +1120,7 @@
       "stock_status": "in_stock",
       "sort_order": 90,
       "price_type": "flat",
-      "price_value": 500,
+      "price_value": 1000,
       "applies_to": null,
       "values": {
         "hex": "#E8C4C0"
@@ -1136,7 +1136,7 @@
       "stock_status": "in_stock",
       "sort_order": 100,
       "price_type": "flat",
-      "price_value": 500,
+      "price_value": 1000,
       "applies_to": null,
       "values": {
         "hex": "#C46A4A"
