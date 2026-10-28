@@ -32,7 +32,8 @@ in phase 4, so for now run it on your own computer only.
 1. Copy `.env.example` to `.env.local`.
 2. Fill in `DATABASE_URL` from Supabase → Project Settings → Database →
    Connection string, using the **Transaction pooler** (port 6543). Fill in the
-   other three values from Project Settings → API.
+   other three values from Project Settings → API. `SUPABASE_URL` is the bare
+   project address, `https://<project>.supabase.co`, without `/rest/v1/`.
 3. Create the tables and load the starting catalog:
 
    ```bash
@@ -41,6 +42,12 @@ in phase 4, so for now run it on your own computer only.
 
    It's safe to run again: migrations already applied are skipped, and catalog
    rows you've edited are never overwritten.
+
+   If your computer can't reach the database (for example a sandbox that only
+   allows HTTPS), paste `supabase/setup.sql` into Supabase → SQL Editor and
+   click **Run** instead. It does exactly the same thing and is just as safe to
+   re-run. After changing a migration or a seed file, regenerate it with
+   `npm run db:sql` (a test fails if you forget).
 4. Run `npm run dev` and open <http://localhost:3000/admin/settings/catalog>.
 
 Without `DATABASE_URL` the app reads the seed files in `config/`, and the

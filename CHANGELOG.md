@@ -1,5 +1,28 @@
 # Changelog
 
+## Connecting Supabase (2026-10-28)
+
+- The Supabase keys work: the secret key reaches the project's API, and the
+  publishable key reaches sign-in.
+- This cloud session still can't open a Postgres connection, so `npm run
+  db:setup` can't run here. Its network only passes HTTPS traffic:
+  - the proxy opens a tunnel to the database port, then drops the Postgres
+    traffic;
+  - `api.supabase.com`, which could run SQL over HTTPS, is blocked.
+  This only affects the sandbox. Vercel connects to Postgres normally.
+- New: `supabase/setup.sql`, which you paste into the Supabase SQL Editor. It
+  does exactly what `npm run db:setup` does: it is generated from the same
+  migration and seed code, by `npm run db:sql`. It's safe to re-run, and
+  `db:setup` skips work it has already done.
+  Tests check that:
+  - the script leaves the database identical to `db:setup`;
+  - re-running it keeps your edits;
+  - the committed file is up to date.
+- `SUPABASE_URL` should be the bare `https://<project>.supabase.co`. The value
+  set in this environment ends in `/rest/v1/`.
+
+Tests: 331 passing.
+
 ## Phase 2: Catalog, settings and pricing (2026-10-28)
 
 Built:
