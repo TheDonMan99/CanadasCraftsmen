@@ -82,5 +82,35 @@
     "licence": "AmaticSC-Bold.LICENSE.txt",
     "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/amaticsc/AmaticSC-Bold.ttf",
     "weight": null
+  },
+  {
+    "file": "LeckerliOne-Regular.ttf",
+    "licence": "LeckerliOne-Regular.LICENSE.txt",
+    "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/leckerlione/LeckerliOne-Regular.ttf",
+    "weight": null
+  },
+  {
+    "file": "Damion-Regular.ttf",
+    "licence": "Damion-Regular.LICENSE.txt",
+    "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/damion/Damion-Regular.ttf",
+    "weight": null
+  },
+  {
+    "file": "GrandHotel-Regular.ttf",
+    "licence": "GrandHotel-Regular.LICENSE.txt",
+    "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/grandhotel/GrandHotel-Regular.ttf",
+    "weight": null
+  },
+  {
+    "file": "Fredoka-Bold.ttf",
+    "licence": "Fredoka-Bold.LICENSE.txt",
+    "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/fredoka/Fredoka[wdth,wght].ttf",
+    "weight": 700
+  },
+  {
+    "file": "Chewy-Regular.ttf",
+    "licence": "Chewy-Regular.LICENSE.txt",
+    "source": "https://raw.githubusercontent.com/google/fonts/main/apache/chewy/Chewy-Regular.ttf",
+    "weight": null
   }
 ]

@@ -5,10 +5,10 @@ import { catalog, settings } from './fixtures';
 import fs from 'node:fs';
 
 describe('seed catalog', () => {
-  test('ships 14 fonts, 11 on, each with its licence file', () => {
+  test('ships 19 fonts, 16 on, each with its licence file', () => {
     const fonts = byCategory(catalog, 'font', false);
-    expect(fonts).toHaveLength(14);
-    expect(fonts.filter((f) => f.enabled)).toHaveLength(11);
+    expect(fonts).toHaveLength(19);
+    expect(fonts.filter((f) => f.enabled)).toHaveLength(16);
     for (const f of fonts) {
       expect(fs.existsSync(`public/fonts/${f.values.font_file}`)).toBe(true);
       expect(fs.existsSync(`public/fonts/${f.values.licence_file}`)).toBe(true);

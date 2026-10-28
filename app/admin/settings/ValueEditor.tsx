@@ -1,8 +1,8 @@
 'use client';
 
 // Edits a JSON object field by field, with an input that suits each value's
-// type. Lists of words are typed comma-separated; anything nested is edited
-// as JSON.
+// type. Lists of words are typed comma-separated, long text gets a text box,
+// nested groups get their own fields, and lists of objects are edited as JSON.
 
 import { useState } from 'react';
 
@@ -51,6 +51,13 @@ function Field({ name, value, onChange }: { name: string; value: any; onChange: 
         </span>
       </label>
     );
+  if (typeof value === 'string' && (value.length > 80 || value.includes('\n')))
+    return (
+      <label className="block text-xs text-stone-600 sm:col-span-2">
+        {label(name)}
+        <textarea className={cls} rows={Math.min(12, value.split('\n').length + 2)} value={value} onChange={(e) => onChange(e.target.value)} />
+      </label>
+    );
   if (typeof value === 'string' || value === null)
     return (
       <label className="block text-xs text-stone-600">
@@ -62,6 +69,13 @@ function Field({ name, value, onChange }: { name: string; value: any; onChange: 
     const numeric = value.length > 0 && value.every((x) => typeof x === 'number');
     return <ListField name={name} value={value} numeric={numeric} onChange={onChange} />;
   }
+  if (value && typeof value === 'object' && !Array.isArray(value))
+    return (
+      <fieldset className="rounded-md border border-stone-200 p-2 sm:col-span-2">
+        <legend className="px-1 text-xs font-medium text-stone-700">{label(name)}</legend>
+        <ValueEditor value={value} onChange={onChange} />
+      </fieldset>
+    );
   return <JsonField name={name} value={value} onChange={onChange} />;
 }
 

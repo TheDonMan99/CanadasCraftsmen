@@ -2,18 +2,19 @@
 // Only missing rows are added, so re-running never overwrites your edits.
 
 import type { CatalogOption, Settings } from '@/lib/config/catalog';
+import replyTemplatesSeed from '@/config/reply-templates.seed.json';
 import type { Db } from './client';
 
 export const DEFAULT_ROLES: Record<string, Record<string, boolean>> = {
   owner: {
     view_orders: true, edit_orders: true, view_prices: true, view_payments: true, record_payments: true,
     view_contacts: true, view_board: true, download_files: true, manage_nesting: true, manage_inventory: true,
-    view_reports: true, edit_catalog: true, edit_settings: true, manage_users: true,
+    view_reports: true, edit_catalog: true, edit_settings: true, manage_users: true, override_cut_gate: true,
   },
   production: {
     view_orders: false, edit_orders: false, view_prices: false, view_payments: false, record_payments: false,
     view_contacts: false, view_board: true, download_files: true, manage_nesting: true, manage_inventory: true,
-    view_reports: false, edit_catalog: false, edit_settings: false, manage_users: false,
+    view_reports: false, edit_catalog: false, edit_settings: false, manage_users: false, override_cut_gate: false,
   },
 };
 
@@ -39,6 +40,16 @@ export async function seedDatabase(db: Db, catalog: CatalogOption[], settings: S
     }
     for (const [name, perms] of Object.entries(DEFAULT_ROLES))
       await t.query('insert into roles (name, permissions) values ($1, $2) on conflict do nothing', [name, JSON.stringify(perms)]);
+    // the owner account, and the starting Messenger replies (only into an empty table)
+    if (settings.business.owner_email)
+      await t.query("insert into users (email, role) values ($1, 'owner') on conflict (email) do nothing", [settings.business.owner_email]);
+    const templates = replyTemplatesSeed.templates;
+    await t.query(
+      `insert into reply_templates (title, body, sort_order)
+       select t.title, t.body, t.sort_order from jsonb_to_recordset($1::jsonb) as t(title text, body text, sort_order int)
+       where not exists (select 1 from reply_templates)`,
+      [JSON.stringify(templates.map((x, i) => ({ ...x, sort_order: (i + 1) * 10 })))],
+    );
     return { options: added, settings: s.length > 0 };
   });
 }

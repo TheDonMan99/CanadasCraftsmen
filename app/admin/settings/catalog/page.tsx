@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { byCategory } from '@/lib/config/catalog';
+import { requirePage } from '@/lib/auth/session';
 import { dataSource, loadCatalog } from '@/lib/data';
 import { CATEGORIES } from '../groups';
 import CatalogEditor from './CatalogEditor';
@@ -7,6 +8,7 @@ import CatalogEditor from './CatalogEditor';
 export const dynamic = 'force-dynamic';
 
 export default async function CatalogPage({ searchParams }: { searchParams: Promise<{ category?: string }> }) {
+  await requirePage('edit_catalog');
   const { category: raw } = await searchParams;
   const category = CATEGORIES.some((c) => c.key === raw) ? raw! : 'product';
   const catalog = await loadCatalog();

@@ -9,14 +9,18 @@
     "start": "next start",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:e2e": "node tests/e2e/order-flow.mjs",
     "typecheck": "tsc --noEmit",
     "fonts": "python3 scripts/prepare_fonts.py",
     "db:setup": "tsx scripts/db-setup.ts",
+    "db:sql": "tsx scripts/db-sql.ts",
     "db:local": "tsx scripts/local-db.ts"
   },
   "dependencies": {
     "@countertype/clipper2-ts": "^1.5.4-3.9a869ba",
     "@resvg/resvg-js": "^2.6.2",
+    "@supabase/ssr": "^0.12.7",
+    "@supabase/supabase-js": "^2.118.0",
     "next": "^16.4.3",
     "opentype.js": "^2.0.0",
     "postgres": "^3.4.9",

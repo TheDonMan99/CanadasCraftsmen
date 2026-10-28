@@ -11,8 +11,9 @@ export const SETTINGS_PAGES: { slug: string; label: string; group?: string; note
   { slug: 'payments', label: 'Payments', group: 'payments' },
   { slug: 'tax', label: 'Tax', group: 'tax' },
   { slug: 'business', label: 'Business', group: 'business' },
-  { slug: 'emails', label: 'Emails', note: 'Email templates arrive with order emails in phase 3.' },
-  { slug: 'users', label: 'Users and roles', note: 'Sign-in, users and roles arrive in phase 4. The owner and production roles are already in the database.' },
+  { slug: 'emails', label: 'Emails', group: 'emails' },
+  { slug: 'spam', label: 'Spam protection', group: 'spam' },
+  { slug: 'users', label: 'Users and roles' },
 ];
 
 export const CATEGORIES: { key: string; label: string }[] = [

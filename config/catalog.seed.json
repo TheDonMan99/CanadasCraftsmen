@@ -18,16 +18,19 @@
         "lines": [
           {
             "role": "top",
-            "text": "Welcome"
+            "text": "Welcome",
+            "font": "font.pacifico"
           },
           {
             "role": "main",
-            "text": "The Smiths"
+            "text": "The Smiths",
+            "font": "font.pacifico"
           },
           {
             "role": "small",
             "text": "Est. 2019",
-            "optional": true
+            "optional": true,
+            "font": "font.montserrat-bold"
           }
         ],
         "allowed_styles": [
@@ -60,7 +63,12 @@
           "font.montserrat-bold",
           "font.bebas-neue",
           "font.oswald",
-          "font.amatic-sc-bold"
+          "font.amatic-sc-bold",
+          "font.grand-hotel",
+          "font.damion",
+          "font.leckerli-one",
+          "font.fredoka-bold",
+          "font.chewy"
         ]
       },
       "internal_notes": ""
@@ -82,11 +90,13 @@
         "lines": [
           {
             "role": "main",
-            "text": "Smith"
+            "text": "Smith",
+            "font": "font.pacifico"
           },
           {
             "role": "small",
-            "text": "Est. 2019"
+            "text": "Est. 2019",
+            "font": "font.montserrat-bold"
           }
         ],
         "allowed_styles": [
@@ -119,7 +129,12 @@
           "font.montserrat-bold",
           "font.bebas-neue",
           "font.oswald",
-          "font.amatic-sc-bold"
+          "font.amatic-sc-bold",
+          "font.grand-hotel",
+          "font.damion",
+          "font.leckerli-one",
+          "font.fredoka-bold",
+          "font.chewy"
         ]
       },
       "internal_notes": ""
@@ -141,7 +156,8 @@
         "lines": [
           {
             "role": "main",
-            "text": "Ava"
+            "text": "Ava",
+            "font": "font.pacifico"
           }
         ],
         "allowed_styles": [
@@ -174,7 +190,12 @@
           "font.montserrat-bold",
           "font.bebas-neue",
           "font.oswald",
-          "font.amatic-sc-bold"
+          "font.amatic-sc-bold",
+          "font.grand-hotel",
+          "font.damion",
+          "font.leckerli-one",
+          "font.fredoka-bold",
+          "font.chewy"
         ]
       },
       "internal_notes": ""
@@ -196,13 +217,15 @@
         "lines": [
           {
             "role": "main",
-            "text": "WELCOME"
+            "text": "WELCOME",
+            "font": "font.pacifico"
           },
           {
             "role": "small",
             "text": "",
             "optional": true,
-            "placement": "bottom"
+            "placement": "bottom",
+            "font": "font.montserrat-bold"
           }
         ],
         "allowed_styles": [
@@ -228,7 +251,12 @@
           "font.montserrat-bold",
           "font.bebas-neue",
           "font.oswald",
-          "font.amatic-sc-bold"
+          "font.amatic-sc-bold",
+          "font.grand-hotel",
+          "font.damion",
+          "font.leckerli-one",
+          "font.fredoka-bold",
+          "font.chewy"
         ]
       },
       "internal_notes": ""
@@ -250,7 +278,8 @@
         "lines": [
           {
             "role": "main",
-            "text": "Welcome"
+            "text": "Welcome",
+            "font": "font.pacifico"
           }
         ],
         "allowed_styles": [
@@ -276,7 +305,12 @@
           "font.montserrat-bold",
           "font.bebas-neue",
           "font.oswald",
-          "font.amatic-sc-bold"
+          "font.amatic-sc-bold",
+          "font.grand-hotel",
+          "font.damion",
+          "font.leckerli-one",
+          "font.fredoka-bold",
+          "font.chewy"
         ]
       },
       "internal_notes": ""
@@ -299,7 +333,8 @@
         "lines": [
           {
             "role": "main",
-            "text": "Your text"
+            "text": "Your text",
+            "font": "font.pacifico"
           }
         ],
         "allowed_styles": [
@@ -332,7 +367,12 @@
           "font.montserrat-bold",
           "font.bebas-neue",
           "font.oswald",
-          "font.amatic-sc-bold"
+          "font.amatic-sc-bold",
+          "font.grand-hotel",
+          "font.damion",
+          "font.leckerli-one",
+          "font.fredoka-bold",
+          "font.chewy"
         ]
       },
       "internal_notes": ""
@@ -350,7 +390,8 @@
       "applies_to": null,
       "values": {
         "expected_pieces": "one",
-        "default": true
+        "default": true,
+        "engine_style": "one_piece"
       },
       "internal_notes": ""
     },
@@ -370,7 +411,8 @@
         "colour_pieces": [
           "top",
           "outline"
-        ]
+        ],
+        "engine_style": "layered"
       },
       "internal_notes": "Off for now: two-tone signs not offered yet."
     },
@@ -391,7 +433,8 @@
           "letters",
           "backer"
         ],
-        "needs_backer": true
+        "needs_backer": true,
+        "engine_style": "letters_on_backer"
       },
       "internal_notes": ""
     },
@@ -411,7 +454,8 @@
         "colour_pieces": [
           "panel"
         ],
-        "needs_backer": true
+        "needs_backer": true,
+        "engine_style": "stencil"
       },
       "internal_notes": ""
     },
@@ -1830,6 +1874,127 @@
         "weld_mode": "block"
       },
       "internal_notes": "Thin font: off until a test cut proves it holds together"
+    },
+    {
+      "id": "font.grand-hotel",
+      "category": "font",
+      "label": "Grand Hotel",
+      "description": "Connected retro script. Best for: Welcome, family names",
+      "enabled": true,
+      "stock_status": "in_stock",
+      "sort_order": 150,
+      "price_type": "none",
+      "price_value": 0,
+      "applies_to": null,
+      "values": {
+        "font_file": "GrandHotel-Regular.ttf",
+        "licence_file": "GrandHotel-Regular.LICENSE.txt",
+        "licence_confirmed": true,
+        "allowed_lines": [
+          "top",
+          "main"
+        ],
+        "auto_thicken_in": 0.02,
+        "weld_mode": "script"
+      },
+      "internal_notes": "Added after phase 3; test-cut before relying on it."
+    },
+    {
+      "id": "font.damion",
+      "category": "font",
+      "label": "Damion",
+      "description": "Thick connected script. Best for: Welcome, names",
+      "enabled": true,
+      "stock_status": "in_stock",
+      "sort_order": 160,
+      "price_type": "none",
+      "price_value": 0,
+      "applies_to": null,
+      "values": {
+        "font_file": "Damion-Regular.ttf",
+        "licence_file": "Damion-Regular.LICENSE.txt",
+        "licence_confirmed": true,
+        "allowed_lines": [
+          "top",
+          "main"
+        ],
+        "auto_thicken_in": 0.02,
+        "weld_mode": "script"
+      },
+      "internal_notes": "Added after phase 3; test-cut before relying on it."
+    },
+    {
+      "id": "font.leckerli-one",
+      "category": "font",
+      "label": "Leckerli One",
+      "description": "Bold playful script. Best for: Nursery names, welcome",
+      "enabled": true,
+      "stock_status": "in_stock",
+      "sort_order": 170,
+      "price_type": "none",
+      "price_value": 0,
+      "applies_to": null,
+      "values": {
+        "font_file": "LeckerliOne-Regular.ttf",
+        "licence_file": "LeckerliOne-Regular.LICENSE.txt",
+        "licence_confirmed": true,
+        "allowed_lines": [
+          "top",
+          "main"
+        ],
+        "auto_thicken_in": 0.02,
+        "weld_mode": "script"
+      },
+      "internal_notes": "Added after phase 3; test-cut before relying on it."
+    },
+    {
+      "id": "font.fredoka-bold",
+      "category": "font",
+      "label": "Fredoka Bold",
+      "description": "Rounded sans. Best for: Nursery names, \"Est.\" line",
+      "enabled": true,
+      "stock_status": "in_stock",
+      "sort_order": 180,
+      "price_type": "none",
+      "price_value": 0,
+      "applies_to": null,
+      "values": {
+        "font_file": "Fredoka-Bold.ttf",
+        "licence_file": "Fredoka-Bold.LICENSE.txt",
+        "licence_confirmed": true,
+        "allowed_lines": [
+          "top",
+          "main",
+          "small"
+        ],
+        "auto_thicken_in": 0,
+        "weld_mode": "block"
+      },
+      "internal_notes": "Added after phase 3; test-cut before relying on it."
+    },
+    {
+      "id": "font.chewy",
+      "category": "font",
+      "label": "Chewy",
+      "description": "Playful rounded capitals and lower case. Best for: Nursery names, kids' rooms",
+      "enabled": true,
+      "stock_status": "in_stock",
+      "sort_order": 190,
+      "price_type": "none",
+      "price_value": 0,
+      "applies_to": null,
+      "values": {
+        "font_file": "Chewy-Regular.ttf",
+        "licence_file": "Chewy-Regular.LICENSE.txt",
+        "licence_confirmed": true,
+        "allowed_lines": [
+          "top",
+          "main"
+        ],
+        "auto_thicken_in": 0,
+        "weld_mode": "block"
+      },
+      "internal_notes": "Added after phase 3; test-cut before relying on it."
     },
     {
       "id": "addon.keyholes",

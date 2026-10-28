@@ -99,7 +99,7 @@ export default function LabClient({ catalog, settings, initialFont, initialMater
   );
 
   useEffect(() => {
-    const w = new Worker(new URL('./engine.worker.ts', import.meta.url));
+    const w = new Worker(new URL('../../../lib/client/engine.worker.ts', import.meta.url));
     w.onmessage = (e) => {
       if (e.data.id !== seq.current) return;
       setBusy(false);
