@@ -3,11 +3,21 @@ import { notFound } from 'next/navigation';
 import { getDb } from '@/lib/db/client';
 import { getSavedDesign } from '@/lib/db/orders';
 import { defaultDesign, normalizeDesign, type OrderDesign } from '@/lib/order/design';
+import { env } from '@/lib/server/env';
 import Designer from '../Designer';
 import { designerData } from '../load';
 import Paused from '../Paused';
 
-export const metadata: Metadata = { title: 'A sign design for you' };
+/** Link previews (Messenger, Facebook) show the sign itself. */
+export async function generateMetadata({ params }: { params: Promise<{ shareId: string }> }): Promise<Metadata> {
+  const { shareId } = await params;
+  const image = `${env.siteUrl()}/api/designs/${encodeURIComponent(shareId)}/image`;
+  return {
+    title: 'A sign design for you',
+    description: 'Tap to see the sign, change it if you like, and order.',
+    openGraph: { title: 'A sign design for you', description: 'Tap to see the sign, change it if you like, and order.', images: [{ url: image, width: 1200 }] },
+  };
+}
 export const dynamic = 'force-dynamic';
 
 /** A design opened from a share link: it opens at the proof, ready to tweak or order. */

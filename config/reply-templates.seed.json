@@ -1,0 +1,24 @@
+{
+  "templates": [
+    {
+      "title": "Price list",
+      "body": "Thanks for your interest! Our signs are cut from 1/4 in birch plywood. Prices by width:\n{price_list}\nPainted, stained and other options are extra. You can design yours and see the exact price here: {design_link}"
+    },
+    {
+      "title": "How to order",
+      "body": "You can design your sign on your phone here: {design_link}\nPick your text, font, size and colour, check the proof, and place the order. You'll get an order number and payment instructions right away."
+    },
+    {
+      "title": "Payment instructions",
+      "body": "Thanks for your order! Please send an Interac e-Transfer to {payment_email} and put your order number in the message. We start on your sign as soon as payment arrives."
+    },
+    {
+      "title": "Arranging pickup",
+      "body": "{pickup_note} What days and times work best for you?"
+    },
+    {
+      "title": "Order ready",
+      "body": "Good news, your sign is ready! When would you like to pick it up?"
+    }
+  ]
+}

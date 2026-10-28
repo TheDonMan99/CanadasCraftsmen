@@ -228,7 +228,7 @@ Uncovered outdoor isn't offered by default, because interior plywood and MDF don
 
 ## Fonts
 
-The app ships with 14 fonts from Google Fonts, which are released under open licences that allow commercial use; the licence file is stored with each font. Thin fonts start switched off until a test cut proves they hold together.
+The app ships with 19 fonts from Google Fonts, which are released under open licences that allow commercial use; the licence file is stored with each font. Thin fonts start switched off until a test cut proves they hold together.
 
 | Font | Style | Best for | Allowed lines | Auto-thicken | On |
 | --- | --- | --- | --- | --- | --- |
@@ -246,6 +246,11 @@ The app ships with 14 fonts from Google Fonts, which are released under open lic
 | Bebas Neue | Condensed capitals | Modern, farmhouse | All | 0 in | On |
 | Oswald | Condensed sans | Small line | Small | 0 in | On |
 | Amatic SC Bold | Hand-drawn capitals | Farmhouse | Main, small | 0.03 in | Off |
+| Grand Hotel | Connected retro script | Welcome, family names | Top, main | 0.02 in | On |
+| Damion | Thick connected script | Welcome, names | Top, main | 0.02 in | On |
+| Leckerli One | Bold playful script | Nursery names, welcome | Top, main | 0.02 in | On |
+| Fredoka Bold | Rounded sans | Nursery names, "Est." line | All | 0 in | On |
+| Chewy | Playful rounded | Nursery names, kids' rooms | Top, main | 0 in | On |
 
 **Font settings**
 
@@ -768,7 +773,7 @@ Every question now has an answer or a default, so Claude Code can build all six 
 | Decorative shapes | Not included for now | — |
 | DIY kits | Not offered | — |
 | Sizes | 12–44 in presets on, 46 in off, custom width on; leaners 36, 42 and 46 in tall | Catalog → Sizes |
-| Colours, stains, fonts | 14 paints and 10 stains on; 11 fonts on, 3 thin fonts off until test-cut | Catalog |
+| Colours, stains, fonts | 14 paints and 10 stains on; 16 fonts on (5 welcome and nursery fonts added after phase 3), 3 thin fonts off until test-cut | Catalog |
 | Prices | Starting tables kept after the market check; review once the queue is regularly full | Catalog, Settings → Pricing |
 | Your hourly rate | Not set; margin shows materials only until you add one | Settings → Pricing |
 | Payment | Full payment upfront; e-Transfer and cash; payment email editable, starting as donovanarntson@gmail.com; Stripe links in phase 6 | Settings → Payments |

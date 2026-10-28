@@ -4,7 +4,7 @@ A web app for designing, ordering and producing laser-cut welcome signs. Custome
 design a sign; you confirm payment; one click makes a LightBurn-ready SVG.
 `SPEC.md` is the full build spec and the source of truth.
 
-**Status:** phases 1–3 of 6 (engine and LightBurn files; catalog, settings and pricing; order designer, orders and emails). See `CHANGELOG.md`.
+**Status:** phases 1–4 of 6 (engine and LightBurn files; catalog, settings and pricing; order designer, orders and emails; dashboard, payments and production). See `CHANGELOG.md`.
 
 ## Run it on your computer
 
@@ -16,7 +16,10 @@ npm run dev
 ```
 
 Open <http://localhost:3000> for the public site and order form, and
-<http://localhost:3000/admin/lab> for the engine lab.
+<http://localhost:3000/admin> for the dashboard. On your own computer, the
+sign-in page also has a **Dev sign-in** box: type an invited email (the owner,
+`donovanarntson@gmail.com`, is invited from the start) and you're in, without an
+email link. Dev sign-in is never available on Vercel.
 
 In the lab you can:
 
@@ -25,8 +28,7 @@ In the lab you can:
 - download the SVG, PNG and DXF files;
 - download the 10 in calibration square.
 
-The lab has no sign-in yet. Owner sign-in for everything under `/admin` arrives
-in phase 4, so for now run it on your own computer only.
+The lab is at <http://localhost:3000/admin/lab>.
 
 ## Connect the database (Supabase)
 
@@ -107,6 +109,68 @@ Settings → Emails edits every template's on/off switch, subject and wording.
 Settings → Spam protection and Settings → Production (lead times, capacity,
 pause switch, share links) control the rest.
 
+## Dashboard (phase 4)
+
+Everything under `/admin` needs sign-in.
+
+- **Sign-in** is by a link emailed to invited people (Settings → Users and
+  roles). The owner role has every permission. The production role sees:
+  - the board, order specs and the customer's first name;
+  - previews and cut files.
+  It never receives prices, payments or contact details from the server.
+- **Home:** cards for new orders, unpaid balance, due this week, in production
+  and revenue this month, then the production queue sorted by needed-by date.
+- **Orders:**
+  - the list has filters, search, bulk status change and bulk file generation;
+  - opening a new order moves it to Awaiting payment.
+- **Payment panel** on every order:
+  - record payments and refunds (amount, method, date, reference, note);
+  - **Mark as paid** records the full balance in one tap;
+  - **Send reminder**; days unpaid show in red after 3;
+  - payment statuses change by themselves;
+  - payments and history can't be edited or deleted.
+- **Cancelling** asks who cancelled and records the refund owed under the policy
+  as a refund entry.
+- **Cut-file gate:** SVG and DXF downloads need full payment. The owner can
+  override with a reason, which goes into the order history. Settings →
+  Production → "require full payment for cut files" off makes it a warning
+  only.
+- **Edit design:**
+  - fix a typo or change a font; the customer-approved version stays on
+    record;
+  - you can email an edited proof for the customer to approve at
+    `/proof/<link>`;
+  - you choose whether the price changes.
+- **Production board** (`/admin/board`): drag cards from Paid → In production →
+  Ready → Complete, or tap the button on a phone. In production and Ready email
+  the customer when those emails are on.
+- **Enter an order** (`/admin/orders/new`): the same designer, marked with a
+  source (Facebook Marketplace by default), with or without the customer's
+  confirmation email.
+- **Quick quote** (`/admin/quote`): build a design in under a minute. Then:
+  - copy the price message;
+  - save a square preview image for Messenger;
+  - make a short link like `/d/7KQ2`, which shows the sign when pasted into
+    Messenger;
+  - make listing images for every size.
+- **Replies** (`/admin/templates`): Messenger replies with copy buttons. They fill
+  in your price list, design link, payment email and pickup note.
+- **Customers:** contact details, order history, total spent, repeat-customer
+  flag.
+
+### Sign-in setup (Supabase, once)
+
+In Supabase → Authentication → URL Configuration:
+
+1. Set **Site URL** to your live address.
+2. Under **Redirect URLs**, add `https://<your site>/auth/callback` and
+   `http://localhost:3000/auth/callback`.
+
+Supabase's built-in email sender only sends a few sign-in emails an hour. Once
+your domain is verified in Resend, you can send sign-in emails through Resend
+instead: Supabase → Authentication → Emails → SMTP settings, using Resend's SMTP
+details.
+
 ## Settings and catalog
 
 - `/admin/settings/catalog`: every option in every category.
@@ -117,6 +181,8 @@ pause switch, share links) control the rest.
 - `/admin/settings/pricing`, `machine`, `engine`, `export`, `nesting`,
   `production`, `payments`, `tax`, `business`, `sizes`, `emails`, `spam`: one
   page per settings group.
+- `/admin/settings/users`: invite people, pick their role, and switch each
+  role's permissions on or off.
 - Every change is recorded in the audit log.
 - Price changes apply to new quotes only.
 
@@ -126,7 +192,7 @@ pause switch, share links) control the rest.
 npm test
 ```
 
-This runs about 370 Vitest tests in about two minutes. They cover:
+This runs about 500 Vitest tests in about two and a half minutes. They cover:
 
 - every engine pipeline step and the exports;
 - the seed catalog;
@@ -135,7 +201,13 @@ This runs about 370 Vitest tests in about two minutes. They cover:
 - the database (schema, seed, edits, price history, append-only payments),
   against PGlite, a real Postgres that runs inside the tests;
 - the order form's design rules and the whole order submission: price
-  tampering, spam checks, lead times, files and emails.
+  tampering, spam checks, lead times, files and emails;
+- the dashboard:
+  - payment statuses and refunds under the policy;
+  - the cut-file gate;
+  - append-only payments;
+  - that the production view leaks no prices or contact details;
+  - edited proofs, users and roles.
 
 The order flow in a real browser, at phone size (needs `npm run build` first):
 
@@ -148,6 +220,12 @@ This test:
 - starts its own throwaway database and the built app;
 - designs and orders a sign;
 - checks the confirmation page, a tampered price and a share link;
+- signs in as the owner:
+  - marks the order paid, and checks that cut files unlock;
+  - cancels a paid order for the customer (50% refund);
+  - invites a production user, and uses quick quote;
+- signs in as that production user, checks they see no prices or contact
+  details, and moves the order on the board;
 - saves screenshots to `test-output/e2e/`.
 
 It never touches Supabase, Resend or Turnstile.
@@ -192,7 +270,7 @@ npm run typecheck
 | `lib/export/` | LightBurn SVG, preview SVG, PNG, DXF, file names |
 | `config/catalog.seed.json` | Every catalog option (products, styles, sizes, materials, colours, fonts…) |
 | `config/settings.seed.json` | Machine, engine, export, nesting, production, payment and tax settings |
-| `public/fonts/` | The 14 fonts, each with its licence file (`scripts/prepare_fonts.py` re-downloads them) |
+| `public/fonts/` | The 19 fonts, each with its licence file (`scripts/prepare_fonts.py` re-downloads them) |
 | `app/admin/lab/` | The engine lab |
 | `app/api/lab/` | Server-side file downloads for the lab |
 | `lib/pricing/` | The price calculator (pure; the server always recalculates) |
@@ -207,6 +285,11 @@ npm run typecheck
 | `lib/server/submit-order.ts` | Everything that happens when an order is placed |
 | `lib/email/` | Email templates |
 | `supabase/setup.sql` | The whole schema and seed, to paste into the Supabase SQL Editor |
+| `app/admin/` | Dashboard: home, orders, board, customers, quick quote, replies, lab, settings |
+| `lib/auth/` | Sign-in and role permissions |
+| `lib/db/admin.ts` | Dashboard reads and writes (payments, statuses, users, replies, short links) |
+| `lib/order/payments.ts` | Statuses, payment and refund rules, the cut-file gate (pure) |
+| `config/reply-templates.seed.json` | The starting Messenger replies |
 | `tests/` | Vitest suite |
 
 ## Deploy and back up

@@ -10,7 +10,11 @@ export interface Db {
 
 export function postgresDb(url: string): Db {
   // prepare: false is required by Supabase's transaction pooler (port 6543)
-  const sql = postgres(url, { prepare: false, max: 5, idle_timeout: 20 });
+  // the local test database (PGlite over a socket) runs every connection through one session and
+  // mixes up overlapping queries' parameter types, so local use sends one query at a time over one
+  // connection; Supabase connections work as normal
+  const local = /@(localhost|127\.0\.0\.1)[:/]/.test(url);
+  const sql = postgres(url, { prepare: false, max: local ? 1 : 5, idle_timeout: 20, ...(local && { max_pipeline: 1 }) } as postgres.Options<{}>);
   const wrap = (s: postgres.Sql | postgres.TransactionSql): Db => ({
     query: async (text, params = []) => (await s.unsafe(text, params as any[])) as any,
     tx: (fn) => ('begin' in s ? (s as postgres.Sql).begin((t) => fn(wrap(t))) : fn(wrap(s))) as any,

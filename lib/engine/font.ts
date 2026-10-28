@@ -5,6 +5,9 @@
 // opentype.js, whose shaper throws on some fonts' substitution tables.
 
 import * as opentype from 'opentype.js';
+
+// plain Node (tsx scripts) sees only a default export; bundlers and Vitest see named ones
+const parseFont: typeof opentype.parse = (opentype as any).parse ?? (opentype as any).default.parse;
 import { area, pieces, union } from './geom';
 import type { Pt, Shape } from './types';
 
@@ -93,7 +96,7 @@ export function pathToShape(path: opentype.Path, tol: number): Shape {
 }
 
 export function loadFont(data: ArrayBuffer): LoadedFont {
-  const font = opentype.parse(data);
+  const font = parseFont(data);
   const upm = font.unitsPerEm;
   const tol = upm * 0.0002;
   const os2 = (font.tables as any).os2;

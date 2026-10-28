@@ -63,7 +63,12 @@
           "font.montserrat-bold",
           "font.bebas-neue",
           "font.oswald",
-          "font.amatic-sc-bold"
+          "font.amatic-sc-bold",
+          "font.grand-hotel",
+          "font.damion",
+          "font.leckerli-one",
+          "font.fredoka-bold",
+          "font.chewy"
         ]
       },
       "internal_notes": ""
@@ -124,7 +129,12 @@
           "font.montserrat-bold",
           "font.bebas-neue",
           "font.oswald",
-          "font.amatic-sc-bold"
+          "font.amatic-sc-bold",
+          "font.grand-hotel",
+          "font.damion",
+          "font.leckerli-one",
+          "font.fredoka-bold",
+          "font.chewy"
         ]
       },
       "internal_notes": ""
@@ -180,7 +190,12 @@
           "font.montserrat-bold",
           "font.bebas-neue",
           "font.oswald",
-          "font.amatic-sc-bold"
+          "font.amatic-sc-bold",
+          "font.grand-hotel",
+          "font.damion",
+          "font.leckerli-one",
+          "font.fredoka-bold",
+          "font.chewy"
         ]
       },
       "internal_notes": ""
@@ -236,7 +251,12 @@
           "font.montserrat-bold",
           "font.bebas-neue",
           "font.oswald",
-          "font.amatic-sc-bold"
+          "font.amatic-sc-bold",
+          "font.grand-hotel",
+          "font.damion",
+          "font.leckerli-one",
+          "font.fredoka-bold",
+          "font.chewy"
         ]
       },
       "internal_notes": ""
@@ -285,7 +305,12 @@
           "font.montserrat-bold",
           "font.bebas-neue",
           "font.oswald",
-          "font.amatic-sc-bold"
+          "font.amatic-sc-bold",
+          "font.grand-hotel",
+          "font.damion",
+          "font.leckerli-one",
+          "font.fredoka-bold",
+          "font.chewy"
         ]
       },
       "internal_notes": ""
@@ -342,7 +367,12 @@
           "font.montserrat-bold",
           "font.bebas-neue",
           "font.oswald",
-          "font.amatic-sc-bold"
+          "font.amatic-sc-bold",
+          "font.grand-hotel",
+          "font.damion",
+          "font.leckerli-one",
+          "font.fredoka-bold",
+          "font.chewy"
         ]
       },
       "internal_notes": ""
@@ -1844,6 +1874,127 @@
         "weld_mode": "block"
       },
       "internal_notes": "Thin font: off until a test cut proves it holds together"
+    },
+    {
+      "id": "font.grand-hotel",
+      "category": "font",
+      "label": "Grand Hotel",
+      "description": "Connected retro script. Best for: Welcome, family names",
+      "enabled": true,
+      "stock_status": "in_stock",
+      "sort_order": 150,
+      "price_type": "none",
+      "price_value": 0,
+      "applies_to": null,
+      "values": {
+        "font_file": "GrandHotel-Regular.ttf",
+        "licence_file": "GrandHotel-Regular.LICENSE.txt",
+        "licence_confirmed": true,
+        "allowed_lines": [
+          "top",
+          "main"
+        ],
+        "auto_thicken_in": 0.02,
+        "weld_mode": "script"
+      },
+      "internal_notes": "Added after phase 3; test-cut before relying on it."
+    },
+    {
+      "id": "font.damion",
+      "category": "font",
+      "label": "Damion",
+      "description": "Thick connected script. Best for: Welcome, names",
+      "enabled": true,
+      "stock_status": "in_stock",
+      "sort_order": 160,
+      "price_type": "none",
+      "price_value": 0,
+      "applies_to": null,
+      "values": {
+        "font_file": "Damion-Regular.ttf",
+        "licence_file": "Damion-Regular.LICENSE.txt",
+        "licence_confirmed": true,
+        "allowed_lines": [
+          "top",
+          "main"
+        ],
+        "auto_thicken_in": 0.02,
+        "weld_mode": "script"
+      },
+      "internal_notes": "Added after phase 3; test-cut before relying on it."
+    },
+    {
+      "id": "font.leckerli-one",
+      "category": "font",
+      "label": "Leckerli One",
+      "description": "Bold playful script. Best for: Nursery names, welcome",
+      "enabled": true,
+      "stock_status": "in_stock",
+      "sort_order": 170,
+      "price_type": "none",
+      "price_value": 0,
+      "applies_to": null,
+      "values": {
+        "font_file": "LeckerliOne-Regular.ttf",
+        "licence_file": "LeckerliOne-Regular.LICENSE.txt",
+        "licence_confirmed": true,
+        "allowed_lines": [
+          "top",
+          "main"
+        ],
+        "auto_thicken_in": 0.02,
+        "weld_mode": "script"
+      },
+      "internal_notes": "Added after phase 3; test-cut before relying on it."
+    },
+    {
+      "id": "font.fredoka-bold",
+      "category": "font",
+      "label": "Fredoka Bold",
+      "description": "Rounded sans. Best for: Nursery names, \"Est.\" line",
+      "enabled": true,
+      "stock_status": "in_stock",
+      "sort_order": 180,
+      "price_type": "none",
+      "price_value": 0,
+      "applies_to": null,
+      "values": {
+        "font_file": "Fredoka-Bold.ttf",
+        "licence_file": "Fredoka-Bold.LICENSE.txt",
+        "licence_confirmed": true,
+        "allowed_lines": [
+          "top",
+          "main",
+          "small"
+        ],
+        "auto_thicken_in": 0,
+        "weld_mode": "block"
+      },
+      "internal_notes": "Added after phase 3; test-cut before relying on it."
+    },
+    {
+      "id": "font.chewy",
+      "category": "font",
+      "label": "Chewy",
+      "description": "Playful rounded capitals and lower case. Best for: Nursery names, kids' rooms",
+      "enabled": true,
+      "stock_status": "in_stock",
+      "sort_order": 190,
+      "price_type": "none",
+      "price_value": 0,
+      "applies_to": null,
+      "values": {
+        "font_file": "Chewy-Regular.ttf",
+        "licence_file": "Chewy-Regular.LICENSE.txt",
+        "licence_confirmed": true,
+        "allowed_lines": [
+          "top",
+          "main"
+        ],
+        "auto_thicken_in": 0,
+        "weld_mode": "block"
+      },
+      "internal_notes": "Added after phase 3; test-cut before relying on it."
     },
     {
       "id": "addon.keyholes",

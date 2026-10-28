@@ -38,3 +38,15 @@ export async function signedUrl(path: string, expiresIn = 600): Promise<string |
   const { signedURL } = await res.json();
   return signedURL ? `${base}/storage/v1${signedURL}` : null;
 }
+
+/** A private file's bytes, or null if storage isn't set up or the file is missing. */
+export async function downloadFile(path: string): Promise<Buffer | null> {
+  const base = env.supabaseUrl();
+  if (!base || !env.serviceKey()) return null;
+  try {
+    const res = await fetch(`${base}/storage/v1/object/${ORDER_BUCKET}/${path}`, { headers: headers(), signal: AbortSignal.timeout(20_000) });
+    return res.ok ? Buffer.from(await res.arrayBuffer()) : null;
+  } catch {
+    return null;
+  }
+}

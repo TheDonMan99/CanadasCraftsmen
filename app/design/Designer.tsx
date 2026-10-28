@@ -40,9 +40,21 @@ export interface DesignerProps {
   earliest: { standard: string; rush: string };
   turnstileSiteKey: string | null;
   refundPolicy: string;
+  /**
+   * customer: the public order form.
+   * admin-new: you entering an order (no spam checks; source and customer email choice).
+   * admin-edit: you editing an order's design (ends at the proof, with re-approval and repricing choices).
+   */
+  mode?: 'customer' | 'admin-new' | 'admin-edit';
+  orderId?: string;
+  /** admin-edit: the order's current total, to show any change */
+  currentTotalCents?: number;
 }
 
-export default function Designer({ catalog, settings, initial, startStep = 0, earliest, turnstileSiteKey, refundPolicy }: DesignerProps) {
+export default function Designer({ catalog, settings, initial, startStep = 0, earliest, turnstileSiteKey, refundPolicy, mode = 'customer', orderId, currentTotalCents }: DesignerProps) {
+  const admin = mode !== 'customer';
+  const editing = mode === 'admin-edit';
+  const lastStep = editing ? 7 : 8;
   const router = useRouter();
   const [design, setDesignRaw] = useState<OrderDesign>(initial);
   const [step, setStep] = useState(startStep);
@@ -54,6 +66,10 @@ export default function Designer({ catalog, settings, initial, startStep = 0, ea
   const [submitting, setSubmitting] = useState(false);
   const [submitErrors, setSubmitErrors] = useState<string[]>([]);
   const [share, setShare] = useState<{ url?: string; error?: string; busy?: boolean }>({});
+  const [source, setSource] = useState('Facebook Marketplace');
+  const [emailCustomer, setEmailCustomer] = useState(true);
+  const [sendProof, setSendProof] = useState(true);
+  const [reprice, setReprice] = useState(false);
 
   const setDesign = (patch: Partial<OrderDesign>) => setDesignRaw((d) => normalizeDesign({ ...d, ...patch }, catalog));
   const engineInput = useMemo(() => engineDesign(design, catalog, settings), [design, catalog, settings]);
@@ -75,11 +91,11 @@ export default function Designer({ catalog, settings, initial, startStep = 0, ea
   if (step === 1 && !design.lines.some((l) => l.role === 'main' && l.text.trim())) blockers.push('Type the main name.');
   if (step >= 1 && step <= 7 && fresh && !result!.ok) blockers.push(...result!.failures.map((f) => f.message));
   if (step >= 3 && !q.ok) blockers.push(...q.errors);
-  if (step === 7 && !approved) blockers.push('Tick the box to approve the proof.');
+  if (step === 7 && !approved && !editing) blockers.push(admin ? 'Tick the box once the customer has approved the design.' : 'Tick the box to approve the proof.');
   const canNext = !blockers.length && (step < 1 || step > 7 || fresh);
 
   const next = () => {
-    setStep((s) => Math.min(STEPS.length - 1, s + 1));
+    setStep((s) => Math.min(lastStep, s + 1));
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
   const back = () => setStep((s) => Math.max(0, s - 1));
@@ -99,18 +115,19 @@ export default function Designer({ catalog, settings, initial, startStep = 0, ea
     }
   }
 
-  async function submit(e: React.FormEvent) {
-    e.preventDefault();
+  async function submit(e?: React.FormEvent) {
+    e?.preventDefault();
     setSubmitting(true);
     setSubmitErrors([]);
     try {
-      const res = await fetch('/api/orders', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ design, contact: { ...contact, neededBy: contact.neededBy || undefined }, proofApproved: approved, turnstileToken: token, website: honeypot }),
-      });
+      const [url, payload] = editing
+        ? [`/api/admin/orders/${orderId}/design`, { design, sendProof, reprice }]
+        : mode === 'admin-new'
+          ? ['/api/admin/orders', { design, contact: { ...contact, neededBy: contact.neededBy || undefined }, proofApproved: approved, source, sendCustomerEmail: emailCustomer }]
+          : ['/api/orders', { design, contact: { ...contact, neededBy: contact.neededBy || undefined }, proofApproved: approved, turnstileToken: token, website: honeypot }];
+      const res = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
       const body = await res.json().catch(() => ({}));
-      if (res.ok && body.confirmationUrl) return router.push(body.confirmationUrl);
+      if (res.ok && (body.confirmationUrl || body.url)) return router.push(admin ? body.url : body.confirmationUrl);
       setSubmitErrors(body.errors?.length ? body.errors : [body.error ?? `Something went wrong (${res.status}). Please try again.`]);
       (window as any).turnstile?.reset?.();
     } catch {
@@ -144,7 +161,7 @@ export default function Designer({ catalog, settings, initial, startStep = 0, ea
           </label>
         </div>
         <ol className="mt-2 flex gap-1" aria-label="Steps">
-          {STEPS.map((s, i) => (
+          {STEPS.slice(0, lastStep + 1).map((s, i) => (
             <li key={s} className="flex-1">
               <button
                 type="button"
@@ -274,11 +291,35 @@ export default function Designer({ catalog, settings, initial, startStep = 0, ea
             </div>
             {settings.pricing.show_breakdown && <Breakdown q={q} />}
             <p className="rounded-lg bg-amber-50 p-3 text-amber-900">{refundPolicy}</p>
-            <label className="flex items-start gap-3 rounded-lg border border-stone-300 bg-white p-3">
-              <input type="checkbox" className="mt-0.5 h-5 w-5" checked={approved} onChange={(e) => setApproved(e.target.checked)} />
-              <span>I’ve checked the spelling, the layout and the size, and I agree to the refund policy. My sign will be made exactly as shown.</span>
-            </label>
-            {settings.production.share_links_enabled && (
+            {editing ? (
+              <div className="space-y-2">
+                <label className="flex items-start gap-3 rounded-lg border border-stone-300 bg-white p-3">
+                  <input type="checkbox" className="mt-0.5 h-5 w-5" checked={sendProof} onChange={(e) => setSendProof(e.target.checked)} />
+                  <span>Email the customer the edited proof to approve. The version they approved stays on record.</span>
+                </label>
+                {currentTotalCents !== undefined && q.ok && q.totalCents !== currentTotalCents && (
+                  <label className="flex items-start gap-3 rounded-lg border border-amber-300 bg-amber-50 p-3">
+                    <input type="checkbox" className="mt-0.5 h-5 w-5" checked={reprice} onChange={(e) => setReprice(e.target.checked)} />
+                    <span>Change the price from {dollars(currentTotalCents)} to {dollars(q.totalCents)}. Leave unticked to keep the price the customer agreed to.</span>
+                  </label>
+                )}
+                {submitErrors.length > 0 && (
+                  <ul className="rounded-lg bg-red-50 p-3 text-sm text-red-800" role="alert">
+                    {submitErrors.map((e, i) => <li key={i}>{e}</li>)}
+                  </ul>
+                )}
+              </div>
+            ) : (
+              <label className="flex items-start gap-3 rounded-lg border border-stone-300 bg-white p-3">
+                <input type="checkbox" className="mt-0.5 h-5 w-5" checked={approved} onChange={(e) => setApproved(e.target.checked)} />
+                <span>
+                  {admin
+                    ? 'The customer has approved this design and the refund policy (in Messenger or in person).'
+                    : 'I’ve checked the spelling, the layout and the size, and I agree to the refund policy. My sign will be made exactly as shown.'}
+                </span>
+              </label>
+            )}
+            {settings.production.share_links_enabled && !admin && (
               <div>
                 <button type="button" onClick={shareDesign} disabled={share.busy} className="text-sm text-blue-700 underline">
                   {share.busy ? 'Saving…' : 'Share this design (send it to someone before ordering)'}
@@ -296,7 +337,20 @@ export default function Designer({ catalog, settings, initial, startStep = 0, ea
 
         {step === 8 && (
           <form id="order-form" onSubmit={submit} className="mt-3 space-y-3">
-            <Field label="Your name" value={contact.name} onChange={(v) => setContact({ ...contact, name: v })} autoComplete="name" required />
+            {mode === 'admin-new' && (
+              <div className="grid gap-3 rounded-lg bg-amber-50 p-3 sm:grid-cols-2">
+                <label className="block text-sm font-medium text-stone-700">
+                  Source
+                  <select className="input mt-1 py-2 text-base" value={source} onChange={(e) => setSource(e.target.value)}>
+                    {['Facebook Marketplace', 'Instagram', 'Market booth', 'Referral', 'Repeat customer', 'Other'].map((o) => <option key={o}>{o}</option>)}
+                  </select>
+                </label>
+                <label className="flex items-center gap-2 text-sm">
+                  <input type="checkbox" checked={emailCustomer} onChange={(e) => setEmailCustomer(e.target.checked)} /> Email the customer their order confirmation
+                </label>
+              </div>
+            )}
+            <Field label={admin ? 'Customer name' : 'Your name'} value={contact.name} onChange={(v) => setContact({ ...contact, name: v })} autoComplete="name" required />
             <Field label="Email" type="email" value={contact.email} onChange={(v) => setContact({ ...contact, email: v })} autoComplete="email" required />
             <Field label="Phone" type="tel" value={contact.phone} onChange={(v) => setContact({ ...contact, phone: v })} autoComplete="tel" required />
             <div>
@@ -331,10 +385,12 @@ export default function Designer({ catalog, settings, initial, startStep = 0, ea
                 Website <input tabIndex={-1} autoComplete="off" value={honeypot} onChange={(e) => setHoneypot(e.target.value)} name="website" />
               </label>
             </div>
-            {turnstileSiteKey && <Turnstile siteKey={turnstileSiteKey} onToken={setToken} />}
-            <p className="text-xs text-stone-500">
-              {settings.business.privacy_note} <a href="/privacy" className="underline">Privacy</a>
-            </p>
+            {!admin && turnstileSiteKey && <Turnstile siteKey={turnstileSiteKey} onToken={setToken} />}
+            {!admin && (
+              <p className="text-xs text-stone-500">
+                {settings.business.privacy_note} <a href="/privacy" className="underline">Privacy</a>
+              </p>
+            )}
             <div className="rounded-lg bg-white p-3 text-sm ring-1 ring-stone-200">
               Amount due when you order: <strong>{dollars(q.amountDueCents)}</strong>
               {q.deliveryQuoted && <span className="block text-xs text-stone-500">Shipping is quoted separately.</span>}
@@ -363,13 +419,17 @@ export default function Designer({ catalog, settings, initial, startStep = 0, ea
               Back
             </button>
           )}
-          {step < 8 ? (
+          {editing && step === lastStep ? (
+            <button type="button" onClick={() => submit()} disabled={submitting || !canNext} className="flex-1 rounded-lg bg-amber-700 px-4 py-3 text-sm font-medium text-white disabled:bg-stone-300">
+              {submitting ? 'Saving…' : 'Save changes'}
+            </button>
+          ) : step < lastStep ? (
             <button type="button" onClick={next} disabled={!canNext} className="flex-1 rounded-lg bg-stone-900 px-4 py-3 text-sm font-medium text-white disabled:bg-stone-300">
-              {step === 7 ? 'Approve and continue' : step === 0 ? 'Start designing' : !fresh && step >= 1 ? 'Checking…' : `Next: ${STEPS[step + 1]}`}
+              {step === 7 ? (admin ? 'Continue' : 'Approve and continue') : step === 0 ? 'Start designing' : !fresh && step >= 1 ? 'Checking…' : `Next: ${STEPS[step + 1]}`}
             </button>
           ) : (
-            <button type="submit" form="order-form" disabled={submitting || !q.ok || !engineOk || (!!turnstileSiteKey && !token)} className="flex-1 rounded-lg bg-amber-700 px-4 py-3 text-sm font-medium text-white disabled:bg-stone-300">
-              {submitting ? 'Sending your order…' : `Place order · ${dollars(q.amountDueCents)} due`}
+            <button type="submit" form="order-form" disabled={submitting || !q.ok || !engineOk || (!admin && !!turnstileSiteKey && !token)} className="flex-1 rounded-lg bg-amber-700 px-4 py-3 text-sm font-medium text-white disabled:bg-stone-300">
+              {submitting ? 'Sending…' : admin ? `Save order · ${dollars(q.totalCents)}` : `Place order · ${dollars(q.amountDueCents)} due`}
             </button>
           )}
         </div>

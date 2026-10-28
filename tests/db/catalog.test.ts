@@ -16,9 +16,18 @@ describe('seed', () => {
   test('loads every catalog option, font, material inventory row and role', async () => {
     const cat = await listCatalog(db);
     expect(cat).toHaveLength(seedCatalog().length);
-    expect((await db.query('select count(*)::int as n from fonts'))[0].n).toBe(14);
+    expect((await db.query('select count(*)::int as n from fonts'))[0].n).toBe(19);
     expect((await db.query('select count(*)::int as n from inventory'))[0].n).toBe(5);
     expect((await db.query('select name from roles order by name')).map((r) => r.name)).toEqual(['owner', 'production']);
+    expect(await db.query('select email, role from users')).toEqual([{ email: 'donovanarntson@gmail.com', role: 'owner' }]);
+    expect((await db.query('select title from reply_templates order by sort_order')).map((r) => r.title)).toEqual([
+      'Price list', 'How to order', 'Payment instructions', 'Arranging pickup', 'Order ready',
+    ]);
+  });
+  test('re-running the seed doesn’t bring back a deleted reply template', async () => {
+    await db.query("delete from reply_templates where title = 'Order ready'");
+    await seedDatabase(db, seedCatalog(), seedSettings());
+    expect((await db.query('select count(*)::int as n from reply_templates'))[0].n).toBe(4);
   });
   test('round-trips options exactly as in the seed file', async () => {
     const byId = new Map((await listCatalog(db)).map((o) => [o.id, o]));

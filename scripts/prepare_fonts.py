@@ -1,4 +1,4 @@
-"""Download the 14 shipped fonts from the Google Fonts repository into public/fonts.
+"""Download the shipped fonts from the Google Fonts repository into public/fonts.
 
 Variable fonts are pinned to a static instance (for example Dancing Script at
 weight 700) so the engine always cuts the exact weight named in the catalog.
@@ -36,6 +36,12 @@ FONTS = [
     ("BebasNeue-Regular.ttf", "ofl/bebasneue/BebasNeue-Regular.ttf", "ofl/bebasneue/OFL.txt", None),
     ("Oswald-Regular.ttf", "ofl/oswald/Oswald[wght].ttf", "ofl/oswald/OFL.txt", 400),
     ("AmaticSC-Bold.ttf", "ofl/amaticsc/AmaticSC-Bold.ttf", "ofl/amaticsc/OFL.txt", None),
+    # added after phase 3: welcome and nursery styles, picked by test-cutting candidates in the engine
+    ("LeckerliOne-Regular.ttf", "ofl/leckerlione/LeckerliOne-Regular.ttf", "ofl/leckerlione/OFL.txt", None),
+    ("Damion-Regular.ttf", "ofl/damion/Damion-Regular.ttf", "ofl/damion/OFL.txt", None),
+    ("GrandHotel-Regular.ttf", "ofl/grandhotel/GrandHotel-Regular.ttf", "ofl/grandhotel/OFL.txt", None),
+    ("Fredoka-Bold.ttf", "ofl/fredoka/Fredoka[wdth,wght].ttf", "ofl/fredoka/OFL.txt", 700),
+    ("Chewy-Regular.ttf", "apache/chewy/Chewy-Regular.ttf", "apache/chewy/LICENSE.txt", None),
 ]
 
 

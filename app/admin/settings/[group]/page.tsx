@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+import { requirePage } from '@/lib/auth/session';
 import { largestSign } from '@/lib/config/catalog';
 import { dataSource, loadSettings } from '@/lib/data';
 import type { SettingsGroup } from '@/lib/db/settings';
@@ -24,6 +25,7 @@ export default async function SettingsGroupPage({ params }: { params: Promise<{ 
   const { group } = await params;
   const page = SETTINGS_PAGES.find((p) => p.slug === group);
   if (!page) notFound();
+  await requirePage(page.slug === 'users' ? 'manage_users' : 'edit_settings');
   if (!page.group)
     return (
       <div>

@@ -1,5 +1,157 @@
 # Changelog
 
+## Phase 4: Dashboard, payments and production (2026-10-29)
+
+Built:
+
+- **Sign-in** by emailed link (Supabase Auth), for invited users only:
+  - the users table, plus `ADMIN_EMAIL`;
+  - the owner, donovanarntson@gmail.com, is seeded;
+  - on your own computer there's also a one-click dev sign-in, which is never
+    available on Vercel.
+- **Roles and permissions:** every permission is a switch per role, in Settings
+  → Users and roles, which is also where you invite and remove people.
+  - The owner always has every permission.
+  - Production gets the board, specs, files, nesting and inventory.
+  - Every admin page, action and endpoint checks the user's permission.
+  - Production's order pages and board are built from queries that never select
+    prices, payments or contact details.
+- **Home:** cards for new orders, unpaid balance, due this week, in production
+  and revenue this month, and the production queue by needed-by date with paid
+  status. Production users see the queue of paid work instead.
+- **Orders list:** number, date, customer, product, width, material, finish,
+  total, paid, balance, status and due date. It has filters, search, bulk status
+  change and bulk file generation.
+- **Order page:**
+  - preview, specs and engine report;
+  - files;
+  - timeline, email log, customer, price as ordered;
+  - private notes.
+- **Payment panel:**
+  - big paid badge;
+  - record payments and refunds (amount, method, date, reference, note);
+  - mark as paid in one tap;
+  - send reminder; days unpaid show in red after 3;
+  - balance owing.
+  Payments and history are append-only.
+- **Statuses:**
+  - opening a new order moves it to Awaiting payment;
+  - payments move it to Deposit paid (only with deposits on) and Paid in full;
+  - you move it through In production, Ready and Complete.
+- **Cancelling** asks who cancelled. It records the refund owed as a refund
+  entry: 50% before cutting, nothing after, 100% when you cancel.
+- **Cut-file gate:** SVG and DXF need full payment. The owner can override with
+  a reason, which is saved to the history. A setting switches it to warn only.
+- **Files:**
+  - download the latest SVG, PNG or DXF;
+  - regenerate a new version with today's material settings;
+  - downloads build the file on the spot if storage isn't set up.
+- **Edit design:**
+  - the same designer, starting from the order;
+  - the approved version is kept in the design history;
+  - you can email an edited proof the customer approves at `/proof/<link>`,
+    a link that works once;
+  - you choose whether the price changes;
+  - files are regenerated.
+- **Customer status emails:**
+  - payment received, plus an optional copy to you;
+  - payment reminder;
+  - edited proof;
+  - in production;
+  - ready.
+- **Production board:** drag and drop, with buttons on phones.
+- **Customers:** contact details, order history, total spent, repeat flag.
+- **Entering orders yourself** (`/admin/orders/new`): the same designer, a source
+  (Facebook Marketplace by default), no spam checks or lead-time limit, and the
+  customer email optional.
+- **Marketplace tools:**
+  - **Quick quote:** a one-screen designer. It copies a price message, saves a
+    square preview image, makes a short design link (`/d/7KQ2`), opens the
+    design as an order, and makes listing images at every size.
+  - Shared design links now show the sign as the link preview in Messenger.
+  - **Reply templates** with copy buttons. Price list, design link, payment email
+    and pickup note fill in automatically; the five starting replies are
+    seeded.
+- **5 more fonts**, picked from 11 Google Fonts candidates by running each
+  through the engine on the spec's test names:
+
+  | Font | Use | Spec test cases passing | Auto-thicken |
+  |---|---|---|---|
+  | Grand Hotel | Welcome, family names | 22/22 | 0.02 in |
+  | Damion | Welcome, names | 21/22 | 0.02 in |
+  | Leckerli One | Nursery names, welcome | 17/22 | 0.02 in |
+  | Fredoka Bold | Nursery names, "Est." line | 21/22 | none |
+  | Chewy | Nursery names, kids' rooms | 21/22 | none |
+
+  Every miss is "letters too small" on long names at 24 in. Cookie, Norican,
+  Courgette, Baloo 2, Sniglet and Lilita One were tried and left out.
+
+  The fonts are on for every product. A migration adds them to the products in a
+  database seeded before now.
+- **Database:** migration `20261030000000_dashboard.sql` adds:
+  - edited-proof links;
+  - the cut-file override reason;
+  - who cancelled;
+  - indexes.
+  `supabase/setup.sql` includes it, with the seeded owner account and reply
+  templates.
+
+Fixed along the way:
+
+- Local databases (`npm run db:local` and the browser test) now use one
+  connection, one query at a time. The PGlite socket server mixed up the
+  parameter types of overlapping queries. Supabase connections are unchanged.
+- Server-rendered PNGs now use the bundled Montserrat for their size label.
+  Vercel has no system fonts, so the label would have been blank in email
+  previews.
+- Node scripts such as `scripts/update-expected-outcomes.ts` work again with
+  opentype.js.
+
+Tests: 503 Vitest tests passing (68 new, plus the 5 fonts across the test-name matrix), and the browser test passes. The browser test
+now also checks:
+
+- that `/admin` needs sign-in and an uninvited email can't sign in;
+- that cut files are locked until Mark as paid releases them;
+- a customer cancellation that records a $37.50 (50%) refund;
+- inviting a production user, and a quick quote;
+- that the production login sees no prices, payments, contact details or last
+  name, can download cut files, can't open the orders list, and moves the order
+  on the board.
+
+Decisions made while building:
+
+- **Opening a new order** moves it from New to Awaiting payment, so "New"
+  means you haven't looked at it yet.
+- **File names** follow the spec (`S-1042_Smith_36in_…`) for everyone. That puts
+  the customer's last name in the file name production downloads, though
+  nowhere else production sees.
+- **Edits keep the price** unless you tick "change the price".
+- **Sending selected orders to nesting** arrives with phase 5.
+
+What you need to do:
+
+- In Supabase → Authentication → URL Configuration, set:
+  - Site URL: your live address;
+  - Redirect URLs: `https://<site>/auth/callback` and
+    `http://localhost:3000/auth/callback`.
+- Run `supabase/setup.sql` again.
+
+Checklist for you (spec phase 4):
+
+- [ ] Full payment recorded on an order; statuses change on their own. Shown in
+  tests.
+- [ ] Cut files blocked until paid in full; an override saves its reason. Shown
+  in tests.
+- [ ] A customer cancellation before cutting records a 50% refund. Shown in
+  tests.
+- [ ] The production login sees the board, specs and files, but no prices,
+  payments or contact details. Shown in tests.
+- [ ] A quick quote's preview image and short link work when pasted into
+  Messenger on your phone.
+- [ ] One real Marketplace order run from New to Complete.
+
+Next: phase 5, nesting, inventory and offcuts.
+
 ## Phase 3: Order designer, orders and emails (2026-10-28)
 
 Built:

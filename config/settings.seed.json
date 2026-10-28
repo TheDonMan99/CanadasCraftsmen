@@ -15,7 +15,8 @@
       "Repeat customer",
       "Other"
     ],
-    "privacy_note": "We collect your name, email, phone number and, for delivery, your address, so we can make your sign, contact you about the order and arrange pickup or delivery. Your design and order details are kept with your order. We don't sell or share your information, and we only email you about your order."
+    "privacy_note": "We collect your name, email, phone number and, for delivery, your address, so we can make your sign, contact you about the order and arrange pickup or delivery. Your design and order details are kept with your order. We don't sell or share your information, and we only email you about your order.",
+    "owner_email": "donovanarntson@gmail.com"
   },
   "machine": {
     "laser": "LaserTree K40 diode module (about 40 W optical)",
@@ -134,14 +135,17 @@
     "paused": false,
     "pause_message": "",
     "require_full_payment_for_cut_files": true,
-    "share_links_enabled": true
+    "share_links_enabled": true,
+    "board_complete_days": 14
   },
   "payments": {
     "amount_due_pct": 100,
     "payment_email": "donovanarntson@gmail.com",
     "refund_customer_cancel_before_cut_pct": 50,
     "refund_customer_cancel_after_cut_pct": 0,
-    "refund_owner_cancel_pct": 100
+    "refund_owner_cancel_pct": 100,
+    "reminder_after_days": 3,
+    "default_method": "payment.etransfer"
   },
   "pricing": {
     "minimum_order_cents": 3000,
