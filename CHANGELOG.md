@@ -21,7 +21,15 @@
 - `SUPABASE_URL` should be the bare `https://<project>.supabase.co`. The value
   set in this environment ends in `/rest/v1/`.
 
-Tests: 331 passing.
+- After the first run of `setup.sql`, every table loaded, but the Supabase API
+  was refused access to them. Newer Supabase projects don't give the API roles
+  access to tables created in SQL. A new migration gives the server-side
+  `service_role` key full access. The public `anon` key still gets none:
+  customers go through the app's own endpoints, which recalculate prices and
+  check for spam. The spec's "public can create orders" rule is met that way,
+  rather than letting browsers write to the orders table directly.
+
+Tests: 332 passing.
 
 ## Phase 2: Catalog, settings and pricing (2026-10-28)
 

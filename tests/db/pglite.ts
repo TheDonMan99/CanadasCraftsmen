@@ -22,7 +22,7 @@ export function pgliteDb(pg: PGlite): Db {
 
 async function bootstrap(pg: PGlite) {
   // Supabase provides these roles; PGlite needs them created.
-  await pg.exec("do $$ begin create role anon; exception when duplicate_object then null; end $$; do $$ begin create role authenticated; exception when duplicate_object then null; end $$;");
+  await pg.exec("do $$ begin create role anon; exception when duplicate_object then null; end $$; do $$ begin create role authenticated; exception when duplicate_object then null; end $$; do $$ begin create role service_role; exception when duplicate_object then null; end $$;");
 }
 
 let template: Promise<Blob> | null = null;

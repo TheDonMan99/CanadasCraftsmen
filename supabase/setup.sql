@@ -279,6 +279,25 @@ $migration$;
   end if;
 end $setup$;
 
+do $setup$ begin
+  if not exists (select 1 from schema_migrations where name = '20261028000001_service_role_grants.sql') then
+    execute $migration$
+-- Newer Supabase projects don't grant the API roles access to tables created in SQL.
+-- The app's server reaches the database directly, but the service-role key (used for
+-- file storage and admin checks over the Supabase API) needs full access too.
+-- The public (anon) role gets no table access: customers go through the app's own
+-- endpoints, which recalculate prices and check spam protection.
+grant usage on schema public to service_role;
+grant all on all tables in schema public to service_role;
+grant all on all sequences in schema public to service_role;
+alter default privileges in schema public grant all on tables to service_role;
+alter default privileges in schema public grant all on sequences to service_role;
+
+$migration$;
+    insert into schema_migrations (name) values ('20261028000001_service_role_grants.sql');
+  end if;
+end $setup$;
+
 insert into settings (id, data) values (1, '{"version":1,"business":{"name":"[Business name]","pickup_note":"Local pickup, Sherwood Park area. We''ll contact you to arrange a time.","delivery_area":"Sherwood Park and Edmonton","timezone":"America/Edmonton"},"machine":{"laser":"LaserTree K40 diode module (about 40 W optical)","cut_area_w_in":48,"cut_area_h_in":48,"machine_reach_in":60,"sheet_w_in":96,"sheet_h_in":48,"saw_kerf_in":0.125,"panel_w_in":48,"panel_h_in":47.875,"panel_edge_margin_in":0.5,"largest_sign_in":46,"default_passes":1,"laser_software":"LightBurn","air_assist_note":"Keep air assist on when cutting; plan to sand or paint cut edges."},"engine":{"weld_overlap_in":0.02,"max_tighten_pct":15,"tighten_step_pct":1,"baseline_bar_in":0.3,"bridge_width_in":0.25,"dot_bridge_width_in":0.15,"stencil_bridge_width_in":0.15,"stencil_bridges_per_hole":2,"layered_outline_offset_in":0.25,"line_spacing_ratio":0.15,"keyhole_head_dia_in":0.375,"keyhole_slot_width_in":0.1875,"keyhole_slot_length_in":0.5,"keyhole_positions":[0.25,0.75],"curve_tolerance_in":0.002,"backer_padding_in":1.5,"floating_bits":"bridge","leaner_spine_width_in":0.5,"leaner_letter_gap_in":0.4,"leaner_foot_height_in":0.5,"leaner_foot":true,"leaner_keyhole":false,"small_line_ratio":0.3,"top_line_ratio":0.6,"max_bridge_length_in":1.5,"thin_tail_ignore_len_in":0.5,"default_cut_speed_in_min":20,"score_speed_in_min":60,"engrave_speed_in_min":400,"engrave_line_interval_in":0.005,"travel_overhead_pct":15},"sizes":{"min_letter_height_in":{"main":2,"top":1.5,"small_cut":1,"small_engraved":0.5},"max_chars":{"top":12,"main":20,"small":24},"custom_width_min_in":10},"export":{"layers":{"cut":{"colour":"#FF0000","lightburn_layer":"02","output":true},"score":{"colour":"#0000FF","lightburn_layer":"01","output":true},"engrave":{"colour":"#000000","lightburn_layer":"00","output":true},"labels":{"colour":"#00E000","lightburn_layer":"03","output":false}},"stroke_width_in":0.001,"decimals":4,"dxf_enabled":true,"png_dpi":96,"include_labels":true},"nesting":{"part_spacing_in":0.25,"rotations":[0,90,180,270],"method":"rectangle","use_offcuts_first":true,"min_offcut_w_in":6,"min_offcut_h_in":12,"fill_gaps":true,"time_limit_s":10},"production":{"lead_time_days":7,"rush_lead_time_days":3,"weekly_capacity":5,"paused":false,"pause_message":"","require_full_payment_for_cut_files":true},"payments":{"amount_due_pct":100,"payment_email":"donovanarntson@gmail.com","refund_customer_cancel_before_cut_pct":50,"refund_customer_cancel_after_cut_pct":0,"refund_owner_cancel_pct":100},"pricing":{"minimum_order_cents":3000,"round_total_to_cents":100,"show_breakdown":true,"hourly_rate_cents":null,"promo_codes_enabled":false},"tax":{"gst_enabled":false,"gst_rate_pct":5,"registration_warning_cents":2500000}}') on conflict (id) do nothing returning id;
 
 insert into catalog_options (id, category, label, description, enabled, stock_status, sort_order, price_type, price_value, applies_to, "values", internal_notes) values ('product.welcome', 'product', 'Welcome sign', '', true, 'in_stock', 10, 'none', 0, null, '{"layout":"horizontal","default_width_in":36,"lines":[{"role":"top","text":"Welcome"},{"role":"main","text":"The Smiths"},{"role":"small","text":"Est. 2019","optional":true}],"allowed_styles":["style.one-piece","style.layered","style.letters-on-backer","style.stencil"],"allowed_sizes":["size.w12","size.w18","size.w24","size.w30","size.w36","size.w40","size.w44","size.w46"],"allowed_fonts":["font.pacifico","font.lobster","font.kaushan-script","font.yellowtail","font.dancing-script-bold","font.satisfy","font.great-vibes","font.alex-brush","font.playfair-display-bold","font.abril-fatface","font.montserrat-bold","font.bebas-neue","font.oswald","font.amatic-sc-bold"]}', '') on conflict (id) do nothing returning id;
