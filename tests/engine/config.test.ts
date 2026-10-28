@@ -15,8 +15,10 @@ describe('seed catalog', () => {
       expect(f.values.licence_confirmed).toBe(true);
     }
   });
-  test('four construction styles, two materials on', () => {
-    expect(byCategory(catalog, 'style')).toHaveLength(4);
+  test('four construction styles (layered two-tone off for now), two materials on', () => {
+    expect(byCategory(catalog, 'style', false)).toHaveLength(4);
+    expect(byCategory(catalog, 'style').map((s) => s.id)).not.toContain('style.layered');
+    expect(byCategory(catalog, 'finish_type').map((s) => s.id)).not.toContain('finish.two-tone');
     expect(byCategory(catalog, 'material').map((m) => m.id)).toEqual(['material.birch-6mm', 'material.maple-6mm']);
   });
   test('ids are unique', () => {

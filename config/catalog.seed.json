@@ -359,7 +359,7 @@
       "category": "style",
       "label": "Layered two-tone",
       "description": "One-piece word on top of a matching outline layer 0.25 in larger, in a second colour",
-      "enabled": true,
+      "enabled": false,
       "stock_status": "in_stock",
       "sort_order": 20,
       "price_type": "flat",
@@ -372,7 +372,7 @@
           "outline"
         ]
       },
-      "internal_notes": ""
+      "internal_notes": "Off for now: two-tone signs not offered yet."
     },
     {
       "id": "style.letters-on-backer",
@@ -969,7 +969,7 @@
       "category": "finish_type",
       "label": "Two-tone",
       "description": "Two colours: paint + paint, or paint + stain",
-      "enabled": true,
+      "enabled": false,
       "stock_status": "in_stock",
       "sort_order": 40,
       "price_type": "flat",
@@ -981,7 +981,7 @@
           "paint_or_stain"
         ]
       },
-      "internal_notes": ""
+      "internal_notes": "Off for now: two-tone signs not offered yet."
     },
     {
       "id": "paint.white",

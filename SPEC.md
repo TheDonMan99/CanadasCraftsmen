@@ -76,7 +76,7 @@ Each product sets its default lines, default width, and which construction style
 | Style | What gets cut | Price change | On |
 | --- | --- | --- | --- |
 | One-piece word | Letters welded or bridged into one piece that hangs on its own | Base | On |
-| Layered two-tone | One-piece word on top of a matching outline layer 0.25 in larger, in a second colour | +$30 | On |
+| Layered two-tone | One-piece word on top of a matching outline layer 0.25 in larger, in a second colour | +$30 | Off (for now) |
 | Letters on backer | Letters cut separately and glued to a backer; the backer gets an engraved placement guide | +$40 | On |
 | Stencil panel | Letters cut out of a solid panel, with bridges so letter centres stay in | +$20 | On |
 
@@ -170,7 +170,7 @@ The customer picks a finish type first, then colours for each piece. Two-colour 
 | Raw wood | Sanded, no colour | $0 | On |
 | Stained | One stain colour | +$10 | On |
 | Painted, one colour | One paint colour | +$15 | On |
-| Two-tone | Two colours: paint + paint, or paint + stain | +$25 | On |
+| Two-tone | Two colours: paint + paint, or paint + stain | +$25 | Off (for now) |
 
 **Paint colours** (preview colour is for the screen only; record your exact paint product in internal notes)
 
@@ -306,7 +306,7 @@ All wording is editable in Settings → Business.
 6. Add GST if switched on
 7. Round the total to the nearest $1
 
-Customers see the breakdown line by line (switchable). Example: 36 in welcome sign, layered two-tone, 1/4 in birch, two-tone paint with gold metallic, matte clear, keyhole slots, pickup = $75 + $30 + $0 + $25 + $5 + $0 + $0 = $135.
+Customers see the breakdown line by line (switchable). Example: 36 in welcome sign, layered two-tone, 1/4 in birch, two-tone paint with gold metallic, matte clear, keyhole slots, pickup = $75 + $30 + $0 + $25 + $5 + $0 + $0 = $135. (Guideline only: two-tone is off for now and basic colours are $10, so this example is not a pricing test.)
 
 ## Order form (customer-facing)
 
@@ -717,7 +717,7 @@ Database, catalog seeded from this document, settings pages with on/off and edit
 
 - [ ] Switching any option off removes it from the lab designer immediately
 - [ ] Editing a price changes new quotes only; price history records it
-- [ ] Five hand-calculated orders, including the $135 example, match the calculator to the cent
+- [ ] Five hand-calculated orders match the calculator to the cent
 
 **Phase 3: Order designer, orders and emails** (deployed online)
 

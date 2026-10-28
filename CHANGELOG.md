@@ -2,6 +2,11 @@
 
 ## Catalog update (2026-10-28)
 
+- Two-tone signs are off for now: the "Layered two-tone" style and the
+  "Two-tone" finish ship switched off (the engine and lab still support them).
+- The $135 worked example is a guideline only and is not used as a pricing test
+  in phase 2.
+
 - Basic paint colours now cost $10 each (was $5); only White and Black are on.
   SPEC.md's paint table is updated to match. Metallic colours are unchanged.
 
@@ -75,9 +80,6 @@ Decisions made while building (all are editable settings):
 
 Open items for later phases:
 
-- **Phase 2 (pricing):** the $135 worked example (two-tone with gold metallic)
-  assumes one colour costs nothing. With basic colours now $10 each, that
-  example needs re-working before it becomes a pricing test.
 - Playfair Display Bold and Abril Fatface fail thin checks at most sizes. Consider
   giving them an auto-thicken value or switching them off after a test cut.
 
