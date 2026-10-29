@@ -1,5 +1,18 @@
 # Changelog
 
+## Fix: spam check failing on the live order form (2026-10-29)
+
+On the live site, the Cloudflare spam check showed a blank box and a
+"Troubleshoot" link, and "Place order" stayed grey with no explanation.
+
+- When the check fails, the order form now says so, with Cloudflare's error
+  code, and has a **Try again** button. It retries by itself, and refreshes an
+  expired check by itself.
+- If Cloudflare's script never loads (blocked or offline), the form says so
+  after 15 seconds.
+- Keys pasted into Vercel with stray spaces, line breaks or quote marks around
+  them now work. This covers the Turnstile keys and the Resend key.
+
 ## Phase 6: Reports and extras (2026-10-29)
 
 Online checkout (Stripe) is **not** built, as you decided: customers pay by
