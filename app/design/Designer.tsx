@@ -700,16 +700,42 @@ function Field({ label, value, onChange, type = 'text', autoComplete, required }
   );
 }
 
-/** Cloudflare Turnstile widget; hands its token up when the check passes. */
+/**
+ * Cloudflare Turnstile widget; hands its token up when the check passes. If the
+ * check fails or never loads, it says so (with Cloudflare's error code) and
+ * offers to try again, rather than leaving the order button greyed out.
+ */
 function Turnstile({ siteKey, onToken }: { siteKey: string; onToken: (t: string) => void }) {
   const box = useRef<HTMLDivElement>(null);
+  const widget = useRef<string | undefined>(undefined);
+  const [problem, setProblem] = useState('');
   useEffect(() => {
     const w = window as any;
-    let id: string | undefined;
+    let alive = true;
     const render = () => {
-      if (!box.current || id !== undefined) return;
-      id = w.turnstile.render(box.current, { sitekey: siteKey, callback: onToken, 'expired-callback': () => onToken(''), 'error-callback': () => onToken('') });
+      if (!alive || !box.current || widget.current !== undefined) return;
+      widget.current = w.turnstile.render(box.current, {
+        sitekey: siteKey,
+        callback: (t: string) => {
+          setProblem('');
+          onToken(t);
+        },
+        'expired-callback': () => onToken(''),
+        'error-callback': (code: string) => {
+          onToken('');
+          setProblem(`The spam check didn’t work (Cloudflare error ${code}).`);
+          console.warn('[turnstile] error', code);
+          // handled here, so Cloudflare doesn't also throw
+          return true;
+        },
+        retry: 'auto',
+        'refresh-expired': 'auto',
+      });
     };
+    // if Cloudflare's script never arrives (blocked or offline), say so
+    const timer = setTimeout(() => {
+      if (alive && !w.turnstile) setProblem('The spam check couldn’t load. Check your connection or try another browser.');
+    }, 15000);
     if (w.turnstile) render();
     else {
       w.onTurnstileLoad = render;
@@ -722,8 +748,32 @@ function Turnstile({ siteKey, onToken }: { siteKey: string; onToken: (t: string)
       }
     }
     return () => {
-      if (id !== undefined) w.turnstile?.remove?.(id);
+      alive = false;
+      clearTimeout(timer);
+      if (widget.current !== undefined) w.turnstile?.remove?.(widget.current);
+      widget.current = undefined;
     };
   }, [siteKey, onToken]);
-  return <div ref={box} className="min-h-[65px]" />;
+  return (
+    <div>
+      <div ref={box} className="min-h-[65px]" />
+      {problem && (
+        <p className="mt-1 text-sm text-red-700" role="alert">
+          {problem}{' '}
+          <button
+            type="button"
+            className="underline"
+            onClick={() => {
+              setProblem('');
+              const w = window as any;
+              if (widget.current !== undefined) w.turnstile?.reset?.(widget.current);
+              else location.reload();
+            }}
+          >
+            Try again
+          </button>
+        </p>
+      )}
+    </div>
+  );
 }
