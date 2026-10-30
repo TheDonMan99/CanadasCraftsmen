@@ -1,0 +1,24 @@
+/* Canada's Craftsmen — Tailwind v4 theme. Import after "tailwindcss" in app/globals.css.
+   Gives utilities like bg-char, text-birch, border-kerf, bg-maple, font-display, rounded-md, shadow-hang.
+   Values mirror tokens.json (light theme). */
+@theme {
+  --color-char: #2b1d14;
+  --color-kerf: #5c3a21;
+  --color-birch: #e8d3ac;
+  --color-paper: #fbf8f3;
+  --color-maple: #b3261e;
+  --color-maple-strong: #8f1d17;
+  --color-maple-bright: #e2543f;
+  --color-spruce: #1d5e6e;
+  --color-danger: #9e1b14;
+  --color-line: #e3d6c2;
+  --color-line-strong: #9b8264;
+
+  --font-display: "Alfa Slab One", Rockwell, "Roboto Slab", Georgia, serif;
+  --font-sans: Archivo, "Helvetica Neue", Arial, sans-serif;
+
+  --radius-sm: 3px;
+  --radius-md: 6px;
+
+  --shadow-hang: 0 1px 0 rgba(43, 29, 20, 0.10), 0 12px 24px -14px rgba(43, 29, 20, 0.45);
+}

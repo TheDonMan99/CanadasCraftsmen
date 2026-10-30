@@ -1,0 +1,103 @@
+/* Canada's Craftsmen — generated from tokens.json. Paper (light) is the default theme; Char (dark) applies under [data-theme="dark"]. */
+
+@font-face {
+  font-family: "Alfa Slab One";
+  src: url("./fonts/AlfaSlabOne-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Archivo";
+  src: url("./fonts/Archivo-Variable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Archivo";
+  src: url("./fonts/Archivo-Variable-Italic.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+:root, [data-theme="light"] {
+  --char: #2b1d14;
+  --kerf: #5c3a21;
+  --birch: #e8d3ac;
+  --paper: #fbf8f3;
+  --maple: #b3261e;
+  --maple-bright: #e2543f;
+  --spruce: #1d5e6e;
+  --surface: var(--paper);
+  --surface-raised: #ffffff;
+  --band: var(--char);
+  --on-band: var(--birch);
+  --ink: var(--char);
+  --ink-muted: var(--kerf);
+  --on-birch: var(--char);
+  --line: #e3d6c2;
+  --line-strong: #9b8264;
+  --brand: var(--maple);
+  --brand-strong: #8f1d17;
+  --on-brand: #ffffff;
+  --focus: var(--char);
+  --success: var(--spruce);
+  --danger: #9e1b14;
+  --shadow-hang: 0 1px 0 rgba(43, 29, 20, 0.10), 0 12px 24px -14px rgba(43, 29, 20, 0.45);
+}
+
+[data-theme="dark"] {
+  --surface: var(--char);
+  --surface-raised: #36261a;
+  --band: #1e140d;
+  --on-band: var(--birch);
+  --ink: #f2e6d0;
+  --ink-muted: #c9ae86;
+  --on-birch: var(--char);
+  --line: #4a3828;
+  --line-strong: #927459;
+  --brand: #e86a50;
+  --brand-strong: #f08a72;
+  --on-brand: var(--char);
+  --focus: #f2e6d0;
+  --success: #6fb3c2;
+  --danger: #f08a78;
+  --shadow-hang: 0 1px 0 rgba(0, 0, 0, 0.30), 0 14px 28px -14px rgba(0, 0, 0, 0.75);
+}
+
+:root {
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-24: 96px;
+  --radius-sm: 3px;
+  --radius-md: 6px;
+  --radius-full: 999px;
+  --edge-hairline: 1px;
+  --edge-kerf: 1.5px;
+  --edge-focus: 2px;
+  --font-display: "Alfa Slab One", Rockwell, "Roboto Slab", Georgia, serif;
+  --font-text: Archivo, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* Type styles */
+.display-xl { font-family: var(--font-display); font-size: 72px; line-height: 72px; font-weight: 400; letter-spacing: -0.01em; }
+.display-l { font-family: var(--font-display); font-size: 48px; line-height: 52px; font-weight: 400; }
+.display-m { font-family: var(--font-display); font-size: 36px; line-height: 40px; font-weight: 400; }
+.display-s { font-family: var(--font-display); font-size: 24px; line-height: 30px; font-weight: 400; }
+.title { font-family: var(--font-text); font-size: 21px; line-height: 28px; font-weight: 700; }
+.body-l { font-family: var(--font-text); font-size: 18px; line-height: 28px; font-weight: 400; }
+.body { font-family: var(--font-text); font-size: 16px; line-height: 26px; font-weight: 400; }
+.label { font-family: var(--font-text); font-size: 15px; line-height: 20px; font-weight: 600; }
+.button { font-family: var(--font-text); font-size: 16px; line-height: 20px; font-weight: 600; }
+.small { font-family: var(--font-text); font-size: 14px; line-height: 20px; font-weight: 400; }
+.caption { font-family: var(--font-text); font-size: 12px; line-height: 16px; font-weight: 500; }

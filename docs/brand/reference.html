@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Canada's Craftsmen — component reference</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="components.css">
+<style>
+  .ref-h { font: 600 14px/20px var(--font-text); color: var(--ink-muted); margin: 0; padding: var(--space-8) var(--space-6) 0; }
+  header.ref { display: flex; align-items: center; justify-content: space-between; padding: var(--space-6); border-bottom: var(--edge-hairline) solid var(--line); }
+  header.ref img { height: 44px; }
+</style>
+</head>
+<body>
+<header class="ref"><img src="logos/cc-logo-horizontal.svg" alt="Canada's Craftsmen"><a class="cc-btn cc-btn--primary" href="#">Design your sign</a></header>
+<p class="ref-h">Buttons</p>
+<div class="cc-stage">
+  <a class="cc-btn cc-btn--primary" href="#">Design your sign</a>
+  <button class="cc-btn cc-btn--secondary" type="button">See all signs</button>
+  <button class="cc-btn cc-btn--primary" type="button" disabled>Approve proof</button>
+</div>
+<div class="cc-band cc-stage">
+  <a class="cc-btn cc-btn--birch" href="#">Design your sign</a>
+</div>
+
+<p class="ref-h">Product card</p>
+<div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--space-6);padding:var(--space-6)">
+  <a class="cc-product" href="#">
+    <div class="cc-product__media cc-panel cc-panel--hung"><svg viewBox="0 0 400 300" role="img" aria-label="Illustration: vertical welcome sign">
+<rect x="160" y="24" width="80" height="252" rx="3" style="fill:var(--char);stroke:var(--kerf);stroke-width:3"/>
+<g style="fill:var(--birch);font-family:var(--font-display);font-size:27px"><text x="200" y="62" text-anchor="middle">W</text><text x="200" y="93" text-anchor="middle">E</text><text x="200" y="124" text-anchor="middle">L</text><text x="200" y="155" text-anchor="middle">C</text><text x="200" y="186" text-anchor="middle">O</text><text x="200" y="217" text-anchor="middle">M</text><text x="200" y="248" text-anchor="middle">E</text></g></svg></div>
+    <p class="cc-product__name">Welcome sign</p>
+    <p class="cc-product__price">From $75</p>
+    <p class="cc-product__meta">Porch leaner, birch or maple</p>
+  </a>
+  <a class="cc-product" href="#">
+    <div class="cc-product__media cc-panel cc-panel--hung"><svg viewBox="0 0 400 300" role="img" aria-label="Illustration: family name sign">
+<rect x="40" y="92" width="320" height="116" rx="3" style="fill:var(--paper);stroke:var(--kerf);stroke-width:3"/>
+<text x="200" y="164" text-anchor="middle" style="fill:var(--char);font-family:var(--font-display);font-size:50px">Millers</text>
+<text x="200" y="192" text-anchor="middle" style="fill:var(--kerf);font-family:var(--font-text);font-weight:700;font-size:14px;letter-spacing:3px">EST 2019</text></svg></div>
+    <p class="cc-product__name">Family name sign</p>
+    <p class="cc-product__price">From $65</p>
+    <p class="cc-product__meta">Painted or stained, wall hung</p>
+  </a>
+  <a class="cc-product" href="#">
+    <div class="cc-product__media cc-panel cc-panel--hung"><svg viewBox="0 0 400 300" role="img" aria-label="Illustration: round door sign">
+<circle cx="200" cy="150" r="112" style="fill:var(--char);stroke:var(--kerf);stroke-width:3"/>
+<text x="200" y="146" text-anchor="middle" style="fill:var(--birch);font-family:var(--font-display);font-size:46px">Hello</text>
+<text x="200" y="186" text-anchor="middle" style="fill:var(--birch);font-family:var(--font-text);font-weight:600;font-size:20px">The Patels</text></svg></div>
+    <p class="cc-product__name">Round door sign</p>
+    <p class="cc-product__price">From $85</p>
+    <p class="cc-product__meta">For the front door or gate</p>
+  </a>
+</div>
+
+<p class="ref-h">How it works (Steps on a band)</p>
+<section class="cc-band" style="padding: var(--space-12) var(--space-6)">
+  <ol class="cc-steps">
+    <li><h3>Design it</h3><p>Type your words and pick the font, size and colour. The preview matches the cut.</p></li>
+    <li><h3>Approve the proof</h3><p>Check the spelling and the finished size before anything is cut.</p></li>
+    <li><h3>Pay</h3><p>e-Transfer or cash. We start cutting once payment arrives.</p></li>
+    <li><h3>Pick it up</h3><p>In Sherwood Park, usually within 7 days.</p></li>
+  </ol>
+</section>
+
+<p class="ref-h">Text field</p>
+<div class="cc-stage" style="gap: var(--space-8)">
+  <div class="cc-field">
+    <label class="cc-field__label" for="f1">Family name</label>
+    <input class="cc-field__input" id="f1" value="The Millers" aria-describedby="f1h">
+    <p class="cc-field__hint" id="f1h">Up to 18 letters on a 36 in sign.</p>
+  </div>
+  <div class="cc-field cc-field--invalid">
+    <label class="cc-field__label" for="f2">Second line</label>
+    <input class="cc-field__input" id="f2" value="Established in the year 2019" aria-invalid="true" aria-describedby="f2e">
+    <p class="cc-field__error" id="f2e"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg><span>That line is too long for a 24 in sign. Shorten it or choose 36 in.</span></p>
+  </div>
+</div>
+
+<footer class="cc-band" style="padding: var(--space-12) var(--space-6); margin-top: var(--space-12)"><img src="logos/cc-logo-stacked-reversed.svg" alt="Canada's Craftsmen" style="width:200px"></footer>
+</body>
+</html>

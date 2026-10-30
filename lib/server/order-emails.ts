@@ -9,6 +9,7 @@ import type { DesignLabels } from '@/lib/order/design';
 import { formatDate, paymentInstructions, refundPolicy, type Contact } from '@/lib/order/rules';
 import { dollars, type Quote } from '@/lib/pricing';
 import type { Attachment, SendEmail } from './email';
+import { businessName } from '@/lib/brand';
 
 /** The test sender Resend allows before a domain is verified; it only delivers to the account's own address. */
 export const RESEND_TEST_SENDER = 'onboarding@resend.dev';
@@ -46,7 +47,9 @@ export async function sendOrderEmail(
     await logEmail(deps.db, { orderId, template: key, recipient: to, subject, status: 'held', error: 'Waiting for a verified sending domain (Settings → Emails → from address)', sentAt: deps.now });
     return 'held';
   }
-  const res = await deps.sendEmail({ from: fromLine(em.from_name, em.from_address || RESEND_TEST_SENDER), to, replyTo: em.reply_to || undefined, subject, text, html, attachments: opt.attachments });
+  // a sender name still set to the placeholder shows as the business name (ASCII apostrophe for mail headers)
+  const fromName = em.from_name && !em.from_name.startsWith('[') ? em.from_name : businessName(deps.settings).replace(/’/g, "'");
+  const res = await deps.sendEmail({ from: fromLine(fromName, em.from_address || RESEND_TEST_SENDER), to, replyTo: em.reply_to || undefined, subject, text, html, attachments: opt.attachments });
   await logEmail(deps.db, {
     orderId,
     template: key,
@@ -115,7 +118,7 @@ export function orderEmailVars(o: {
     notes: contact.notes || '—',
     dashboard_link: `${o.siteUrl}/admin/orders/${o.orderId}`,
     proof_link: o.proofLink ?? '',
-    business_name: settings.business.name.startsWith('[') ? '' : settings.business.name,
+    business_name: businessName(settings),
   };
 }
 
