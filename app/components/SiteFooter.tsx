@@ -1,9 +1,10 @@
 import Link from 'next/link';
 
 /** Customer pages: a char band with the stacked reversed logo and the privacy link. */
-export default function SiteFooter() {
+/** `clearBar` leaves room for the designer's fixed step buttons. */
+export default function SiteFooter({ clearBar = false }: { clearBar?: boolean }) {
   return (
-    <footer className="cc-band">
+    <footer className={`cc-band ${clearBar ? 'pb-20' : ''}`}>
       <div className="mx-auto flex max-w-6xl flex-col gap-8 px-4 py-16 md:flex-row md:items-end md:justify-between md:px-12">
         <img src="/brand/cc-logo-stacked-reversed.svg" alt="Canada’s Craftsmen, Sherwood Park, Alberta" width={200} height={133} className="h-auto w-[200px]" />
         <nav className="cc-small flex flex-wrap gap-x-6 gap-y-2" aria-label="Footer">

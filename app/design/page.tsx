@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 import { defaultDesign } from '@/lib/order/design';
+import SiteFooter from '@/app/components/SiteFooter';
+import SiteHeader from '@/app/components/SiteHeader';
 import Designer from './Designer';
 import { designerData } from './load';
 import Paused from './Paused';
@@ -13,14 +15,18 @@ export default async function DesignPage({ searchParams }: { searchParams: Promi
   if (data.fullSettings.production.paused) return <Paused message={data.fullSettings.production.pause_message} />;
   const product = data.catalog.some((o) => o.id === q.product && o.category === 'product') ? q.product : undefined;
   return (
-    <Designer
-      catalog={data.catalog}
-      settings={data.settings}
-      initial={defaultDesign(data.catalog, data.settings, product)}
-      startStep={product ? 1 : 0}
-      earliest={data.earliest}
-      turnstileSiteKey={data.turnstileSiteKey}
-      refundPolicy={data.refundPolicy}
-    />
+    <>
+      <SiteHeader cta={false} />
+      <Designer
+        catalog={data.catalog}
+        settings={data.settings}
+        initial={defaultDesign(data.catalog, data.settings, product)}
+        startStep={product ? 1 : 0}
+        earliest={data.earliest}
+        turnstileSiteKey={data.turnstileSiteKey}
+        refundPolicy={data.refundPolicy}
+      />
+      <SiteFooter clearBar />
+    </>
   );
 }

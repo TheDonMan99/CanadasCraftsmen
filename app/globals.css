@@ -197,3 +197,6 @@ body {
   .btn:hover { background: var(--kerf); }
   .btn:disabled { opacity: .5; cursor: not-allowed; }
 }
+
+/* Checkboxes and radio buttons in the brand ink. */
+input[type="checkbox"], input[type="radio"] { accent-color: var(--char); }

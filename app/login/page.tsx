@@ -1,6 +1,9 @@
 import type { Metadata } from 'next';
 import { devLoginAllowed } from '@/lib/auth/session';
 import { devLogin } from './actions';
+import SiteFooter from '@/app/components/SiteFooter';
+import SiteHeader from '@/app/components/SiteHeader';
+import { AlertIcon } from '@/app/components/icons';
 import LoginForm from './LoginForm';
 
 export const metadata: Metadata = { title: 'Sign in', robots: { index: false } };
@@ -10,22 +13,35 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
   const q = await searchParams;
   const next = q.next?.startsWith('/admin') ? q.next : '/admin';
   return (
-    <main className="mx-auto max-w-sm px-4 py-16">
-      <h1 className="text-2xl font-semibold">Sign in</h1>
-      <p className="mt-1 text-sm text-stone-600">For invited users only. We’ll email you a link.</p>
-      {q.error === 'link' && <p className="mt-3 rounded bg-red-50 p-2 text-sm text-red-800">That sign-in link didn’t work or has expired. Ask for a new one.</p>}
-      {q.error === 'not-invited' && <p className="mt-3 rounded bg-red-50 p-2 text-sm text-red-800">That email isn’t invited.</p>}
-      <div className="mt-6">
-        <LoginForm next={next} />
-      </div>
-      {devLoginAllowed() && (
-        <form action={devLogin} className="mt-10 rounded-lg border border-dashed border-stone-300 p-3">
-          <p className="text-xs text-stone-500">On this computer only: sign in without an email.</p>
-          <input type="hidden" name="next" value={next} />
-          <input name="email" type="email" placeholder="invited email" className="input mt-2" aria-label="Dev sign-in email" />
-          <button className="mt-2 w-full rounded-md border border-stone-300 px-3 py-2 text-sm">Dev sign-in</button>
-        </form>
-      )}
-    </main>
+    <>
+      <SiteHeader cta={false} />
+      <main className="mx-auto max-w-md px-4 py-16 md:py-24">
+        <h1 className="cc-display-l">Sign in</h1>
+        <p className="cc-body mt-4 text-kerf">For invited people only. We’ll email you a link.</p>
+        {q.error === 'link' && <Problem>That sign-in link didn’t work or has expired. Ask for a new one below.</Problem>}
+        {q.error === 'not-invited' && <Problem>That email isn’t invited. Ask the owner to invite you in Settings → Users and roles.</Problem>}
+        <div className="mt-8">
+          <LoginForm next={next} />
+        </div>
+        {devLoginAllowed() && (
+          <form action={devLogin} className="mt-12 rounded-sm border border-dashed border-line-strong p-4">
+            <p className="cc-small text-kerf">On this computer only: sign in without an email.</p>
+            <input type="hidden" name="next" value={next} />
+            <input name="email" type="email" placeholder="invited email" className="cc-field__input mt-3" aria-label="Dev sign-in email" />
+            <button className="cc-btn cc-btn--secondary mt-3 w-full">Dev sign-in</button>
+          </form>
+        )}
+      </main>
+      <SiteFooter />
+    </>
+  );
+}
+
+function Problem({ children }: { children: React.ReactNode }) {
+  return (
+    <p className="cc-field__error mt-4" role="alert">
+      <AlertIcon />
+      <span>{children}</span>
+    </p>
   );
 }
