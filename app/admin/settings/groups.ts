@@ -13,6 +13,7 @@ export const SETTINGS_PAGES: { slug: string; label: string; group?: string; note
   { slug: 'business', label: 'Business', group: 'business' },
   { slug: 'emails', label: 'Emails', group: 'emails' },
   { slug: 'spam', label: 'Spam protection', group: 'spam' },
+  { slug: 'preview', label: 'Preview backgrounds', group: 'preview' },
   { slug: 'users', label: 'Users and roles' },
 ];
 

@@ -17,6 +17,8 @@ const NOTES: Record<string, string> = {
   business: 'No pickup address is shown anywhere; the pickup note is all customers see. The privacy note appears on the order form and the privacy page.',
   emails:
     'Until you set a from address on your own verified domain (for example orders@yourdomain.ca), alerts to you are sent from Resend’s test address and customer emails are held. Templates use {variables}: order_number, customer_name, first_name, last_name, customer_email, customer_phone, product, text_lines, font, size, size_short, style, material, finish, placement, addons, delivery, delivery_note, total, deposit, amount_due, balance, paid_status, payment_instructions, refund_policy, needed_by, heard_from, notes, dashboard_link, proof_link, business_name.',
+  preview:
+    'The background colours customers can pick behind their sign preview, to see a white or dark sign better. Only the preview changes, never the cut. Each has a name, a #rrggbb colour, and optionally "siding": true for board lines.',
   spam: 'A hidden honeypot field, a limit on orders per device per hour, and Cloudflare Turnstile (needs TURNSTILE_SITE_KEY and TURNSTILE_SECRET_KEY).',
   production: 'Lead times are in days. Weekly capacity pushes the earliest ready date back a week for each full week of open orders. The pause switch stops new orders and shows the pause message on the order page.',
 };

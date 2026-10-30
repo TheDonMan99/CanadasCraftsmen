@@ -1,5 +1,25 @@
 # Changelog
 
+## Preview backgrounds (2026-10-30)
+
+- **Background swatches** under the sign preview, in the designer and in quick
+  quote, so a white or dark sign is easy to see. The choices are White, Light
+  wall, Grey siding, Sage, Brick, Navy door and Dark wall.
+  - Only the mock-up changes, never the cut. The size label turns light on dark
+    backgrounds.
+  - The choice is remembered on that device.
+  - Quick-quote images and listing images use the chosen background too.
+- The colours are a setting (Settings → Preview backgrounds), not hard-coded. Each
+  has a name, a colour and an optional "siding" for board lines. Databases set
+  up earlier get them automatically.
+- **Fix:** on the proof step, the large preview no longer stays pinned at the top
+  of the screen. On a phone it was covering the approval checkbox. It now scrolls
+  away with the page.
+
+Tests: 540 Vitest tests and the browser test pass. New tests check that a chosen
+background never changes the sign, the label colour on dark backgrounds, siding
+lines, and that a malformed colour falls back to white.
+
 ## Brand redesign: Canada's Craftsmen (2026-10-30)
 
 The site now uses the Canada's Craftsmen brand kit (kept in `docs/brand/`). This

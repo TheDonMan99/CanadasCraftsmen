@@ -12,16 +12,19 @@ import { previewSvg } from '@/lib/export/svg';
 import { backersFor, defaultDesign, engineDesign, fontsFor, materialsFor, needsBacker, normalizeDesign, previewColours, quoteInput, sizesFor, stylesFor, type OrderDesign } from '@/lib/order/design';
 import { dollars, quote } from '@/lib/pricing';
 import { shortLinkFor } from '../orders/actions';
+import BackdropPicker, { useBackdrop, type Backdrop } from '@/app/components/BackdropPicker';
 
 const ROLE: Record<LineRole, string> = { top: 'Top line', main: 'Main name', small: 'Small line' };
 
 export default function QuoteClient({ catalog, settings, initial }: { catalog: CatalogOption[]; settings: Settings; initial: OrderDesign }) {
   const [design, setRaw] = useState(initial);
+  const backdrops: Backdrop[] = settings.preview?.backgrounds ?? [];
+  const [backdrop, setBackdrop] = useBackdrop(backdrops);
   const set = (p: Partial<OrderDesign>) => setRaw((d) => normalizeDesign({ ...d, ...p }, catalog));
   const ed = useMemo(() => engineDesign(design, catalog, settings), [design, catalog, settings]);
   const { result, busy } = useEngine(ed, design.materialId, catalog, settings, 150);
   const q = useMemo(() => quote(quoteInput(design, result?.widthIn), catalog, settings), [design, result?.widthIn, catalog, settings]);
-  const svg = result?.parts.length ? previewSvg(result, { colours: previewColours(design, catalog), background: 'plain', showDimensions: false, showThin: true }) : '';
+  const svg = result?.parts.length ? previewSvg(result, { colours: previewColours(design, catalog), background: 'plain', backdrop, showDimensions: false, showThin: true }) : '';
   const [msg, setMsg] = useState('');
   const [link, setLink] = useState<{ url: string; shareId: string } | null>(null);
   const [listing, setListing] = useState<{ label: string; url: string }[] | null>(null);
@@ -75,7 +78,7 @@ export default function QuoteClient({ catalog, settings, initial }: { catalog: C
         const p = quote(quoteInput(d, r.widthIn), catalog, settings);
         if (!r.ok || !p.ok) continue;
         const cap = `${s.label} · ${dollars(p.totalCents)}`;
-        const blob = await squareImage(previewSvg(r, { colours: previewColours(d, catalog), background: 'wall', showDimensions: false, showThin: false }), cap);
+        const blob = await squareImage(previewSvg(r, { colours: previewColours(d, catalog), background: 'wall', backdrop, showDimensions: false, showThin: false }), cap);
         out.push({ label: cap, url: URL.createObjectURL(blob) });
         setListing([...out]);
       } catch {}
@@ -136,13 +139,14 @@ export default function QuoteClient({ catalog, settings, initial }: { catalog: C
               <span className="text-stone-600">{size}</span>
               {busy && <span className="text-xs text-stone-500">updating…</span>}
             </div>
+            <BackdropPicker list={backdrops} value={backdrop} onPick={setBackdrop} />
             {result && !result.ok && <ul className="mt-1 text-sm text-red-800">{result.failures.map((f, i) => <li key={i}>{f.message}</li>)}</ul>}
             {!q.ok && <ul className="mt-1 text-sm text-red-800">{q.errors.map((e) => <li key={e}>{e}</li>)}</ul>}
           </div>
           {ok && <textarea className="input text-sm" rows={3} readOnly value={message} aria-label="Quote message" />}
           <div className="flex flex-wrap gap-2">
             <button className="btn" disabled={!ok} onClick={() => copy(message, 'Price message')}>Copy price message</button>
-            <button className="btn" disabled={!ok} onClick={async () => download(await squareImage(previewSvg(result!, { colours: previewColours(design, catalog), background: 'wall', showDimensions: false, showThin: false }), `${size} · ${dollars(q.totalCents)}`), `quote-${Date.now()}.png`)}>
+            <button className="btn" disabled={!ok} onClick={async () => download(await squareImage(previewSvg(result!, { colours: previewColours(design, catalog), background: 'wall', backdrop, showDimensions: false, showThin: false }), `${size} · ${dollars(q.totalCents)}`), `quote-${Date.now()}.png`)}>
               Save preview image
             </button>
             <button className="btn" disabled={!ok || working === 'link'} onClick={makeLink}>{working === 'link' ? 'Making link…' : 'Make design link'}</button>

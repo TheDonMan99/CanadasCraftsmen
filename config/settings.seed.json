@@ -247,5 +247,39 @@
     },
     "nightly_backup": false,
     "digest_hour": 7
+  },
+  "preview": {
+    "backgrounds": [
+      {
+        "name": "White",
+        "hex": "#FFFFFF"
+      },
+      {
+        "name": "Light wall",
+        "hex": "#D8D2C8",
+        "siding": true
+      },
+      {
+        "name": "Grey siding",
+        "hex": "#8F928F",
+        "siding": true
+      },
+      {
+        "name": "Sage",
+        "hex": "#9CAF88"
+      },
+      {
+        "name": "Brick",
+        "hex": "#8E4A3B"
+      },
+      {
+        "name": "Navy door",
+        "hex": "#1F2A44"
+      },
+      {
+        "name": "Dark wall",
+        "hex": "#2E2F31"
+      }
+    ]
   }
 }

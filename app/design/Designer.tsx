@@ -11,6 +11,7 @@ import type { LineRole } from '@/lib/engine/types';
 import { previewSvg } from '@/lib/export/svg';
 import { useEngine } from '@/lib/client/useEngine';
 import { AlertIcon } from '@/app/components/icons';
+import BackdropPicker, { useBackdrop, type Backdrop } from '@/app/components/BackdropPicker';
 import {
   backersFor,
   defaultDesign,
@@ -59,7 +60,8 @@ export default function Designer({ catalog, settings, initial, startStep = 0, ea
   const router = useRouter();
   const [design, setDesignRaw] = useState<OrderDesign>(initial);
   const [step, setStep] = useState(startStep);
-  const [background, setBackground] = useState<'plain' | 'wall'>('plain');
+  const backdrops: Backdrop[] = settings.preview?.backgrounds ?? [];
+  const [backdrop, setBackdrop] = useBackdrop(backdrops);
   const [approved, setApproved] = useState(false);
   const [contact, setContact] = useState<Contact>({ name: '', email: '', phone: '', address: '', neededBy: '', heardFrom: '', notes: '' });
   const [honeypot, setHoneypot] = useState('');
@@ -79,7 +81,7 @@ export default function Designer({ catalog, settings, initial, startStep = 0, ea
   const colours = previewColours(design, catalog);
   // the result can lag the design by a moment; only trust it when it matches
   const fresh = !busy && !!result;
-  const preview = result && result.parts.length ? previewSvg(result, { colours, background, showDimensions: true, showThin: true }) : '';
+  const preview = result && result.parts.length ? previewSvg(result, { colours, background: 'plain', backdrop, showDimensions: true, showThin: true }) : '';
   const rush = design.addonIds.some((id) => catalog.find((o) => o.id === id)?.values.rush);
   const earliestDate = rush ? earliest.rush : earliest.standard;
   const vertical = isVertical(catalog, design.productId);
@@ -143,7 +145,8 @@ export default function Designer({ catalog, settings, initial, startStep = 0, ea
       <FontFaces catalog={catalog} />
 
       {/* preview and price, above every step */}
-      <div className="sticky top-0 z-10 border-b border-stone-200 bg-stone-50/95 px-4 pb-2 pt-3 backdrop-blur">
+      {/* pinned while editing; on the proof the preview is large, so it scrolls away to leave room for the details */}
+      <div className={`${step === 7 ? '' : 'sticky top-0'} z-10 border-b border-stone-200 bg-stone-50/95 px-4 pb-2 pt-3 backdrop-blur`}>
         <div className={`cc-panel relative overflow-hidden p-1.5 ${step === 7 ? 'cc-panel--hung' : 'max-h-[30vh]'}`}>
           {preview ? (
             <div className={`[&>svg]:mx-auto [&>svg]:h-auto [&>svg]:w-full ${step === 7 ? '[&>svg]:max-h-[60vh]' : '[&>svg]:max-h-[26vh]'}`} dangerouslySetInnerHTML={{ __html: preview }} />
@@ -157,11 +160,9 @@ export default function Designer({ catalog, settings, initial, startStep = 0, ea
             <span className="font-display text-2xl leading-[30px]" data-price>{q.ok ? dollars(q.totalCents) : '—'}</span>
             {result && <span className="ml-2 text-stone-600">{result.widthIn.toFixed(1)} × {result.heightIn.toFixed(1)} in</span>}
           </div>
-          <label className="flex shrink-0 items-center gap-1 text-xs text-stone-600">
-            <input type="checkbox" checked={background === 'wall'} onChange={(e) => setBackground(e.target.checked ? 'wall' : 'plain')} /> On a wall
-          </label>
         </div>
-        <ol className="mt-2 flex gap-1" aria-label="Steps">
+        <BackdropPicker list={backdrops} value={backdrop} onPick={setBackdrop} />
+        <ol className="mt-1 flex gap-1" aria-label="Steps">
           {STEPS.slice(0, lastStep + 1).map((s, i) => (
             <li key={s} className="flex-1">
               <button
