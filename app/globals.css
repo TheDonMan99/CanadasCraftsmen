@@ -200,3 +200,7 @@ body {
 
 /* Checkboxes and radio buttons in the brand ink. */
 input[type="checkbox"], input[type="radio"] { accent-color: var(--char); }
+
+/* Admin: page headings in the display face; everything else stays as laid out. */
+.cc-admin h1 { font-family: var(--font-display); font-weight: 400; }
+.cc-admin a.underline, .cc-admin button.underline { text-underline-offset: 3px; }

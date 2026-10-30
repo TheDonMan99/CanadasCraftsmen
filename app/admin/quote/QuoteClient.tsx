@@ -130,7 +130,7 @@ export default function QuoteClient({ catalog, settings, initial }: { catalog: C
 
         <div className="space-y-3">
           <div className="rounded-lg bg-white p-3 ring-1 ring-stone-200">
-            {svg ? <div className="[&>svg]:h-auto [&>svg]:max-h-[45vh] [&>svg]:w-full" dangerouslySetInnerHTML={{ __html: svg }} /> : <p className="py-16 text-center text-stone-400">{busy ? 'Drawing…' : 'No preview'}</p>}
+            {svg ? <div className="[&>svg]:h-auto [&>svg]:max-h-[45vh] [&>svg]:w-full" dangerouslySetInnerHTML={{ __html: svg }} /> : <p className="py-16 text-center text-stone-500">{busy ? 'Drawing…' : 'No preview'}</p>}
             <div className="mt-2 flex items-baseline gap-3">
               <span className="text-2xl font-semibold">{q.ok ? dollars(q.totalCents) : '—'}</span>
               <span className="text-stone-600">{size}</span>
@@ -151,7 +151,7 @@ export default function QuoteClient({ catalog, settings, initial }: { catalog: C
               {working === 'listing' ? 'Making listing images…' : 'Listing images (every size)'}
             </button>
           </div>
-          {link && <p className="break-all text-sm">Link: <a className="text-blue-700 underline" href={link.url}>{link.url}</a></p>}
+          {link && <p className="break-all text-sm">Link: <a className="text-char underline" href={link.url}>{link.url}</a></p>}
           {msg && <p className="text-sm text-stone-700" role="status">{msg}</p>}
           {listing && listing.length > 0 && (
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">

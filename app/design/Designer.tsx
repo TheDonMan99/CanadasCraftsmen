@@ -148,13 +148,13 @@ export default function Designer({ catalog, settings, initial, startStep = 0, ea
           {preview ? (
             <div className={`[&>svg]:mx-auto [&>svg]:h-auto [&>svg]:w-full ${step === 7 ? '[&>svg]:max-h-[60vh]' : '[&>svg]:max-h-[26vh]'}`} dangerouslySetInnerHTML={{ __html: preview }} />
           ) : (
-            <div className="flex h-32 items-center justify-center text-sm text-stone-400">{busy ? 'Drawing your sign…' : 'Your sign appears here'}</div>
+            <div className="flex h-32 items-center justify-center text-sm text-kerf">{busy ? 'Drawing your sign…' : 'Your sign appears here'}</div>
           )}
           {busy && <span className="absolute right-2 top-2 rounded bg-white/80 px-2 py-0.5 text-xs text-stone-500">Updating…</span>}
         </div>
         <div className="mt-2 flex items-center justify-between gap-2 text-sm">
           <div className="min-w-0">
-            <span className="font-display text-2xl leading-[30px]">{q.ok ? dollars(q.totalCents) : '—'}</span>
+            <span className="font-display text-2xl leading-[30px]" data-price>{q.ok ? dollars(q.totalCents) : '—'}</span>
             {result && <span className="ml-2 text-stone-600">{result.widthIn.toFixed(1)} × {result.heightIn.toFixed(1)} in</span>}
           </div>
           <label className="flex shrink-0 items-center gap-1 text-xs text-stone-600">
@@ -286,7 +286,7 @@ export default function Designer({ catalog, settings, initial, startStep = 0, ea
                 <p key={i} className="mt-1 flex flex-wrap gap-1">
                   <span className="mr-1 text-stone-500">{ROLE_LABEL[l.role]}:</span>
                   {[...l.text.trim()].map((c, j) => (
-                    <span key={j} className={`inline-flex h-7 min-w-6 items-center justify-center rounded border px-1 font-mono ${c === ' ' ? 'border-dashed border-stone-300 text-stone-400' : 'border-stone-300 bg-white'}`}>
+                    <span key={j} className={`inline-flex h-7 min-w-6 items-center justify-center rounded border px-1 font-mono ${c === ' ' ? 'border-dashed border-stone-300 text-stone-500' : 'border-stone-300 bg-white'}`}>
                       {c === ' ' ? '␣' : c}
                     </span>
                   ))}

@@ -201,7 +201,7 @@ export default function LabClient({ catalog, settings, initialFont, initialMater
               </div>
             ))}
             <div className="flex items-center justify-between">
-              {lines.length < 3 && <button className="text-sm text-blue-700" onClick={() => setLines((ls) => [...ls, P('small', 'Est. 2019', 'font.montserrat-bold')])}>+ Add line</button>}
+              {lines.length < 3 && <button className="text-sm text-char" onClick={() => setLines((ls) => [...ls, P('small', 'Est. 2019', 'font.montserrat-bold')])}>+ Add line</button>}
               <label className="flex items-center gap-1 text-xs text-stone-600"><input type="checkbox" checked={showDisabled} onChange={(e) => setShowDisabled(e.target.checked)} /> Include options that are off (test cuts)</label>
             </div>
           </Section>
@@ -266,7 +266,7 @@ export default function LabClient({ catalog, settings, initialFont, initialMater
                 <Num key={k} label={label(k)} value={(engine[k] as number | undefined) ?? (settings.engine as any)[k]} step={0.01} onChange={(v) => setEngine((e) => ({ ...e, [k]: v }))} />
               ))}
             </div>
-            <button className="mt-2 text-xs text-blue-700" onClick={() => setEngine({})}>Reset to defaults</button>
+            <button className="mt-2 text-xs text-char" onClick={() => setEngine({})}>Reset to defaults</button>
           </details>
         </aside>
 
@@ -291,7 +291,7 @@ export default function LabClient({ catalog, settings, initialFont, initialMater
                 ))}
               </span>
             </div>
-            {preview ? <div className="w-full [&>svg]:h-auto [&>svg]:max-h-[70vh] [&>svg]:w-full" dangerouslySetInnerHTML={{ __html: preview }} /> : <div className="py-20 text-center text-stone-400">No preview</div>}
+            {preview ? <div className="w-full [&>svg]:h-auto [&>svg]:max-h-[70vh] [&>svg]:w-full" dangerouslySetInnerHTML={{ __html: preview }} /> : <div className="py-20 text-center text-stone-500">No preview</div>}
             {error && <p className="mt-2 text-sm text-red-700">{error}</p>}
             <div className="mt-3 flex flex-wrap gap-2">
               <button className="btn" onClick={() => serverFile('svg')}>Download SVG (LightBurn)</button>

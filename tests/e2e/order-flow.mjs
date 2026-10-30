@@ -99,7 +99,7 @@ async function main() {
   const approve = page.getByRole('button', { name: 'Approve and continue' });
   assert.equal(await approve.isDisabled(), true, 'cannot continue without approving');
   await page.screenshot({ path: `${OUT}/4-proof.png`, fullPage: true });
-  const proofPrice = (await page.locator('.sticky .text-lg').textContent()).trim();
+  const proofPrice = (await page.locator('[data-price]').textContent()).trim();
   await page.getByRole('checkbox', { name: /I’ve checked the spelling/ }).check();
   await next('Approve and continue');
 

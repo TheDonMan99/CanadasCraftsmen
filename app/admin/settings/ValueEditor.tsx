@@ -83,7 +83,7 @@ function ListField({ name, value, numeric, onChange }: { name: string; value: (s
   const [text, setText] = useState(value.join(', '));
   return (
     <label className="block text-xs text-stone-600 sm:col-span-2">
-      {label(name)} <span className="text-stone-400">(comma-separated)</span>
+      {label(name)} <span className="text-stone-500">(comma-separated)</span>
       <input
         className="input mt-0.5"
         value={text}
@@ -102,7 +102,7 @@ export function JsonField({ name, value, onChange }: { name: string; value: any;
   const [bad, setBad] = useState(false);
   return (
     <label className="block text-xs text-stone-600 sm:col-span-2">
-      {label(name)} <span className="text-stone-400">(JSON)</span>
+      {label(name)} <span className="text-stone-500">(JSON)</span>
       <textarea
         className={`input mt-0.5 font-mono text-xs ${bad ? 'border-red-500' : ''}`}
         rows={Math.min(12, text.split('\n').length + 1)}
