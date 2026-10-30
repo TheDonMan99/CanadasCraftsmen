@@ -107,8 +107,8 @@ export default function CatalogEditor({ category, options, canSave }: { category
                   <button className="px-1 text-stone-500 disabled:opacity-30" aria-label={`Move ${o.label} down`} disabled={!canSave} onClick={() => move(o.id, 1)}>↓</button>
                 </td>
                 <td className="p-2 whitespace-nowrap text-right">
-                  <button className="text-blue-700" onClick={() => setEditing(o.id)}>Edit</button>
-                  <button className="ml-3 text-blue-700 disabled:opacity-40" disabled={!canSave} onClick={() => act(copyOption(o.id), `Copied ${o.label}.`)}>Duplicate</button>
+                  <button className="text-char" onClick={() => setEditing(o.id)}>Edit</button>
+                  <button className="ml-3 text-char disabled:opacity-40" disabled={!canSave} onClick={() => act(copyOption(o.id), `Copied ${o.label}.`)}>Duplicate</button>
                 </td>
               </tr>
             ))}
@@ -259,7 +259,7 @@ function Preview({ option }: { option: CatalogOption }) {
   if (labParam)
     return (
       <p className="mt-4 text-sm">
-        <Link className="text-blue-700" href={`/admin/lab?${labParam}`} target="_blank">Preview on a sample sign in the engine lab ↗</Link>
+        <Link className="text-char" href={`/admin/lab?${labParam}`} target="_blank">Preview on a sample sign in the engine lab ↗</Link>
       </p>
     );
   return null;

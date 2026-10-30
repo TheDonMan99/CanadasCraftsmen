@@ -1,0 +1,52 @@
+/* Canada's Craftsmen: component styles. Every colour, space and radius comes from tokens.css. */
+
+body { margin: 0; font-family: var(--font-text); background: var(--surface); color: var(--ink); -webkit-font-smoothing: antialiased; }
+.cc-stage { padding: var(--space-6); display: flex; flex-wrap: wrap; gap: var(--space-4); align-items: flex-start; }
+
+/* Band: full-width dark section. Remaps focus so the ring stays visible on char. */
+.cc-band { background: var(--band); color: var(--on-band); --focus: var(--on-band); }
+
+/* Button */
+.cc-btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2); min-height: 48px; padding: 0 var(--space-6); border-radius: var(--radius-sm); border: var(--edge-kerf) solid transparent; font: 600 16px/20px var(--font-text); text-decoration: none; cursor: pointer; transition: background-color .12s ease, border-color .12s ease; }
+.cc-btn:focus-visible { outline: var(--edge-focus) solid var(--focus); outline-offset: 2px; }
+.cc-btn--primary { background: var(--brand); color: var(--on-brand); }
+.cc-btn--primary:hover { background: var(--brand-strong); }
+.cc-btn--secondary { background: transparent; color: var(--ink); border-color: var(--line-strong); }
+.cc-btn--secondary:hover { border-color: var(--ink); }
+.cc-btn--birch { background: var(--birch); color: var(--on-birch); }
+.cc-btn--birch:hover { background: var(--paper); }
+.cc-btn[disabled], .cc-btn[aria-disabled="true"] { opacity: .5; cursor: not-allowed; }
+@media (prefers-reduced-motion: reduce) { .cc-btn { transition: none; } }
+
+/* Birch panel with the burnt edge */
+.cc-panel { background: var(--birch); color: var(--on-birch); border: var(--edge-kerf) solid var(--kerf); border-radius: var(--radius-md); }
+.cc-panel--hung { box-shadow: var(--shadow-hang); }
+
+/* Product card */
+.cc-product { display: flex; flex-direction: column; gap: var(--space-1); color: var(--ink); text-decoration: none; width: 100%; max-width: 300px; }
+.cc-product__media { aspect-ratio: 4 / 3; display: flex; align-items: center; justify-content: center; overflow: hidden; margin-bottom: var(--space-3); }
+.cc-product__media svg, .cc-product__media img { width: 100%; height: 100%; display: block; object-fit: cover; }
+.cc-product__name { font: 700 21px/28px var(--font-text); margin: 0; }
+.cc-product__price { font: 400 24px/30px var(--font-display); margin: 0; }
+.cc-product__meta { font: 400 14px/20px var(--font-text); color: var(--ink-muted); margin: 0; }
+.cc-product:hover .cc-product__name { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 4px; }
+.cc-product:focus-visible { outline: var(--edge-focus) solid var(--focus); outline-offset: 6px; border-radius: var(--radius-md); }
+
+/* Steps: a real sequence, so numbered */
+.cc-steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: var(--space-8) var(--space-6); counter-reset: step; --step-num: var(--brand); --step-text: var(--ink-muted); }
+.cc-band .cc-steps { --step-num: var(--maple-bright); --step-text: var(--on-band); }
+.cc-steps li { counter-increment: step; }
+.cc-steps li::before { content: counter(step); display: block; font: 400 48px/52px var(--font-display); color: var(--step-num); margin-bottom: var(--space-3); }
+.cc-steps h3 { font: 700 21px/28px var(--font-text); margin: 0 0 var(--space-2); }
+.cc-steps p { font: 400 16px/26px var(--font-text); margin: 0; color: var(--step-text); max-width: 30ch; }
+
+/* Text field */
+.cc-field { display: flex; flex-direction: column; gap: var(--space-2); width: 100%; max-width: 360px; }
+.cc-field__label { font: 600 15px/20px var(--font-text); color: var(--ink); }
+.cc-field__input { box-sizing: border-box; min-height: 48px; width: 100%; padding: 0 var(--space-4); font: 400 16px/26px var(--font-text); color: var(--ink); background: var(--surface-raised); border: var(--edge-kerf) solid var(--line-strong); border-radius: var(--radius-sm); }
+.cc-field__input:hover { border-color: var(--ink-muted); }
+.cc-field__input:focus-visible { outline: var(--edge-focus) solid var(--focus); outline-offset: 2px; border-color: var(--ink); }
+.cc-field__hint { font: 400 14px/20px var(--font-text); color: var(--ink-muted); margin: 0; }
+.cc-field__error { display: flex; gap: var(--space-2); align-items: flex-start; font: 500 14px/20px var(--font-text); color: var(--danger); margin: 0; }
+.cc-field__error svg { flex: none; width: 20px; height: 20px; }
+.cc-field--invalid .cc-field__input { border-color: var(--danger); }

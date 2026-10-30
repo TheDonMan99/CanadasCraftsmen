@@ -1,5 +1,8 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import SiteFooter from '@/app/components/SiteFooter';
+import SiteHeader from '@/app/components/SiteHeader';
+import { CheckIcon } from '@/app/components/icons';
 import { loadCatalog, loadSettings } from '@/lib/data';
 import { getDb } from '@/lib/db/client';
 import { getOrderForCustomer } from '@/lib/db/orders';
@@ -20,25 +23,30 @@ export default async function ConfirmationPage({ params, searchParams }: { param
   const delivery = catalog.find((o) => o.id === order.delivery_method);
   const lines: { label: string; cents: number; note?: string; key: string }[] = order.price_breakdown.lines ?? [];
   return (
-    <main className="mx-auto max-w-xl px-4 py-10">
-      <p className="text-sm font-medium text-green-800">Order received</p>
-      <h1 className="mt-1 text-3xl font-semibold">Thank you, {order.customer_name.split(/\s+/)[0]}!</h1>
-      <p className="mt-2 text-stone-600">
+    <>
+    <SiteHeader cta={false} />
+    <main className="mx-auto max-w-2xl px-4 py-16 md:px-12">
+      <p className="cc-label cc-success flex items-center gap-2">
+        <CheckIcon />
+        Order received
+      </p>
+      <h1 className="cc-display-l mt-2">Thank you, {order.customer_name.split(/\s+/)[0]}</h1>
+      <p className="cc-body-l mt-6 text-kerf">
         Your order number is <strong className="text-stone-900">{order.number}</strong>.{' '}
         {/* customer emails are held until a sending domain is set up */}
         {settings.emails.from_address ? `A copy is on its way to ${order.customer_email}.` : 'Keep this page: it has everything you need to pay.'}
       </p>
 
-      <section className="mt-6 rounded-lg bg-white p-4 ring-1 ring-stone-200">
-        <h2 className="font-medium">Amount due: {dollars(order.deposit_required)}</h2>
-        <ul className="mt-2 space-y-2 text-sm">
+      <section className="mt-8 rounded-sm border border-line bg-white p-6">
+        <h2 className="cc-display-s">Amount due: {dollars(order.deposit_required)}</h2>
+        <ul className="cc-body mt-4 space-y-2">
           {paymentInstructions(catalog, settings, order.number, order.deposit_required).map((p) => <li key={p}>{p}</li>)}
         </ul>
-        <p className="mt-3 text-sm text-stone-600">We start on your sign once payment arrives.</p>
+        <p className="cc-small mt-4 text-kerf">We start on your sign once payment arrives.</p>
       </section>
 
-      <section className="mt-4 rounded-lg bg-white p-4 text-sm ring-1 ring-stone-200">
-        <h2 className="font-medium">Your sign</h2>
+      <section className="cc-body mt-6 rounded-sm border border-line bg-white p-6">
+        <h2 className="cc-title">Your sign</h2>
         <ul className="mt-2 space-y-1">
           {(labels.lines ?? []).map((l: { text: string; font: string }, i: number) => <li key={i}>“{l.text}” in {l.font}</li>)}
           <li>{[labels.product, labels.size, labels.style, labels.material, [labels.finish, ...(labels.colours ?? [])].filter(Boolean).join(', ')].filter(Boolean).join(' · ')}</li>
@@ -47,7 +55,7 @@ export default async function ConfirmationPage({ params, searchParams }: { param
           <table className="mt-3 w-full">
             <tbody>
               {lines.map((l) => (
-                <tr key={l.key} className="border-b border-stone-100">
+                <tr key={l.key} className="border-b border-line">
                   <td className="py-1">{l.label}</td>
                   <td className="py-1 text-right">{dollars(l.cents)}</td>
                 </tr>
@@ -65,8 +73,11 @@ export default async function ConfirmationPage({ params, searchParams }: { param
         </p>
       </section>
 
-      <p className="mt-4 text-sm text-stone-600">{refundPolicy(settings)}</p>
-      <p className="mt-2 text-sm text-stone-600">{settings.emails.from_address ? 'Questions? Just reply to the email we sent you.' : 'Questions? Message us where you found us, and quote your order number.'}</p>
+      <p className="cc-small mt-6 text-kerf">{refundPolicy(settings)}</p>
+      <p className="cc-small mt-2 text-kerf">{settings.emails.from_address ? 'Questions? Just reply to the email we sent you.' : 'Questions? Message us where you found us, and quote your order number.'}</p>
     </main>
+    <SiteFooter />
+    </>
   );
 }
+

@@ -68,7 +68,7 @@ export default function Replies({ templates, canEdit }: { templates: T[]; canEdi
           {error && <p className="text-sm text-red-700">{error}</p>}
         </form>
       )}
-      {canEdit && !editing && <button className="text-sm text-blue-700 underline" onClick={() => setEditing({ title: '', body: '' })}>+ Add a reply</button>}
+      {canEdit && !editing && <button className="text-sm text-char underline" onClick={() => setEditing({ title: '', body: '' })}>+ Add a reply</button>}
     </div>
   );
 }

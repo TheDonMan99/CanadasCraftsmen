@@ -10,6 +10,8 @@ import { byCategory, type CatalogOption, type Settings } from '@/lib/config/cata
 import type { LineRole } from '@/lib/engine/types';
 import { previewSvg } from '@/lib/export/svg';
 import { useEngine } from '@/lib/client/useEngine';
+import { AlertIcon } from '@/app/components/icons';
+import BackdropPicker, { useBackdrop, type Backdrop } from '@/app/components/BackdropPicker';
 import {
   backersFor,
   defaultDesign,
@@ -58,7 +60,8 @@ export default function Designer({ catalog, settings, initial, startStep = 0, ea
   const router = useRouter();
   const [design, setDesignRaw] = useState<OrderDesign>(initial);
   const [step, setStep] = useState(startStep);
-  const [background, setBackground] = useState<'plain' | 'wall'>('plain');
+  const backdrops: Backdrop[] = settings.preview?.backgrounds ?? [];
+  const [backdrop, setBackdrop] = useBackdrop(backdrops);
   const [approved, setApproved] = useState(false);
   const [contact, setContact] = useState<Contact>({ name: '', email: '', phone: '', address: '', neededBy: '', heardFrom: '', notes: '' });
   const [honeypot, setHoneypot] = useState('');
@@ -78,7 +81,7 @@ export default function Designer({ catalog, settings, initial, startStep = 0, ea
   const colours = previewColours(design, catalog);
   // the result can lag the design by a moment; only trust it when it matches
   const fresh = !busy && !!result;
-  const preview = result && result.parts.length ? previewSvg(result, { colours, background, showDimensions: true, showThin: true }) : '';
+  const preview = result && result.parts.length ? previewSvg(result, { colours, background: 'plain', backdrop, showDimensions: true, showThin: true }) : '';
   const rush = design.addonIds.some((id) => catalog.find((o) => o.id === id)?.values.rush);
   const earliestDate = rush ? earliest.rush : earliest.standard;
   const vertical = isVertical(catalog, design.productId);
@@ -142,25 +145,24 @@ export default function Designer({ catalog, settings, initial, startStep = 0, ea
       <FontFaces catalog={catalog} />
 
       {/* preview and price, above every step */}
-      <div className="sticky top-0 z-10 border-b border-stone-200 bg-stone-50/95 px-4 pb-2 pt-3 backdrop-blur">
-        <div className={`relative overflow-hidden rounded-lg border border-stone-200 bg-white ${step === 7 ? '' : 'max-h-[28vh]'}`}>
+      {/* pinned while editing; on the proof the preview is large, so it scrolls away to leave room for the details */}
+      <div className={`${step === 7 ? '' : 'sticky top-0'} z-10 border-b border-stone-200 bg-stone-50/95 px-4 pb-2 pt-3 backdrop-blur`}>
+        <div className={`cc-panel relative overflow-hidden p-1.5 ${step === 7 ? 'cc-panel--hung' : 'max-h-[30vh]'}`}>
           {preview ? (
             <div className={`[&>svg]:mx-auto [&>svg]:h-auto [&>svg]:w-full ${step === 7 ? '[&>svg]:max-h-[60vh]' : '[&>svg]:max-h-[26vh]'}`} dangerouslySetInnerHTML={{ __html: preview }} />
           ) : (
-            <div className="flex h-32 items-center justify-center text-sm text-stone-400">{busy ? 'Drawing your sign…' : 'Your sign appears here'}</div>
+            <div className="flex h-32 items-center justify-center text-sm text-kerf">{busy ? 'Drawing your sign…' : 'Your sign appears here'}</div>
           )}
           {busy && <span className="absolute right-2 top-2 rounded bg-white/80 px-2 py-0.5 text-xs text-stone-500">Updating…</span>}
         </div>
         <div className="mt-2 flex items-center justify-between gap-2 text-sm">
           <div className="min-w-0">
-            <span className="text-lg font-semibold">{q.ok ? dollars(q.totalCents) : '—'}</span>
+            <span className="font-display text-2xl leading-[30px]" data-price>{q.ok ? dollars(q.totalCents) : '—'}</span>
             {result && <span className="ml-2 text-stone-600">{result.widthIn.toFixed(1)} × {result.heightIn.toFixed(1)} in</span>}
           </div>
-          <label className="flex shrink-0 items-center gap-1 text-xs text-stone-600">
-            <input type="checkbox" checked={background === 'wall'} onChange={(e) => setBackground(e.target.checked ? 'wall' : 'plain')} /> On a wall
-          </label>
         </div>
-        <ol className="mt-2 flex gap-1" aria-label="Steps">
+        <BackdropPicker list={backdrops} value={backdrop} onPick={setBackdrop} />
+        <ol className="mt-1 flex gap-1" aria-label="Steps">
           {STEPS.slice(0, lastStep + 1).map((s, i) => (
             <li key={s} className="flex-1">
               <button
@@ -169,15 +171,17 @@ export default function Designer({ catalog, settings, initial, startStep = 0, ea
                 disabled={i >= step}
                 aria-current={i === step ? 'step' : undefined}
                 aria-label={`${i + 1}. ${s}`}
-                className={`block h-1.5 w-full rounded-full ${i < step ? 'bg-stone-700' : i === step ? 'bg-amber-600' : 'bg-stone-300'}`}
-              />
+                className="flex h-6 w-full items-center"
+              >
+                <span className={`block h-1.5 w-full rounded-full ${i < step ? 'bg-char' : i === step ? 'bg-maple' : 'bg-line'}`} />
+              </button>
             </li>
           ))}
         </ol>
       </div>
 
       <div className="px-4 pt-4">
-        <h1 className="text-xl font-semibold">
+        <h1 className="cc-display-s">
           <span className="text-stone-500">{step + 1}.</span> {stepTitle(step, vertical)}
         </h1>
 
@@ -196,14 +200,15 @@ export default function Designer({ catalog, settings, initial, startStep = 0, ea
           design.lines.map((l, i) =>
             l.text.trim() ? (
               <section key={i} className="mt-4">
-                <h2 className="text-sm font-medium text-stone-700">{ROLE_LABEL[l.role]}</h2>
+                <h2 className="cc-label">{ROLE_LABEL[l.role]}</h2>
                 <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-3">
                   {fontsFor(catalog, design.productId, l.role).map((f) => (
                     <button
                       key={f.id}
                       type="button"
+                      aria-pressed={l.fontId === f.id}
                       onClick={() => setDesign({ lines: design.lines.map((x, j) => (j === i ? { ...x, fontId: f.id } : x)) })}
-                      className={`rounded-lg border bg-white p-2 text-left ${l.fontId === f.id ? 'border-amber-600 ring-2 ring-amber-600' : 'border-stone-300'}`}
+                      className={`cc-choice p-2 text-left`}
                     >
                       <span className="block truncate text-2xl leading-tight" style={{ fontFamily: fontFamily(f.id) }}>{l.text}</span>
                       <span className="mt-1 block text-xs text-stone-500">{f.label}</span>
@@ -223,11 +228,11 @@ export default function Designer({ catalog, settings, initial, startStep = 0, ea
             <Choices options={stylesFor(catalog, design.productId)} value={design.styleId} onPick={(id) => setDesign({ styleId: id })} detail={(o) => o.description} price />
             {needsBacker(catalog, design.styleId) && !product?.values.forced_backer && (
               <>
-                <h2 className="mt-5 text-sm font-medium text-stone-700">Backer shape</h2>
+                <h2 className="cc-label mt-6">Backer shape</h2>
                 <Choices options={backersFor(catalog, design)} value={design.backerId ?? ''} onPick={(id) => setDesign({ backerId: id })} price compact />
               </>
             )}
-            <h2 className="mt-5 text-sm font-medium text-stone-700">Material</h2>
+            <h2 className="cc-label mt-6">Material</h2>
             <Choices options={materialsFor(catalog, design.placementId)} value={design.materialId} onPick={(id) => setDesign({ materialId: id })} detail={(o) => o.values.thickness_label} price compact />
           </>
         )}
@@ -236,7 +241,7 @@ export default function Designer({ catalog, settings, initial, startStep = 0, ea
 
         {step === 6 && (
           <>
-            <h2 className="mt-3 text-sm font-medium text-stone-700">Where will it hang?</h2>
+            <h2 className="cc-label mt-4">Where will it hang?</h2>
             <Choices options={byCategory(catalog, 'placement')} value={design.placementId} onPick={(id) => setDesign({ placementId: id })} compact />
             {(() => {
               const coats = topcoatsFor(catalog, design.placementId, design.finishId);
@@ -245,17 +250,17 @@ export default function Designer({ catalog, settings, initial, startStep = 0, ea
               if (coats.length < 2) return null;
               return (
                 <>
-                  <h2 className="mt-5 text-sm font-medium text-stone-700">Clear coat</h2>
+                  <h2 className="cc-label mt-6">Clear coat</h2>
                   <Choices options={coats} value={design.topcoatId ?? ''} onPick={(id) => setDesign({ topcoatId: id })} price compact />
                 </>
               );
             })()}
-            <h2 className="mt-5 text-sm font-medium text-stone-700">Extras</h2>
+            <h2 className="cc-label mt-6">Extras</h2>
             <div className="mt-2 space-y-2">
               {byCategory(catalog, 'addon')
                 .filter((a) => !(a.values.engine === 'engrave_small_line' && !design.lines.some((l) => l.role === 'small' && l.text.trim())))
                 .map((a) => (
-                  <label key={a.id} className="flex items-start gap-3 rounded-lg border border-stone-300 bg-white p-3">
+                  <label key={a.id} className="flex min-h-12 items-start gap-3 rounded-sm border-[1.5px] border-line-strong bg-white p-3">
                     <input
                       type="checkbox"
                       className="mt-1 h-4 w-4"
@@ -282,7 +287,7 @@ export default function Designer({ catalog, settings, initial, startStep = 0, ea
                 <p key={i} className="mt-1 flex flex-wrap gap-1">
                   <span className="mr-1 text-stone-500">{ROLE_LABEL[l.role]}:</span>
                   {[...l.text.trim()].map((c, j) => (
-                    <span key={j} className={`inline-flex h-7 min-w-6 items-center justify-center rounded border px-1 font-mono ${c === ' ' ? 'border-dashed border-stone-300 text-stone-400' : 'border-stone-300 bg-white'}`}>
+                    <span key={j} className={`inline-flex h-7 min-w-6 items-center justify-center rounded border px-1 font-mono ${c === ' ' ? 'border-dashed border-stone-300 text-stone-500' : 'border-stone-300 bg-white'}`}>
                       {c === ' ' ? '␣' : c}
                     </span>
                   ))}
@@ -290,27 +295,25 @@ export default function Designer({ catalog, settings, initial, startStep = 0, ea
               ))}
             </div>
             {settings.pricing.show_breakdown && <Breakdown q={q} />}
-            <p className="rounded-lg bg-amber-50 p-3 text-amber-900">{refundPolicy}</p>
+            <p className="rounded-sm border border-line bg-white p-3">{refundPolicy}</p>
             {editing ? (
               <div className="space-y-2">
-                <label className="flex items-start gap-3 rounded-lg border border-stone-300 bg-white p-3">
+                <label className="flex min-h-12 items-start gap-3 rounded-sm border-[1.5px] border-line-strong bg-white p-3">
                   <input type="checkbox" className="mt-0.5 h-5 w-5" checked={sendProof} onChange={(e) => setSendProof(e.target.checked)} />
                   <span>Email the customer the edited proof to approve. The version they approved stays on record.</span>
                 </label>
                 {currentTotalCents !== undefined && q.ok && q.totalCents !== currentTotalCents && (
-                  <label className="flex items-start gap-3 rounded-lg border border-amber-300 bg-amber-50 p-3">
+                  <label className="flex min-h-12 items-start gap-3 rounded-sm border-[1.5px] border-kerf bg-birch p-3">
                     <input type="checkbox" className="mt-0.5 h-5 w-5" checked={reprice} onChange={(e) => setReprice(e.target.checked)} />
                     <span>Change the price from {dollars(currentTotalCents)} to {dollars(q.totalCents)}. Leave unticked to keep the price the customer agreed to.</span>
                   </label>
                 )}
                 {submitErrors.length > 0 && (
-                  <ul className="rounded-lg bg-red-50 p-3 text-sm text-red-800" role="alert">
-                    {submitErrors.map((e, i) => <li key={i}>{e}</li>)}
-                  </ul>
+                  <ErrorList items={submitErrors} role="alert" />
                 )}
               </div>
             ) : (
-              <label className="flex items-start gap-3 rounded-lg border border-stone-300 bg-white p-3">
+              <label className="flex min-h-12 items-start gap-3 rounded-sm border-[1.5px] border-line-strong bg-white p-3">
                 <input type="checkbox" className="mt-0.5 h-5 w-5" checked={approved} onChange={(e) => setApproved(e.target.checked)} />
                 <span>
                   {admin
@@ -321,15 +324,15 @@ export default function Designer({ catalog, settings, initial, startStep = 0, ea
             )}
             {settings.production.share_links_enabled && !admin && (
               <div>
-                <button type="button" onClick={shareDesign} disabled={share.busy} className="text-sm text-blue-700 underline">
+                <button type="button" onClick={shareDesign} disabled={share.busy} className="cc-small underline underline-offset-4">
                   {share.busy ? 'Saving…' : 'Share this design (send it to someone before ordering)'}
                 </button>
                 {share.url && (
                   <p className="mt-1 break-all text-xs text-stone-600">
-                    Link copied: <a className="text-blue-700" href={share.url}>{share.url}</a>
+                    Link copied: <a className="underline" href={share.url}>{share.url}</a>
                   </p>
                 )}
-                {share.error && <p className="mt-1 text-xs text-red-700">{share.error}</p>}
+                {share.error && <ErrorList items={[share.error]} role="alert" className="mt-1" />}
               </div>
             )}
           </div>
@@ -338,10 +341,10 @@ export default function Designer({ catalog, settings, initial, startStep = 0, ea
         {step === 8 && (
           <form id="order-form" onSubmit={submit} className="mt-3 space-y-3">
             {mode === 'admin-new' && (
-              <div className="grid gap-3 rounded-lg bg-amber-50 p-3 sm:grid-cols-2">
-                <label className="block text-sm font-medium text-stone-700">
+              <div className="grid gap-3 rounded-sm border border-line bg-white p-3 sm:grid-cols-2">
+                <label className="cc-field__label block">
                   Source
-                  <select className="input mt-1 py-2 text-base" value={source} onChange={(e) => setSource(e.target.value)}>
+                  <select className="cc-field__input mt-2" value={source} onChange={(e) => setSource(e.target.value)}>
                     {['Facebook Marketplace', 'Instagram', 'Market booth', 'Referral', 'Repeat customer', 'Other'].map((o) => <option key={o}>{o}</option>)}
                   </select>
                 </label>
@@ -354,30 +357,30 @@ export default function Designer({ catalog, settings, initial, startStep = 0, ea
             <Field label="Email" type="email" value={contact.email} onChange={(v) => setContact({ ...contact, email: v })} autoComplete="email" required />
             <Field label="Phone" type="tel" value={contact.phone} onChange={(v) => setContact({ ...contact, phone: v })} autoComplete="tel" required />
             <div>
-              <span className="block text-sm font-medium text-stone-700">Pickup or delivery</span>
+              <span className="cc-field__label block">Pickup or delivery</span>
               <Choices options={byCategory(catalog, 'delivery')} value={design.deliveryId} onPick={(id) => setDesign({ deliveryId: id })} detail={(o) => (o.id === 'delivery.pickup' ? settings.business.pickup_note : o.values.needs_address ? settings.business.delivery_area : '')} price compact />
             </div>
             {delivery?.values.needs_address && (
               <Field label="Delivery address" value={contact.address ?? ''} onChange={(v) => setContact({ ...contact, address: v })} autoComplete="street-address" required />
             )}
-            <label className="block text-sm font-medium text-stone-700">
+            <label className="cc-field__label block">
               Needed by (optional)
-              <input type="date" className="input mt-1 py-2 text-base" min={earliestDate} value={contact.neededBy ?? ''} onChange={(e) => setContact({ ...contact, neededBy: e.target.value })} />
+              <input type="date" className="cc-field__input mt-2" min={earliestDate} value={contact.neededBy ?? ''} onChange={(e) => setContact({ ...contact, neededBy: e.target.value })} />
               <span className="mt-1 block text-xs font-normal text-stone-500">
                 Earliest ready date: {formatDate(earliestDate)}
                 {!rush && catalog.some((o) => o.values.rush && o.enabled) && ` (or ${formatDate(earliest.rush)} with rush)`}
               </span>
             </label>
-            <label className="block text-sm font-medium text-stone-700">
+            <label className="cc-field__label block">
               How did you hear about us?
-              <select className="input mt-1 py-2 text-base" value={contact.heardFrom} onChange={(e) => setContact({ ...contact, heardFrom: e.target.value })}>
+              <select className="cc-field__input mt-2" value={contact.heardFrom} onChange={(e) => setContact({ ...contact, heardFrom: e.target.value })}>
                 <option value="">Choose…</option>
                 {(settings.business.hear_about_options ?? []).map((o: string) => <option key={o}>{o}</option>)}
               </select>
             </label>
-            <label className="block text-sm font-medium text-stone-700">
+            <label className="cc-field__label block">
               Notes (optional)
-              <textarea className="input mt-1 text-base" rows={3} maxLength={1000} value={contact.notes} onChange={(e) => setContact({ ...contact, notes: e.target.value })} />
+              <textarea className="cc-field__input mt-2" rows={3} maxLength={1000} value={contact.notes} onChange={(e) => setContact({ ...contact, notes: e.target.value })} />
             </label>
             {/* honeypot: hidden from people, so only bots fill it in */}
             <div aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
@@ -391,23 +394,19 @@ export default function Designer({ catalog, settings, initial, startStep = 0, ea
                 {settings.business.privacy_note} <a href="/privacy" className="underline">Privacy</a>
               </p>
             )}
-            <div className="rounded-lg bg-white p-3 text-sm ring-1 ring-stone-200">
+            <div className="rounded-sm border border-line bg-white p-3 text-sm">
               Amount due when you order: <strong>{dollars(q.amountDueCents)}</strong>
               {q.deliveryQuoted && <span className="block text-xs text-stone-500">Shipping is quoted separately.</span>}
             </div>
             {submitErrors.length > 0 && (
-              <ul className="rounded-lg bg-red-50 p-3 text-sm text-red-800" role="alert">
-                {submitErrors.map((e, i) => <li key={i}>{e}</li>)}
-              </ul>
+              <ErrorList items={submitErrors} role="alert" />
             )}
           </form>
         )}
 
         {step >= 1 && step <= 7 && fresh && !result!.ok && <Fixes design={design} catalog={catalog} codes={result!.failures.map((f) => f.code)} onChange={setDesign} onFont={() => setStep(2)} />}
         {blockers.length > 0 && step > 0 && (
-          <ul className="mt-4 space-y-1 text-sm text-red-800" role="status">
-            {[...new Set(blockers)].map((b) => <li key={b}>{b}</li>)}
-          </ul>
+          <ErrorList items={[...new Set(blockers)]} role="status" className="mt-4" />
         )}
       </div>
 
@@ -415,20 +414,20 @@ export default function Designer({ catalog, settings, initial, startStep = 0, ea
       <div className="fixed inset-x-0 bottom-0 z-10 border-t border-stone-200 bg-white/95 px-4 py-3 backdrop-blur">
         <div className="mx-auto flex max-w-3xl gap-3">
           {step > 0 && (
-            <button type="button" onClick={back} className="rounded-lg border border-stone-300 px-4 py-3 text-sm">
+            <button type="button" onClick={back} className="cc-btn cc-btn--secondary">
               Back
             </button>
           )}
           {editing && step === lastStep ? (
-            <button type="button" onClick={() => submit()} disabled={submitting || !canNext} className="flex-1 rounded-lg bg-amber-700 px-4 py-3 text-sm font-medium text-white disabled:bg-stone-300">
+            <button type="button" onClick={() => submit()} disabled={submitting || !canNext} className="cc-btn cc-btn--primary flex-1">
               {submitting ? 'Saving…' : 'Save changes'}
             </button>
           ) : step < lastStep ? (
-            <button type="button" onClick={next} disabled={!canNext} className="flex-1 rounded-lg bg-stone-900 px-4 py-3 text-sm font-medium text-white disabled:bg-stone-300">
+            <button type="button" onClick={next} disabled={!canNext} className="cc-btn cc-btn--primary flex-1">
               {step === 7 ? (admin ? 'Continue' : 'Approve and continue') : step === 0 ? 'Start designing' : !fresh && step >= 1 ? 'Checking…' : `Next: ${STEPS[step + 1]}`}
             </button>
           ) : (
-            <button type="submit" form="order-form" disabled={submitting || !q.ok || !engineOk || (!admin && !!turnstileSiteKey && !token)} className="flex-1 rounded-lg bg-amber-700 px-4 py-3 text-sm font-medium text-white disabled:bg-stone-300">
+            <button type="submit" form="order-form" disabled={submitting || !q.ok || !engineOk || (!admin && !!turnstileSiteKey && !token)} className="cc-btn cc-btn--primary flex-1">
               {submitting ? 'Sending…' : admin ? `Save order · ${dollars(q.totalCents)}` : `Place order · ${dollars(q.amountDueCents)} due`}
             </button>
           )}
@@ -471,7 +470,7 @@ function Choices({ options, value, onPick, detail, price, compact }: { options: 
             aria-checked={value === o.id}
             disabled={out}
             onClick={() => onPick(o.id)}
-            className={`rounded-lg border bg-white p-3 text-left text-sm disabled:opacity-50 ${value === o.id ? 'border-amber-600 ring-2 ring-amber-600' : 'border-stone-300'}`}
+            className={`cc-choice p-3 text-left text-sm`}
           >
             <span className="flex justify-between gap-2">
               <span className="font-medium">{o.label}</span>
@@ -503,10 +502,10 @@ function TextStep({ design, catalog, settings, onChange }: { design: OrderDesign
                 {ROLE_LABEL[l.role]}
                 {optional && <span className="font-normal text-stone-500"> (optional, leave empty to skip)</span>}
               </span>
-              <span className={n > max ? 'text-red-700' : 'text-stone-500'}>{n}/{max}</span>
+              <span className={n > max ? 'font-semibold text-danger' : 'font-normal text-stone-500'}>{n}/{max}</span>
             </span>
             <span className="mt-1 flex gap-2">
-              <input className="input py-2 text-base" value={l.text} maxLength={max + 5} onChange={(e) => set(i, e.target.value)} autoCapitalize="words" />
+              <input className="cc-field__input" value={l.text} maxLength={max + 5} onChange={(e) => set(i, e.target.value)} autoCapitalize="words" />
               {maxLines > 0 && design.lines.length > 1 && (
                 <button type="button" className="px-2 text-stone-500" onClick={() => onChange(design.lines.filter((_, j) => j !== i))} aria-label="Remove line">×</button>
               )}
@@ -522,7 +521,7 @@ function TextStep({ design, catalog, settings, onChange }: { design: OrderDesign
               <button
                 key={r}
                 type="button"
-                className="rounded-md border border-stone-300 bg-white px-3 py-1.5"
+                className="cc-btn cc-btn--secondary"
                 onClick={() => {
                   const fonts = fontsFor(catalog, design.productId, r);
                   const line = { role: r, text: '', fontId: fonts[0]?.id ?? '' };
@@ -557,7 +556,7 @@ function SizeStep({ design, catalog, settings, ratio, onChange }: { design: Orde
               role="radio"
               aria-checked={design.sizeId === s.id}
               onClick={() => onChange({ sizeId: s.id })}
-              className={`rounded-lg border bg-white p-3 text-left text-sm ${design.sizeId === s.id ? 'border-amber-600 ring-2 ring-amber-600' : 'border-stone-300'}`}
+              className={`cc-choice p-3 text-left text-sm`}
             >
               <span className="flex justify-between">
                 <span className="font-medium">{s.label}</span>
@@ -569,13 +568,13 @@ function SizeStep({ design, catalog, settings, ratio, onChange }: { design: Orde
         })}
       </div>
       {custom && (
-        <label className="mt-3 flex items-center gap-3 rounded-lg border border-stone-300 bg-white p-3 text-sm">
+        <label className="mt-3 flex min-h-12 items-center gap-3 rounded-sm border-[1.5px] border-line-strong bg-white p-3 text-sm">
           <input type="radio" checked={design.sizeId === custom.id} onChange={() => onChange({ sizeId: custom.id, customWidthIn: design.customWidthIn ?? 30 })} />
           <span className="flex-1">Custom width</span>
           <input
             type="number"
             inputMode="decimal"
-            className="input w-24 py-2 text-base"
+            className="cc-field__input w-24"
             min={min}
             max={max}
             step={0.5}
@@ -602,15 +601,16 @@ function FinishStep({ design, catalog, onChange }: { design: OrderDesign; catalo
         const swatches = (kind === 'paint_or_stain' ? ['paint', 'stain'] : [kind]).flatMap((c) => byCategory(catalog, c));
         return (
           <section key={i} className="mt-5">
-            <h2 className="text-sm font-medium text-stone-700">{kinds.length > 1 ? `Colour for the ${pieces[i] ?? `piece ${i + 1}`}` : 'Colour'}</h2>
+            <h2 className="cc-label">{kinds.length > 1 ? `Colour for the ${pieces[i] ?? `piece ${i + 1}`}` : 'Colour'}</h2>
             <div className="mt-2 grid grid-cols-3 gap-2 sm:grid-cols-4">
               {swatches.map((c) => (
                 <button
                   key={c.id}
                   type="button"
+                  aria-pressed={design.colourIds[i] === c.id}
                   disabled={c.stock_status === 'out_of_stock'}
                   onClick={() => onChange({ colourIds: design.colourIds.map((x, j) => (j === i ? c.id : x)) })}
-                  className={`rounded-lg border bg-white p-2 text-left text-xs disabled:opacity-50 ${design.colourIds[i] === c.id ? 'border-amber-600 ring-2 ring-amber-600' : 'border-stone-300'}`}
+                  className={`cc-choice p-2 text-left text-xs`}
                 >
                   <span className="block h-8 rounded border border-stone-200" style={{ background: c.values.hex }} />
                   <span className="mt-1 block">{c.label}</span>
@@ -640,10 +640,10 @@ function Fixes({ design, catalog, codes, onChange, onFont }: { design: OrderDesi
   if (!tooBig && !cutIssue && !codes.includes('missing_glyphs') && !codes.includes('font_not_allowed_for_line')) return null;
   return (
     <div className="mt-4 flex flex-wrap gap-2 text-sm">
-      {cutIssue && bigger && <button type="button" className="rounded-md bg-amber-100 px-3 py-2 text-amber-900" onClick={() => onChange({ sizeId: bigger.id })}>Make it bigger ({bigger.label})</button>}
-      {tooBig && smaller && <button type="button" className="rounded-md bg-amber-100 px-3 py-2 text-amber-900" onClick={() => onChange({ sizeId: smaller.id })}>Make it smaller ({smaller.label})</button>}
-      <button type="button" className="rounded-md bg-amber-100 px-3 py-2 text-amber-900" onClick={onFont}>Try another font</button>
-      {cutIssue && backer && <button type="button" className="rounded-md bg-amber-100 px-3 py-2 text-amber-900" onClick={() => onChange({ styleId: backer.id })}>Use {backer.label.toLowerCase()} ({priceLabel(backer) || 'no charge'})</button>}
+      {cutIssue && bigger && <button type="button" className="cc-btn cc-btn--secondary" onClick={() => onChange({ sizeId: bigger.id })}>Make it bigger ({bigger.label})</button>}
+      {tooBig && smaller && <button type="button" className="cc-btn cc-btn--secondary" onClick={() => onChange({ sizeId: smaller.id })}>Make it smaller ({smaller.label})</button>}
+      <button type="button" className="cc-btn cc-btn--secondary" onClick={onFont}>Try another font</button>
+      {cutIssue && backer && <button type="button" className="cc-btn cc-btn--secondary" onClick={() => onChange({ styleId: backer.id })}>Use {backer.label.toLowerCase()} ({priceLabel(backer) || 'no charge'})</button>}
     </div>
   );
 }
@@ -661,7 +661,7 @@ function Summary({ design, catalog, result }: { design: OrderDesign; catalog: Ca
   ];
   if (design.addonIds.length) rows.push(['Extras', design.addonIds.map(label).join(', ')]);
   return (
-    <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 rounded-lg bg-white p-3 ring-1 ring-stone-200">
+    <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 rounded-sm border border-line bg-white p-3">
       {rows.map(([k, v]) => (
         <div key={k} className="contents">
           <dt className="text-stone-500">{k}</dt>
@@ -693,9 +693,9 @@ function Breakdown({ q }: { q: ReturnType<typeof quote> }) {
 
 function Field({ label, value, onChange, type = 'text', autoComplete, required }: { label: string; value: string; onChange: (v: string) => void; type?: string; autoComplete?: string; required?: boolean }) {
   return (
-    <label className="block text-sm font-medium text-stone-700">
+    <label className="cc-field__label block">
       {label}
-      <input className="input mt-1 py-2 text-base" type={type} value={value} onChange={(e) => onChange(e.target.value)} autoComplete={autoComplete} required={required} />
+      <input className="cc-field__input mt-2" type={type} value={value} onChange={(e) => onChange(e.target.value)} autoComplete={autoComplete} required={required} />
     </label>
   );
 }
@@ -758,7 +758,9 @@ function Turnstile({ siteKey, onToken }: { siteKey: string; onToken: (t: string)
     <div>
       <div ref={box} className="min-h-[65px]" />
       {problem && (
-        <p className="mt-1 text-sm text-red-700" role="alert">
+        <p className="cc-field__error mt-2" role="alert">
+          <AlertIcon />
+          <span>
           {problem}{' '}
           <button
             type="button"
@@ -772,8 +774,23 @@ function Turnstile({ siteKey, onToken }: { siteKey: string; onToken: (t: string)
           >
             Try again
           </button>
+          </span>
         </p>
       )}
     </div>
+  );
+}
+
+/** Problems in the danger colour, each with the icon, saying what's wrong and how to fix it. */
+function ErrorList({ items, role, className = '' }: { items: string[]; role: 'alert' | 'status'; className?: string }) {
+  return (
+    <ul className={`space-y-2 ${className}`} role={role}>
+      {items.map((e) => (
+        <li key={e} className="cc-field__error">
+          <AlertIcon />
+          <span>{e}</span>
+        </li>
+      ))}
+    </ul>
   );
 }

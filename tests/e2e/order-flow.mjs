@@ -63,7 +63,7 @@ async function main() {
 
   step('landing page lists the products');
   await page.goto('/');
-  await page.getByRole('link', { name: 'Design your sign' }).waitFor();
+  await page.getByRole('link', { name: 'Design your sign' }).first().waitFor();
   assert.ok(await page.getByText('Nursery name sign').count());
 
   step('pick a nursery name sign and type the name');
@@ -99,7 +99,7 @@ async function main() {
   const approve = page.getByRole('button', { name: 'Approve and continue' });
   assert.equal(await approve.isDisabled(), true, 'cannot continue without approving');
   await page.screenshot({ path: `${OUT}/4-proof.png`, fullPage: true });
-  const proofPrice = (await page.locator('.sticky .text-lg').textContent()).trim();
+  const proofPrice = (await page.locator('[data-price]').textContent()).trim();
   await page.getByRole('checkbox', { name: /I’ve checked the spelling/ }).check();
   await next('Approve and continue');
 
@@ -111,7 +111,7 @@ async function main() {
   await page.screenshot({ path: `${OUT}/5-details.png`, fullPage: true });
   await page.getByRole('button', { name: /Place order/ }).click();
   await page.waitForURL(/\/order\/S-1001\/confirmation\?t=/, { timeout: 60_000 });
-  await page.getByText('Thank you, Jane!').waitFor();
+  await page.getByText('Thank you, Jane').waitFor();
   const body = await page.textContent('main');
   assert.match(body, /S-1001/);
   assert.match(body, new RegExp(`Amount due: \\${proofPrice}`));

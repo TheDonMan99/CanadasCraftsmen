@@ -66,7 +66,7 @@ export default async function OrderPage({ params }: { params: Promise<{ id: stri
       <div className="mt-4 grid gap-6 lg:grid-cols-[1fr_380px]">
         <div className="space-y-4">
           <section className="rounded-lg bg-white p-3 ring-1 ring-stone-200">
-            {preview ? <div className="[&>svg]:h-auto [&>svg]:max-h-[50vh] [&>svg]:w-full" dangerouslySetInnerHTML={{ __html: preview }} /> : <p className="py-10 text-center text-stone-400">No preview</p>}
+            {preview ? <div className="[&>svg]:h-auto [&>svg]:max-h-[50vh] [&>svg]:w-full" dangerouslySetInnerHTML={{ __html: preview }} /> : <p className="py-10 text-center text-stone-500">No preview</p>}
             {result && !result.ok && <ul className="mt-2 text-sm text-red-800">{result.failures.map((f, i) => <li key={i}>✗ {f.message}</li>)}</ul>}
           </section>
 
@@ -89,7 +89,7 @@ export default async function OrderPage({ params }: { params: Promise<{ id: stri
                 <dd>{o.proof_approved_at ? `Approved ${shortDate(o.proof_approved_at)}` : o.proof_requested_at ? `Edited proof sent ${shortDate(o.proof_requested_at)}, waiting for approval` : 'Not approved'}</dd>
               </dl>
               {user.perms.edit_orders && o.status !== 'cancelled' && (
-                <Link href={`/admin/orders/${o.id}/edit`} className="mt-3 inline-block text-sm text-blue-700 underline">Edit design (typo, font…)</Link>
+                <Link href={`/admin/orders/${o.id}/edit`} className="mt-3 inline-block text-sm text-char underline">Edit design (typo, font…)</Link>
               )}
             </div>
             {r && (
@@ -165,8 +165,8 @@ export default async function OrderPage({ params }: { params: Promise<{ id: stri
             <section className="rounded-lg bg-white p-4 text-sm ring-1 ring-stone-200">
               <h2 className="mb-2 font-medium">Customer</h2>
               <p>{owner.customer_name}</p>
-              <p><a className="text-blue-700 underline" href={`mailto:${owner.customer_email}`}>{owner.customer_email}</a></p>
-              {owner.customer_phone && <p><a className="text-blue-700 underline" href={`tel:${owner.customer_phone}`}>{owner.customer_phone}</a></p>}
+              <p><a className="text-char underline" href={`mailto:${owner.customer_email}`}>{owner.customer_email}</a></p>
+              {owner.customer_phone && <p><a className="text-char underline" href={`tel:${owner.customer_phone}`}>{owner.customer_phone}</a></p>}
               <p className="mt-2 text-stone-600">{l.delivery}{owner.delivery_address ? `: ${owner.delivery_address}` : ''}</p>
               {owner.notes_customer && <p className="mt-2 rounded bg-stone-50 p-2">“{owner.notes_customer}”</p>}
             </section>

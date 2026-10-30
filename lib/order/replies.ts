@@ -1,6 +1,7 @@
 // Fills Messenger reply templates: {price_list}, {design_link}, {payment_email}, {pickup_note}.
 import { byCategory, type CatalogOption, type Settings } from '@/lib/config/catalog';
 import { dollars } from '@/lib/pricing';
+import { businessName } from '@/lib/brand';
 
 export function replyVars(catalog: CatalogOption[], settings: Settings, siteUrl: string): Record<string, string> {
   const widths = byCategory(catalog, 'size').filter((s) => s.values.kind === 'width');
@@ -11,7 +12,7 @@ export function replyVars(catalog: CatalogOption[], settings: Settings, siteUrl:
     design_link: `${siteUrl}/design`,
     payment_email: settings.payments.payment_email,
     pickup_note: settings.business.pickup_note,
-    business_name: settings.business.name.startsWith('[') ? '' : settings.business.name,
+    business_name: businessName(settings),
   };
 }
 

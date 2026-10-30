@@ -14,6 +14,7 @@ import type { SendEmail } from './email';
 import { exportCsv } from './exports';
 import { sendOrderEmail, storedOrderVars } from './order-emails';
 import { getOwnerOrder } from '@/lib/db/admin';
+import { businessName } from '@/lib/brand';
 
 export interface ScheduledDeps {
   db: Db;
@@ -54,7 +55,7 @@ export async function runScheduled(deps: ScheduledDeps, opts: { force?: string[]
   const due = (job: string, when: boolean) => opts.force?.includes(job) || (!opts.force && when);
   const out: JobResult[] = [];
   const owner = deps.notifyEmail || settings.emails.notify_email;
-  const base = { date: clock.date, dashboard_link: `${deps.siteUrl}/admin`, business_name: settings.business.name.startsWith('[') ? '' : settings.business.name };
+  const base = { date: clock.date, dashboard_link: `${deps.siteUrl}/admin`, business_name: businessName(settings) };
   const send = async (key: TemplateKey, vars: Record<string, string>, appendKey: string, attachments?: { filename: string; content: string; contentType: string }[]) => {
     const t = settings.emails.templates[key];
     if (!t?.enabled) return 'off';

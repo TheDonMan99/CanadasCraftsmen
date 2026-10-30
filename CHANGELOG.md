@@ -1,5 +1,72 @@
 # Changelog
 
+## Preview backgrounds (2026-10-30)
+
+- **Background swatches** under the sign preview, in the designer and in quick
+  quote, so a white or dark sign is easy to see. The choices are White, Light
+  wall, Grey siding, Sage, Brick, Navy door and Dark wall.
+  - Only the mock-up changes, never the cut. The size label turns light on dark
+    backgrounds.
+  - The choice is remembered on that device.
+  - Quick-quote images and listing images use the chosen background too.
+- The colours are a setting (Settings → Preview backgrounds), not hard-coded. Each
+  has a name, a colour and an optional "siding" for board lines. Databases set
+  up earlier get them automatically.
+- **Fix:** on the proof step, the large preview no longer stays pinned at the top
+  of the screen. On a phone it was covering the approval checkbox. It now scrolls
+  away with the page.
+
+Tests: 540 Vitest tests and the browser test pass. New tests check that a chosen
+background never changes the sign, the label colour on dark backgrounds, siding
+lines, and that a malformed colour falls back to white.
+
+## Brand redesign: Canada's Craftsmen (2026-10-30)
+
+The site now uses the Canada's Craftsmen brand kit (kept in `docs/brand/`). This
+is a visual change only: routes, pricing, emails' wording, the engine, cut files
+and the sign previews are unchanged.
+
+- **Brand setup:**
+  - Alfa Slab One and Archivo, self-hosted with `next/font/local`, so no layout
+    shift;
+  - the brand colours, type styles and components (buttons, burnt-edge birch
+    panels, product cards, steps, fields, dark bands) in `app/globals.css`;
+  - logos in `public/brand/`, the favicon and app icon, the Facebook preview
+    image, and the page title "Canada's Craftsmen: custom welcome signs and name
+    signs".
+- **Business name:** while Settings → Business still has the `[Business name]`
+  placeholder, pages and emails say "Canada's Craftsmen", including the email
+  sender name.
+- **Home page:**
+  - a char hero with the headline, intro, a birch "Design your sign" button and
+    a sign preview on a burnt-edge birch panel;
+  - product cards on birch panels with "From $75" in Alfa Slab;
+  - "How it works" as numbered steps on a char band;
+  - a char footer with the stacked logo.
+- **Customer pages** (designer, share links, proof, confirmation, privacy, sign-in,
+  paused) have:
+  - the header and footer, and the brand type scale;
+  - one red primary button per screen, and 48 px fields and choices;
+  - errors in the danger colour with an icon, and confirmations in spruce with a
+    word.
+  The sign preview sits in the burnt-edge birch frame and keeps its white
+  ground, so plain-wood signs stay visible.
+- **Copy:**
+  - "Thank you, Jane" without the exclamation mark;
+  - "Approve proof", answered by "Proof approved";
+  - clearer error messages.
+- **Admin:** only the brand fonts, colours, buttons and inputs are applied (the
+  grey scale maps to the brand's warm greys), with headings in Alfa Slab and the
+  leaf in the admin bar. No layout changes.
+- **Accessibility:**
+  - a 2 px focus ring on everything you can tab to;
+  - reduced motion is respected;
+  - text contrast is 4.5:1 or better;
+  - nothing scrolls sideways at 375 px.
+
+Tests: 537 Vitest tests and the browser test pass. The browser test now reads the
+price from a stable `data-price` marker rather than a style class.
+
 ## Fix: spam check failing on the live order form (2026-10-29)
 
 On the live site, the Cloudflare spam check showed a blank box and a

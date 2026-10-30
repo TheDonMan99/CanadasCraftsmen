@@ -23,10 +23,13 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   const user = await requirePage();
   const can = (p: Perm | Perm[]) => (Array.isArray(p) ? p : [p]).some((x) => user.perms[x]);
   return (
-    <div className="min-h-screen">
+    <div className="cc-admin min-h-screen">
       <nav className="border-b border-stone-200 bg-white">
         <div className="mx-auto flex max-w-7xl items-center gap-x-4 gap-y-1 overflow-x-auto px-4 py-2 text-sm">
-          <span className="font-semibold">Admin</span>
+          <Link href="/admin" className="flex items-center gap-2 font-semibold">
+            <img src="/brand/cc-mark.svg" alt="" width={22} height={20} />
+            Admin
+          </Link>
           {NAV.filter((n) => can(n.perm)).map((n) => (
             <Link key={n.href} href={n.href} className="whitespace-nowrap text-stone-700 hover:text-stone-950">{n.label}</Link>
           ))}

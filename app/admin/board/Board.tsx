@@ -92,7 +92,7 @@ export default function Board({ cards, completeDays }: { cards: CardData[]; comp
                       <div className="text-xs text-stone-500">{c.firstName}</div>
                       <div className="mt-1 text-xs">{c.spec}</div>
                       {next && (
-                        <button className="mt-2 text-xs text-blue-700 underline" onClick={() => move(c.id, next.status)}>
+                        <button className="mt-2 text-xs text-char underline" onClick={() => move(c.id, next.status)}>
                           → {STATUS_LABEL[next.status]}
                         </button>
                       )}

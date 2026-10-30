@@ -80,3 +80,23 @@ describe('other formats and names', () => {
     expect(panelFileName('2026-11-03', 'Birch-6mm', 1, 'A')).toBe('2026-11-03_Birch-6mm_Sheet1_PanelA.svg');
   });
 });
+
+describe('preview backgrounds', () => {
+  const opt = { colours: { word: '#F5F5F2' }, background: 'plain' as const, showDimensions: true, showThin: false };
+  const shapes = (svg: string) => svg.match(/<path d="[^"]+" fill="#F5F5F2"/g);
+  test('a chosen background colour fills the mock-up; the sign itself is unchanged', () => {
+    const plain = previewSvg(sign, opt);
+    const navy = previewSvg(sign, { ...opt, backdrop: { hex: '#1F2A44' } });
+    expect(plain).toContain('<rect width="100%" height="100%" fill="#FFFFFF"/>');
+    expect(navy).toContain('<rect width="100%" height="100%" fill="#1F2A44"/>');
+    expect(shapes(navy)).toEqual(shapes(plain));
+  });
+  test('the size label turns light on a dark background; siding adds board lines', () => {
+    expect(previewSvg(sign, { ...opt, backdrop: { hex: '#2E2F31' } })).toContain('fill="#EEEEEE">36.00 in');
+    expect(previewSvg(sign, { ...opt, backdrop: { hex: '#D8D2C8' } })).toContain('fill="#444444">36.00 in');
+    expect(previewSvg(sign, { ...opt, backdrop: { hex: '#D8D2C8', siding: true } })).toContain('rgba(0,0,0,0.08)');
+  });
+  test('a malformed colour falls back to white', () => {
+    expect(previewSvg(sign, { ...opt, backdrop: { hex: 'red"/><script>' } })).toContain('fill="#FFFFFF"/>');
+  });
+});

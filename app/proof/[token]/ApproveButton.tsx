@@ -1,14 +1,21 @@
 'use client';
 
 import { useState } from 'react';
+import { AlertIcon, CheckIcon } from '@/app/components/icons';
 
 export default function ApproveButton({ token }: { token: string }) {
   const [state, setState] = useState<'idle' | 'busy' | 'done' | 'error'>('idle');
-  if (state === 'done') return <p className="mt-6 rounded-lg bg-green-50 p-3 text-green-900">Thank you! Your sign is approved and we’ll make it exactly as shown.</p>;
+  if (state === 'done')
+    return (
+      <p className="cc-body-l cc-success mt-8 flex items-start gap-2" role="status">
+        <CheckIcon />
+        <span>Proof approved. We’ll make your sign exactly as shown.</span>
+      </p>
+    );
   return (
-    <div className="mt-6">
+    <div className="mt-8">
       <button
-        className="w-full rounded-lg bg-amber-700 px-4 py-3 font-medium text-white disabled:opacity-50"
+        className="cc-btn cc-btn--primary w-full sm:w-auto"
         disabled={state === 'busy'}
         onClick={async () => {
           setState('busy');
@@ -16,9 +23,14 @@ export default function ApproveButton({ token }: { token: string }) {
           setState(res.ok ? 'done' : 'error');
         }}
       >
-        {state === 'busy' ? 'Approving…' : 'Approve this design'}
+        {state === 'busy' ? 'Approving…' : 'Approve proof'}
       </button>
-      {state === 'error' && <p className="mt-2 text-sm text-red-700">That didn’t work. The link may have been used already.</p>}
+      {state === 'error' && (
+        <p className="cc-field__error mt-3" role="alert">
+          <AlertIcon />
+          <span>That link has already been used or has expired. Reply to our email and we’ll send a new one.</span>
+        </p>
+      )}
     </div>
   );
 }

@@ -135,6 +135,15 @@ export interface PreviewOptions {
   showThin: boolean;
   /** Draw kerf-offset toolpaths instead of design shapes. */
   showCutPaths?: boolean;
+  /** A background colour for the mock-up (overrides `background`); `siding` adds horizontal board lines. Never part of the cut. */
+  backdrop?: { hex: string; siding?: boolean };
+}
+
+/** Relative luminance of a #rrggbb colour, 0 (black) to 1 (white). */
+function luminance(hex: string): number {
+  const h = hex.replace('#', '');
+  const c = [0, 2, 4].map((i) => parseInt(h.slice(i, i + 2), 16) / 255).map((x) => (x <= 0.03928 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4));
+  return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
 }
 
 const DEFAULT_WOOD = '#E3C9A0';
@@ -145,11 +154,15 @@ export function previewSvg(result: EngineResult, opt: PreviewOptions): string {
   const dimH = opt.showDimensions ? Math.max(0.8, result.widthIn * 0.04) : 0;
   const W = result.widthIn + 2 * pad, H = result.heightIn + 2 * pad + dimH;
   const d = 3;
-  const bg = opt.background === 'wall' ? '#D8D2C8' : '#FFFFFF';
+  const hex = opt.backdrop && /^#[0-9a-f]{6}$/i.test(opt.backdrop.hex) ? opt.backdrop.hex : null;
+  const bg = hex ?? (opt.background === 'wall' ? '#D8D2C8' : '#FFFFFF');
+  const siding = hex ? !!opt.backdrop!.siding : opt.background === 'wall';
+  const dark = luminance(bg) < 0.25;
   let out = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W.toFixed(3)} ${H.toFixed(3)}" width="${(W * 20).toFixed(0)}" height="${(H * 20).toFixed(0)}">`;
   out += `<rect width="100%" height="100%" fill="${bg}"/>`;
-  if (opt.background === 'wall') {
-    for (let y = 0; y < H; y += 6) out += `<rect x="0" y="${y.toFixed(2)}" width="${W.toFixed(2)}" height="0.06" fill="#C9C2B6"/>`;
+  if (siding) {
+    const line = dark ? 'rgba(255,255,255,0.10)' : 'rgba(0,0,0,0.08)';
+    for (let y = 0; y < H; y += 6) out += `<rect x="0" y="${y.toFixed(2)}" width="${W.toFixed(2)}" height="0.06" fill="${line}"/>`;
   }
   out += `<g transform="translate(${pad.toFixed(3)} ${pad.toFixed(3)})">`;
   // paint order: backers and outline layers first, words and letters on top
@@ -170,7 +183,7 @@ export function previewSvg(result: EngineResult, opt: PreviewOptions): string {
   out += '</g>';
   if (opt.showDimensions) {
     const fs = dimH * 0.55;
-    out += `<text x="${(W / 2).toFixed(3)}" y="${(H - dimH * 0.35).toFixed(3)}" font-size="${fs.toFixed(3)}" text-anchor="middle" font-family="Arial, sans-serif" fill="#444">${result.widthIn.toFixed(2)} in × ${result.heightIn.toFixed(2)} in</text>`;
+    out += `<text x="${(W / 2).toFixed(3)}" y="${(H - dimH * 0.35).toFixed(3)}" font-size="${fs.toFixed(3)}" text-anchor="middle" font-family="Arial, sans-serif" fill="${dark ? '#EEEEEE' : '#444444'}">${result.widthIn.toFixed(2)} in × ${result.heightIn.toFixed(2)} in</text>`;
   }
   return out + '</svg>';
 }

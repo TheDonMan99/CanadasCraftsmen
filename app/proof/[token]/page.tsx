@@ -8,9 +8,11 @@ import { runEngine } from '@/lib/engine';
 import { previewSvg } from '@/lib/export/svg';
 import { previewColours } from '@/lib/order/design';
 import { loadFontFile } from '@/lib/server/fonts';
+import SiteFooter from '@/app/components/SiteFooter';
+import SiteHeader from '@/app/components/SiteHeader';
 import ApproveButton from './ApproveButton';
 
-export const metadata: Metadata = { title: 'Approve your sign', robots: { index: false } };
+export const metadata: Metadata = { title: 'Check your updated sign', robots: { index: false } };
 export const dynamic = 'force-dynamic';
 
 /** The customer's link to approve an edited proof. */
@@ -24,25 +26,29 @@ export default async function ProofPage({ params }: { params: Promise<{ token: s
   const svg = previewSvg(result, { colours: previewColours(o.design, catalog), background: 'plain', showDimensions: true, showThin: false });
   const l = o.design.labels ?? {};
   return (
-    <main className="mx-auto max-w-2xl px-4 py-8">
-      <p className="text-sm text-stone-500">Order {o.number}</p>
-      <h1 className="text-2xl font-semibold">Please check your updated sign</h1>
-      <div className="mt-4 rounded-lg bg-white p-3 ring-1 ring-stone-200 [&>svg]:h-auto [&>svg]:w-full" dangerouslySetInnerHTML={{ __html: svg }} />
-      <div className="mt-4 text-sm">
-        <h2 className="font-medium">Spelling, letter by letter</h2>
-        {(l.lines ?? []).map((x: { text: string; font: string }, i: number) => (
-          <p key={i} className="mt-1 flex flex-wrap gap-1">
-            {[...x.text].map((c, j) => (
-              <span key={j} className="inline-flex h-7 min-w-6 items-center justify-center rounded border border-stone-300 bg-white px-1 font-mono">{c === ' ' ? '␣' : c}</span>
-            ))}
-            <span className="ml-2 text-stone-500">in {x.font}</span>
-          </p>
-        ))}
-        <p className="mt-3 text-stone-600">{[l.product, l.size, l.style, l.material, [l.finish, ...(l.colours ?? [])].filter(Boolean).join(', ')].filter(Boolean).join(' · ')}</p>
-        <p className="mt-1 text-stone-600">Finished size: {result.widthIn.toFixed(2)} in × {result.heightIn.toFixed(2)} in</p>
-      </div>
-      <ApproveButton token={token} />
-      <p className="mt-3 text-sm text-stone-500">Something not right? Reply to our email and we’ll fix it.</p>
-    </main>
+    <>
+      <SiteHeader cta={false} />
+      <main className="mx-auto max-w-2xl px-4 py-16 md:px-12">
+        <p className="cc-small text-kerf">Order {o.number}</p>
+        <h1 className="cc-display-l mt-2">Check your updated sign</h1>
+        <div className="cc-panel cc-panel--hung mt-8 p-2 [&>svg]:block [&>svg]:h-auto [&>svg]:w-full" dangerouslySetInnerHTML={{ __html: svg }} />
+        <div className="cc-body mt-8">
+          <h2 className="cc-title">Spelling, letter by letter</h2>
+          {(l.lines ?? []).map((x: { text: string; font: string }, i: number) => (
+            <p key={i} className="mt-2 flex flex-wrap items-center gap-1">
+              {[...x.text].map((c, j) => (
+                <span key={j} className="inline-flex h-8 min-w-7 items-center justify-center rounded-sm border border-line-strong bg-white px-1 font-mono">{c === ' ' ? '␣' : c}</span>
+              ))}
+              <span className="cc-small ml-2 text-kerf">in {x.font}</span>
+            </p>
+          ))}
+          <p className="mt-4 text-kerf">{[l.product, l.size, l.style, l.material, [l.finish, ...(l.colours ?? [])].filter(Boolean).join(', ')].filter(Boolean).join(' · ')}</p>
+          <p className="mt-1 text-kerf">Finished size: {result.widthIn.toFixed(2)} in × {result.heightIn.toFixed(2)} in</p>
+        </div>
+        <ApproveButton token={token} />
+        <p className="cc-small mt-4 text-kerf">Something not right? Reply to our email and we’ll fix it.</p>
+      </main>
+      <SiteFooter />
+    </>
   );
 }

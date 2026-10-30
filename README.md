@@ -372,6 +372,9 @@ npm run typecheck
 | `lib/reports/` | Report figures, digests and CSV (pure) |
 | `lib/server/scheduled.ts`, `app/api/cron/daily/` | Scheduled emails |
 | `app/admin/reports/` | Reports page |
+| `docs/brand/` | The brand kit: guide, tokens, component styles, reference page |
+| `app/globals.css`, `app/fonts/`, `public/brand/` | Brand styles, fonts and logos |
+| `app/components/` | Customer-page header, footer and icons |
 | `tests/` | Vitest suite |
 
 ## Deploy and back up

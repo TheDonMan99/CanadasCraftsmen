@@ -77,7 +77,7 @@ describe('a good order', () => {
     expect(sent).toHaveLength(1);
     const alert = sent[0];
     expect(alert.to).toBe('donovanarntson@gmail.com');
-    expect(alert.from).toBe('onboarding@resend.dev');
+    expect(alert.from).toBe("Canada's Craftsmen <onboarding@resend.dev>");
     expect(alert.subject).toBe('New order S-1001 · Smith · 36 in · $75 · UNPAID');
     expect(alert.attachments!.map((a) => [a.filename, a.contentId])).toEqual([
       ['S-1001_Smith_36in_Birch-6mm.png', 'sign-preview'],

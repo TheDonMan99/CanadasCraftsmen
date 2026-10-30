@@ -4,6 +4,8 @@ import { getDb } from '@/lib/db/client';
 import { getSavedDesign } from '@/lib/db/orders';
 import { defaultDesign, normalizeDesign, type OrderDesign } from '@/lib/order/design';
 import { env } from '@/lib/server/env';
+import SiteFooter from '@/app/components/SiteFooter';
+import SiteHeader from '@/app/components/SiteHeader';
 import Designer from '../Designer';
 import { designerData } from '../load';
 import Paused from '../Paused';
@@ -33,14 +35,18 @@ export default async function SharedDesignPage({ params }: { params: Promise<{ s
   const productOn = data.catalog.some((o) => o.id === d.productId);
   const design = productOn ? normalizeDesign({ ...defaultDesign(data.catalog, data.settings, d.productId), ...d }, data.catalog) : defaultDesign(data.catalog, data.settings);
   return (
-    <Designer
-      catalog={data.catalog}
-      settings={data.settings}
-      initial={design}
-      startStep={7}
-      earliest={data.earliest}
-      turnstileSiteKey={data.turnstileSiteKey}
-      refundPolicy={data.refundPolicy}
-    />
+    <>
+      <SiteHeader cta={false} />
+      <Designer
+        catalog={data.catalog}
+        settings={data.settings}
+        initial={design}
+        startStep={7}
+        earliest={data.earliest}
+        turnstileSiteKey={data.turnstileSiteKey}
+        refundPolicy={data.refundPolicy}
+      />
+      <SiteFooter clearBar />
+    </>
   );
 }
